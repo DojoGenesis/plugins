@@ -99,9 +99,21 @@ In the specifications, be explicit about how the tracks will connect after they 
 
 Commission the independent tracks to their respective agents or developers. Once they are complete, commission the dependent tracks.
 
-### Step 6: Integrate and Test
+### Step 6 [MANDATORY]: Integration & Wiring Gate
 
-As tracks are completed, merge them into the main branch. After all tracks are merged, run a full suite of integration tests to verify that the defined integration points are working correctly. Fix any interface mismatches or regressions.
+> **Confirm before proceeding:** All tracks are complete. Ask the user:
+> _"Integration/wiring is the mandatory final step. Proceed now, or defer?"_
+> If deferred: document the open integration tasks, record the deferral reason, and stop. Do **not** mark the work complete.
+
+After the user confirms to proceed:
+1. Merge tracks into the main branch in the planned order
+2. Verify each track's compilation gate passes (`go build ./...`, `cargo check`, `npx tsc --noEmit`, or equivalent)
+3. Run integration tests to verify interface contracts
+4. Confirm wiring: entry points are reachable, call graphs are traceable, no orphaned modules remain
+5. Fix any interface mismatches or regressions
+6. Run the full test suite
+
+**Never skip this step.** Parallel tracks produce isolated, potentially dead code without integration. A track is not "done" until it is wired into the running system.
 
 ---
 
@@ -124,5 +136,6 @@ Before commissioning the tracks, ensure you can answer "yes" to all of the follo
 4.  [ ] Does each track have its own comprehensive, self-contained specification?
 5.  [ ] Are the integration points (APIs, props, state) clearly defined in the specifications?
 6.  [ ] Have you considered potential merge conflicts and planned for them?
+7.  [ ] Has integration/wiring been completed or explicitly deferred (with open tasks and deferral reason documented)?
 
 If you cannot answer "yes" to all of these, revisit the planning phase before proceeding.
