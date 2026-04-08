@@ -1,0 +1,51 @@
+name: Validate SKILL.md Frontmatter
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-skills:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate SKILL.md frontmatter
+        run: |
+          ERRORS=0
+          CHECKED=0
+
+          for skill in plugins/*/skills/*/SKILL.md; do
+            [ -f "$skill" ] || continue
+            CHECKED=$((CHECKED + 1))
+
+            # Extract YAML frontmatter (between first pair of --- delimiters)
+            frontmatter=$(sed -n '/^---$/,/^---$/p' "$skill" | sed '1d;$d')
+
+            if [ -z "$frontmatter" ]; then
+              echo "ERROR: $skill - missing YAML frontmatter"
+              ERRORS=$((ERRORS + 1))
+              continue
+            fi
+
+            missing=""
+            echo "$frontmatter" | grep -q '^name:' || missing="$missing name"
+            echo "$frontmatter" | grep -q '^description:' || missing="$missing description"
+            echo "$frontmatter" | grep -q '^triggers:' || missing="$missing triggers"
+
+            if [ -n "$missing" ]; then
+              echo "ERROR: $skill - missing required fields:$missing"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+
+          echo ""
+          echo "Checked $CHECKED SKILL.md files"
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "FAILED: $ERRORS file(s) with invalid frontmatter"
+            exit 1
+          else
+            echo "PASSED: All SKILL.md files have valid frontmatter"
+          fi
