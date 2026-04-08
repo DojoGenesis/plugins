@@ -75,6 +75,34 @@ inc() {
     echo $(( $(cat "$f") + 1 )) > "$f"
 }
 
+# --- Helper: validate SKILL.md frontmatter ---
+# Returns 0 if name:, description:, and triggers: are all present in YAML frontmatter.
+# Returns 1 with error message on stderr if any are missing.
+validate_skill() {
+    local file="$1"
+    local skill_name="$2"
+    local missing=""
+
+    # Extract YAML frontmatter (between first two --- lines)
+    local frontmatter
+    frontmatter=$(sed -n '/^---$/,/^---$/p' "$file" | head -50)
+
+    if [ -z "$frontmatter" ]; then
+        echo "  ERROR: $skill_name — no YAML frontmatter found" >&2
+        return 1
+    fi
+
+    echo "$frontmatter" | grep -q "^name:" || missing="${missing}name "
+    echo "$frontmatter" | grep -q "^description:" || missing="${missing}description "
+    echo "$frontmatter" | grep -q "^triggers:" || missing="${missing}triggers "
+
+    if [ -n "$missing" ]; then
+        echo "  ERROR: $skill_name — missing required fields: ${missing}" >&2
+        return 1
+    fi
+    return 0
+}
+
 # --- Build canonical skill index ---
 echo "[1/4] Building canonical skill index..."
 
@@ -160,12 +188,31 @@ EOF
                 elif [ "$canonical_lines" -ge "$target_lines" ]; then
                     action="Sync from canonical"
                     if [ "$DRY_RUN" = false ]; then
-                        cp "$canonical_file" "$target_file"
-                        echo "    SYNC: $skill_name ($plugin_name) <- canonical"
+                        # Validate canonical BEFORE copying
+                        if ! validate_skill "$canonical_file" "$skill_name"; then
+                            action="BLOCKED (canonical invalid)"
+                            echo "    BLOCKED: $skill_name — canonical fails validation, skipping sync"
+                            inc errors
+                        else
+                            # Backup target, copy, then validate result
+                            cp "$target_file" "${target_file}.bak"
+                            cp "$canonical_file" "$target_file"
+                            if validate_skill "$target_file" "$skill_name"; then
+                                rm -f "${target_file}.bak"
+                                echo "    SYNC: $skill_name ($plugin_name) <- canonical [validated]"
+                                inc synced
+                            else
+                                # Restore backup — sync produced invalid file
+                                mv "${target_file}.bak" "$target_file"
+                                action="REVERTED (post-copy validation failed)"
+                                echo "    REVERTED: $skill_name — post-copy validation failed, restored original"
+                                inc errors
+                            fi
+                        fi
                     else
                         echo "    [DRY] SYNC: $skill_name ($plugin_name) <- canonical"
+                        inc synced
                     fi
-                    inc synced
                 else
                     action="BACK-PORT CANDIDATE"
                     inc backport
@@ -194,7 +241,7 @@ fi
 
 # --- Back-port section ---
 echo ""
-echo "[3/4] Back-port candidates..."
+echo "[3/5] Back-port candidates..."
 BACKPORT_COUNT=$(cat "$COUNT_DIR/backport")
 cat >> "$REPORT" <<EOF
 
@@ -211,13 +258,52 @@ if [ "$BACKPORT_COUNT" -eq 0 ]; then
     echo "*None found. All canonical versions are up-to-date or richer.*" >> "$REPORT"
 fi
 
+# --- Post-sync validation sweep ---
+echo ""
+echo "[4/5] Post-sync validation sweep..."
+INVALID_COUNT=0
+
+for target_base in "$GATEWAY" "$MCP"; do
+    [ -d "$target_base" ] || continue
+    for plugin_dir in "$target_base"/*/; do
+        local_skills=""
+        if [ -d "$plugin_dir/skills" ]; then
+            local_skills="$plugin_dir/skills"
+        else
+            local_skills="$plugin_dir"
+        fi
+        for skill_dir in "$local_skills"/*/; do
+            [ -f "$skill_dir/SKILL.md" ] || continue
+            sname=$(basename "$skill_dir")
+            if ! validate_skill "$skill_dir/SKILL.md" "$sname" 2>/dev/null; then
+                echo "    INVALID: $sname in $(basename "$target_base")"
+                INVALID_COUNT=$((INVALID_COUNT + 1))
+            fi
+        done
+    done
+done
+
+if [ "$INVALID_COUNT" -eq 0 ]; then
+    echo "  All distribution skills pass validation."
+else
+    echo "  WARNING: $INVALID_COUNT skills failed post-sync validation!"
+    cat >> "$REPORT" <<EOF
+
+## Post-Sync Validation
+
+**$INVALID_COUNT skills failed frontmatter validation after sync.**
+Run \`scripts/validate-skills.sh\` for details.
+
+EOF
+fi
+
 # --- Summary ---
 SYNCED_COUNT=$(cat "$COUNT_DIR/synced")
 SKIPPED_COUNT=$(cat "$COUNT_DIR/skipped")
 ERROR_COUNT=$(cat "$COUNT_DIR/errors")
 
 echo ""
-echo "[4/4] Summary"
+echo "[5/5] Summary"
 echo ""
 echo "  Canonical skills: $CANONICAL_COUNT"
 echo "  Synced (Tier 1 -> Tier 2): $SYNCED_COUNT"
