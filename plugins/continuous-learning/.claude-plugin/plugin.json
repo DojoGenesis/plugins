@@ -1,8 +1,10 @@
 {
   "name": "continuous-learning",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "The process is the purpose. Harvest learnings from sprints through structured retrospectives, explore research deeply and widely, diagnose problems systematically, and let curiosity guide exploration of new projects.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["learning", "research", "retrospective", "synthesis", "exploration"]
 }

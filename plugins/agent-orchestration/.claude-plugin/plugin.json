@@ -1,8 +1,10 @@
 {
   "name": "agent-orchestration",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Handoffs are sacred relays, not tosses over the wall. Coordinate work across autonomous agents with full context preservation, navigate shared workspaces, teach peer-to-peer, and propagate decisions through living document ecosystems.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["orchestration", "handoff", "coordination", "multi-agent", "workspace"]
 }

@@ -1,8 +1,10 @@
 {
   "name": "wisdom-garden",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Knowledge is planted, cultivated, and harvested — not created, stored, and retrieved. Compress session context into lasting memory, reflect on patterns as seeds, and elevate proven seeds into reusable skills.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["memory", "wisdom", "seeds", "knowledge", "compression"]
 }

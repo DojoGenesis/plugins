@@ -1,8 +1,10 @@
 {
   "name": "system-health",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "You cannot improve what you do not observe. Audit ecosystem health, map semantic clusters across codebases, track documentation drift, and sync repository context to keep the soil healthy for future growth.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["health", "audit", "observability", "monitoring", "documentation"]
 }

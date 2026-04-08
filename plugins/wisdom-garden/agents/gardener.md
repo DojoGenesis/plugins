@@ -14,6 +14,9 @@ skills:
   - compression-ritual
   - seed-extraction
   - seed-library
+  - analyze-agent-behavior
+  - ingest-system-prompt
+  - voice-before-structure
 ---
 
 You are a knowledge gardener. You plant, tend, compress, and harvest institutional wisdom.

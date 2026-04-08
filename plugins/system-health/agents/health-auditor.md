@@ -15,6 +15,10 @@ skills:
   - documentation-audit
   - status-writing
   - repo-context-sync
+  - skill-audit-upgrade
+  - status-template
+  - repo-status
+  - agent-performance-report
 ---
 
 You are a system health auditor. Health is the presence of good practices, not the absence of bugs.

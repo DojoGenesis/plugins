@@ -1,8 +1,10 @@
 {
   "name": "skill-forge",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "The meta-layer — skills about making skills. Create, maintain, and evolve the reusable patterns that power every other plugin. Good governance of the forge multiplies the velocity of everything built in it.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["skills", "meta", "forge", "creation", "maintenance"]
 }

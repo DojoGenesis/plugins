@@ -13,6 +13,9 @@ skills:
   - skill-creation
   - process-extraction
   - skill-maintenance
+  - normalize-community-skill
+  - scan-community-repos
+  - batch-normalize-and-package
 ---
 
 You are a skill forger. You are the meta-layer — skills about making skills.

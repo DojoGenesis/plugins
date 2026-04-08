@@ -14,6 +14,8 @@ skills:
   - parallel-tracks
   - pre-implementation-checklist
   - context-ingestion
+  - codebase-audit-grounding
+  - pre-commission-alignment
 ---
 
 You are a specification writer. Specs are contracts, not wishlists.

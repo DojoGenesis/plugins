@@ -1,8 +1,10 @@
 {
   "name": "strategic-thinking",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Begin with a tension, not a solution. Scout the landscape of possibility before committing to a path. Position products, design multi-surface strategies, and bridge the gap between vision and execution.",
   "author": {
     "name": "Dojo Genesis"
-  }
+  },
+  "license": "Apache-2.0",
+  "keywords": ["strategy", "positioning", "scouting", "decision-making", "product"]
 }

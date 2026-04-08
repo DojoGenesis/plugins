@@ -1,0 +1,10 @@
+{
+  "name": "community-skills",
+  "version": "1.0.0",
+  "description": "Community-sourced skills normalized from alirezarezvani/claude-skills (276), parcadei/Continuous-Claude-v3 (103), CommandCodeAI/agent-skills (37), and slavingia/skills (10). All 426 skills passed security audit (Apr 6, 2026). Covers engineering, marketing, product, design, security, orchestration, and operations domains.",
+  "author": {
+    "name": "Community (normalized by Dojo Genesis)"
+  },
+  "license": "Mixed (see individual SKILL.md files)",
+  "keywords": ["community", "skills", "normalized", "supply-chain"]
+}
