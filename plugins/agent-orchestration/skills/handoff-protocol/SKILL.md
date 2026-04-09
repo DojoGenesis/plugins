@@ -3,6 +3,20 @@ name: handoff-protocol
 model: sonnet
 description: Produces a structured handoff package (markdown document) containing objective, required context file list, task definition, definition of done, constraints, and next steps for the receiving agent. Use when: 'hand off to the next agent', 'prepare this for handoff', 'is this handoff package complete', 'ensure nothing is lost in the transition'.
 category: agent-orchestration
+
+inputs:
+  - name: objective
+    type: string
+    description: The objective being handed off to the receiving agent
+    required: true
+  - name: context_files
+    type: string[]
+    description: List of context file paths the receiving agent needs
+    required: false
+outputs:
+  - name: handoff_package
+    type: string
+    description: Structured handoff markdown document with objective, context files, task definition, definition of done, and constraints
 ---
 
 # Agent Handoff Protocol Skill

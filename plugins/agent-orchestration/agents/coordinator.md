@@ -4,7 +4,7 @@ description: >
   Agent coordination specialist. Use when creating handoff packages for
   other agents, navigating shared workspaces, teaching knowledge between
   agents, or propagating decisions across the ecosystem.
-tools: Read, Write, Grep, Glob
+tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 memory: project
 skills:

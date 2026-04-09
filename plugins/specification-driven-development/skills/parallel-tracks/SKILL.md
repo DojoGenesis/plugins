@@ -3,6 +3,17 @@ name: parallel-tracks
 model: sonnet
 description: Produces a parallel-tracks execution plan with phased structure, self-contained track specifications, integration contracts, and a mandatory wiring gate. Use when 'split into parallel tracks', 'organize these tracks into phases', or 'plan parallel development for this release'.
 category: specification-driven-development
+
+inputs:
+  - name: spec
+    type: string
+    description: The release specification or feature set to split into parallel tracks
+    required: true
+outputs:
+  - name: parallel_tracks_plan
+    type: ref
+    format: cas-ref
+    description: Parallel-tracks execution plan with phased structure, self-contained track specs, integration contracts, and mandatory wiring gate
 ---
 
 # Parallel Tracks Pattern Skill

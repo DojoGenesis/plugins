@@ -3,6 +3,21 @@ name: implementation-prompt
 model: sonnet
 description: Produces a self-contained implementation prompt document with objective, context grounding, numbered requirements, file manifest, binary success criteria, constraints, and backend grounding — ready for autonomous agent execution. Use when 'write an implementation prompt', 'commission this spec', or 'convert spec to prompt'.
 category: specification-driven-development
+
+inputs:
+  - name: spec
+    type: string
+    description: The specification or feature description to convert into an implementation prompt
+    required: true
+  - name: file_manifest
+    type: string[]
+    description: List of files the implementation agent is authorized to touch
+    required: false
+outputs:
+  - name: implementation_prompt
+    type: ref
+    format: cas-ref
+    description: Self-contained implementation prompt with objective, context grounding, requirements, file manifest, and binary success criteria
 ---
 
 # Transform Spec to Implementation Prompt Skill

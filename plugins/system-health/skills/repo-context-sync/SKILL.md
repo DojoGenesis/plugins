@@ -3,6 +3,16 @@ name: repo-context-sync
 model: sonnet
 description: Produces grounding context summaries — directory structure, recent diffs, and file patterns — from local repository state, enabling more accurate architectural and implementation decisions. Use when: "extract context from this repo", "what changed since last session", "understand the repo structure before writing a prompt", "ground a refactor in actual code state".
 category: system-health
+
+inputs:
+  - name: repo_path
+    type: string
+    description: Path to the repository to extract context from
+    required: true
+outputs:
+  - name: context_summary
+    type: string
+    description: Grounding context summaries with directory structure, recent diffs, and file patterns from local repository state
 ---
 
 # Repo Context Sync

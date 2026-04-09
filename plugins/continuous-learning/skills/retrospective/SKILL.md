@@ -3,6 +3,17 @@ name: retrospective
 model: opus
 description: Produces a Retrospective Document with structured reflection (what went well, what was hard, what to change) and seeds for the memory garden. Use when: 'do a retrospective', 'what did we learn from this sprint', 'reflect on this release', 'harvest the learnings', 'what went well and what was hard'.
 category: continuous-learning
+
+inputs:
+  - name: context
+    type: string
+    description: Description of the sprint, release, or session to reflect on
+    required: false
+outputs:
+  - name: retrospective_document
+    type: ref
+    format: cas-ref
+    description: Retrospective Document with structured reflection (what went well, what was hard, what to change) and memory garden seeds
 ---
 
 # Retrospective Skill

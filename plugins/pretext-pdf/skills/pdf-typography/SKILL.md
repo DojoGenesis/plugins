@@ -3,6 +3,20 @@ name: pdf-typography
 description: Configure Pretext typography settings for PDF export — font stacks, sizing, line height, page geometry, and disposition-driven typography mapping. Use when defaults need tuning for specific content types or audiences.
 model: sonnet
 category: pdf
+
+inputs:
+  - name: content_type
+    type: string
+    description: Content type to tune typography for — prose, code, chat, or structured
+    required: true
+  - name: typography_overrides
+    type: object
+    description: Typography settings to override (font_stack, body_size, line_height, page_size, margins)
+    required: false
+outputs:
+  - name: typography_config
+    type: object
+    description: Resolved Pretext typography configuration object ready for use in pdf-export
 ---
 
 # PDF Typography Skill

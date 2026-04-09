@@ -3,6 +3,20 @@ name: voice-before-structure
 model: sonnet
 description: "Read the project's design language and philosophy before writing structural artifacts. Ground manifests, READMEs, and descriptions in the project's voice, not boilerplate. Use when creating manifests or READMEs for established projects, writing ecosystem-level documentation, building plugin descriptions or marketplace metadata, or authoring metadata that carries a project's identity. Trigger phrases: 'write the manifest', 'create a README', 'describe this plugin', 'ground yourself in the philosophy', 'ecosystem-level work'."
 category: wisdom-garden
+
+inputs:
+  - name: project_context
+    type: string
+    description: Description of the project whose design language and philosophy to read before writing
+    required: true
+  - name: artifact_type
+    type: string
+    description: Type of artifact to produce — manifest, README, description, or metadata
+    required: false
+outputs:
+  - name: voiced_artifact
+    type: string
+    description: Project-voice-grounded artifact (manifest, README, description, or metadata) written in the established design language
 ---
 
 # Voice Before Structure

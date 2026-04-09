@@ -3,6 +3,17 @@ name: product-positioning
 model: opus
 description: Produces a reframed product positioning — a before/after statement that replaces a keep-or-kill decision with a complementary role for the product — plus a set of strategic routes that leverage that role. Use when: "should we deprecate X now that we have Y", "this feature feels redundant", "we can't decide whether to keep this product", "two things in our portfolio seem to overlap".
 category: strategic-thinking
+
+inputs:
+  - name: product_tension
+    type: string
+    description: The keep-or-kill decision or overlap tension to resolve through positioning
+    required: true
+outputs:
+  - name: positioning_document
+    type: ref
+    format: cas-ref
+    description: Reframed product positioning with before/after statement and strategic routes leveraging the complementary role
 ---
 
 # Product Positioning Scout Skill

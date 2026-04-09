@@ -4,6 +4,21 @@ model: sonnet
 description: Produces a complete SKILL.md packaged as a .skill file ready for CAS distribution. Use when: "create a new skill", "write a skill", "build a skill for this workflow", "turn this into a skill", "upgrade this to a skill".
 license: Complete terms in LICENSE.txt
 category: skill-forge
+
+inputs:
+  - name: skill_description
+    type: string
+    description: Description of the workflow or domain to formalize into a skill
+    required: true
+  - name: usage_examples
+    type: string[]
+    description: Concrete usage scenarios for the skill (1-3 examples)
+    required: false
+outputs:
+  - name: skill_package
+    type: ref
+    format: cas-ref
+    description: Complete SKILL.md packaged as a .skill file ready for CAS distribution
 ---
 
 # Skill Creator

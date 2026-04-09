@@ -3,6 +3,20 @@ name: agent-teaching
 model: sonnet
 description: Produces a peer-voiced teaching document (learning guide, letter, reflection, or protocol) that transfers a skill or insight without creating an expert-to-student dynamic. Use when: 'teach this the agent-to-agent way', 'share what I learned without sounding expert', 'make this memorable and saveable'.
 category: agent-orchestration
+
+inputs:
+  - name: insight_or_skill
+    type: string
+    description: The insight, skill, or pattern to transfer peer-to-peer
+    required: true
+  - name: target_format
+    type: string
+    description: Output format — learning_guide, letter, reflection, or protocol
+    required: false
+outputs:
+  - name: teaching_document
+    type: string
+    description: Peer-voiced teaching document (learning guide, letter, reflection, or protocol)
 ---
 
 # Agent-to-Agent Teaching Protocol

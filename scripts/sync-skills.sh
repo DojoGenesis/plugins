@@ -3,7 +3,7 @@
 # Usage: ./sync-skills.sh [--dry-run] [--report-only]
 #
 # Authority Model:
-#   Tier 1 (canonical): dojo-genesis/skills/, claudeplugins/*/skills/
+#   Tier 1 (canonical): dojo-genesis/skills/, CoworkPluginsByDojoGenesis/plugins/*/skills/
 #   Tier 2 (distribution): AgenticGatewayByDojoGenesis/plugins/*/skills/,
 #                           MCPByDojoGenesis/internal/skills/bundled/*/
 #
@@ -14,7 +14,7 @@ set -euo pipefail
 # --- Configuration ---
 BASE="/Users/alfonsomorales/ZenflowProjects"
 CANONICAL_DOJO="$BASE/dojo-genesis/skills"
-CANONICAL_PLUGINS="$BASE/claudeplugins"
+CANONICAL_PLUGINS="$BASE/CoworkPluginsByDojoGenesis/plugins"
 GATEWAY="$BASE/AgenticGatewayByDojoGenesis/plugins"
 MCP="$BASE/MCPByDojoGenesis/internal/skills/bundled"
 REPORT_DIR="$BASE/AgenticStackOrchestration/docs/sync-reports"
@@ -55,6 +55,29 @@ skill_hash() {
 # --- Helper: get line count ---
 skill_lines() {
     wc -l < "$1" | tr -d ' '
+}
+
+# --- Helper: get content-normalized line count for direction comparison ---
+# Strips old-format YAML noise that inflates distribution skill line counts:
+#   - Copyright / license comment lines (^# Copyright, ^# Licensed)
+#   - metadata: YAML block (key + all indented child lines)
+#   - inputs: YAML block (key + all indented child lines)
+#   - outputs: YAML block (key + all indented child lines)
+#   - triggers: YAML block (key + all indented child lines) — frontmatter metadata
+#   - model:, category:, version:, created:, author: single-line YAML keys
+# Use this for the sync-vs-backport direction decision only.
+# Use skill_lines() for the human-readable table output.
+skill_content_lines() {
+    local file="$1"
+    awk '
+        /^# Copyright/ { next }
+        /^# Licensed/ { next }
+        /^(metadata|inputs|outputs|triggers):/ { in_block=1; next }
+        in_block && /^[[:space:]]/ { next }
+        in_block { in_block=0 }
+        /^(model|category|version|created|author):/ { next }
+        { print }
+    ' "$file" | grep -c '.'
 }
 
 # --- Helper: look up canonical path for a skill name ---
@@ -106,7 +129,7 @@ validate_skill() {
 # --- Build canonical skill index ---
 echo "[1/4] Building canonical skill index..."
 
-# Index claudeplugins (plugin-organized skills) — takes priority
+# Index CoworkPluginsByDojoGenesis (plugin-organized skills) — takes priority
 for plugin_dir in "$CANONICAL_PLUGINS"/*/; do
     plugin_name=$(basename "$plugin_dir")
     skills_dir="$plugin_dir/skills"
@@ -181,11 +204,20 @@ EOF
                 hash_target=$(skill_hash "$target_file")
                 match="No"
 
+                # Use content-normalized line counts for the direction decision.
+                # Old-format distribution skills carry YAML noise (metadata:, inputs:,
+                # outputs:, model:, category:, copyright comments) that inflates their
+                # raw line count relative to audited canonical skills. Comparing raw
+                # counts causes every noise-inflated skill to be flagged as a
+                # BACK-PORT CANDIDATE even when the canonical version is actually richer.
+                canonical_content=$(skill_content_lines "$canonical_file")
+                target_content=$(skill_content_lines "$target_file")
+
                 if [ "$hash_canonical" = "$hash_target" ]; then
                     action="In sync"
                     match="Yes"
                     inc skipped
-                elif [ "$canonical_lines" -ge "$target_lines" ]; then
+                elif [ "$canonical_content" -ge "$target_content" ]; then
                     action="Sync from canonical"
                     if [ "$DRY_RUN" = false ]; then
                         # Validate canonical BEFORE copying
@@ -216,7 +248,7 @@ EOF
                 else
                     action="BACK-PORT CANDIDATE"
                     inc backport
-                    echo "    WARN: $skill_name ($plugin_name) is $((target_lines - canonical_lines)) lines richer"
+                    echo "    WARN: $skill_name ($plugin_name) is $((target_lines - canonical_lines)) lines richer (content: +$((target_content - canonical_content)))"
                 fi
 
                 echo "| $skill_name | $plugin_name | $action | $canonical_lines | $target_lines | $match |" >> "$REPORT"

@@ -1,0 +1,13 @@
+{
+  "SessionEnd": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Did this session involve strategic scouting, positioning analysis, or multi-surface strategy work? If yes, respond with {\"ok\": true} and print a 1-2 sentence summary of the key strategic output to stdout for the session log. If no strategic work occurred, just respond with {\"ok\": true}.",
+          "model": "claude-haiku-4-5"
+        }
+      ]
+    }
+  ]
+}

@@ -3,6 +3,17 @@ name: web-research
 model: sonnet
 description: Produces a structured Research Summary document (findings, sources, attributions) from targeted web queries using Brave Search and web_fetch. Use when: 'research this online', 'find current information about X', 'verify this claim', 'gather sources on Y', 'search for what the field says about Z'.
 category: continuous-learning
+
+inputs:
+  - name: query
+    type: string
+    description: The research question or topic to investigate online
+    required: true
+outputs:
+  - name: research_summary
+    type: ref
+    format: cas-ref
+    description: Structured Research Summary document with findings, sources, and attributions from web queries
 ---
 
 # Web Research Skill

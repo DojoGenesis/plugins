@@ -4,6 +4,16 @@ model: sonnet
 description: Produces a CLAUDE.md health report listing conflicts, redundancies, and stale rules across the global, project, and subdirectory hierarchy — and optionally installs a PreToolUse hook to block unauthorized modifications. Use when: "agent behavior is inconsistent", "just merged branches that touched CLAUDE.md", "onboarding a new agent", "after applying learnings", "weekly maintenance".
 license: proprietary
 category: system-health
+
+inputs:
+  - name: context
+    type: string
+    description: Trigger context — branch merge, onboarding, weekly maintenance, or behavior inconsistency
+    required: false
+outputs:
+  - name: health_report
+    type: string
+    description: CLAUDE.md health report listing conflicts, redundancies, and stale rules across global, project, and subdirectory hierarchy
 ---
 
 # CLAUDE.md Guardian

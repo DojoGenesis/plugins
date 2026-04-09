@@ -3,6 +3,17 @@ name: spec-constellation-to-prompt-suite
 model: sonnet
 description: Produces a suite of coordinated, self-contained implementation prompts and a master integration contract table from a set of interconnected specs. Use when 'convert specs to prompts', 'ready to commission these specs', or 'coordinate these parallel tracks into executable prompts'.
 category: specification-driven-development
+
+inputs:
+  - name: spec_files
+    type: string[]
+    description: Paths to interconnected specification files to convert into prompts
+    required: true
+outputs:
+  - name: prompt_suite
+    type: ref
+    format: cas-ref
+    description: Suite of coordinated, self-contained implementation prompts and master integration contract table
 ---
 
 ## I. The Philosophy

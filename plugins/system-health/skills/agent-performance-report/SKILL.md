@@ -4,6 +4,16 @@ model: sonnet
 description: Produces an aggregated markdown performance report from stored trace data — tool call metrics, token usage, cost, bottlenecks, and numbered recommendations. Use when: "session cost report", "what ran this week", "why did this spike", "end-of-sprint performance review", "budget alert fired".
 license: proprietary
 category: system-health
+
+inputs:
+  - name: time_period
+    type: string
+    description: Time period for the report (e.g. this week, this sprint, today)
+    required: false
+outputs:
+  - name: performance_report
+    type: string
+    description: Aggregated markdown performance report with tool call metrics, token usage, cost, bottlenecks, and numbered recommendations
 ---
 
 ## I. Philosophy

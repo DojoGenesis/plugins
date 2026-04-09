@@ -3,6 +3,17 @@ name: strategic-scout
 model: opus
 description: Produces a scout document containing a stated tension, 3-5 distinct routes with tradeoffs, and a recommended direction with rationale — the first artifact in a four-step pipeline (scout → spec → prompts → commission). Use when: "we don't know which direction to take", "scout our options before we commit", "what are the tradeoffs here", "we're stuck between competing priorities", "I need routes before writing a spec".
 category: strategic-thinking
+
+inputs:
+  - name: tension
+    type: string
+    description: The strategic tension or decision point to scout routes for
+    required: true
+outputs:
+  - name: scout_document
+    type: ref
+    format: cas-ref
+    description: Scout document with stated tension, 3-5 distinct routes with tradeoffs, and recommended direction with rationale
 ---
 
 # Strategic Scout Skill

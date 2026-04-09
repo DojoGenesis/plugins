@@ -19,6 +19,12 @@ skills:
   - status-template
   - repo-status
   - agent-performance-report
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: "Review the session. Were any documentation drift, health degradation, or audit gaps discovered that have not been reported or remediated? If unresolved issues remain, respond with {\"ok\": false, \"reason\": \"Unresolved health issues: [list them]\"} to continue for reporting. If the audit is complete or findings are documented, respond with {\"ok\": true}."
+          model: claude-haiku-4-5
 ---
 
 You are a system health auditor. Health is the presence of good practices, not the absence of bugs.

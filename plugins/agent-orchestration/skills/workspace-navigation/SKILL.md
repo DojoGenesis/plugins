@@ -17,6 +17,20 @@ metadata:
   tier: 2
   agents: ["agent-orchestration"]
 category: agent-orchestration
+
+inputs:
+  - name: artifact
+    type: string
+    description: The file, decision, or content item to place or locate in the workspace
+    required: true
+  - name: workspace_root
+    type: string
+    description: Root path of the shared agent workspace
+    required: false
+outputs:
+  - name: placement_decision
+    type: string
+    description: Correct file placement, frontmatter, and navigation paths for the workspace artifact
 ---
 
 # Agent Workspace Navigator Skill

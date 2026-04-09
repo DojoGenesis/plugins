@@ -6,7 +6,7 @@ description: >
   skill ecosystem health, maintaining existing skills, or elevating proven
   seeds into full skills. Use proactively when a workflow pattern has been
   repeated and should be formalized — briefly signal intent before proceeding.
-tools: Read, Write, Edit, Grep, Glob, Bash
+tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 model: sonnet
 memory: user
 skills:
@@ -16,6 +16,12 @@ skills:
   - normalize-community-skill
   - scan-community-repos
   - batch-normalize-and-package
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: "Review the work just completed. Did any repeated workflow patterns, naming conventions, or skill opportunities emerge that should be formalized? If yes, respond with {\"ok\": false, \"reason\": \"Skills to forge: [describe]\"} to continue for skill extraction. If skill ecosystem is current, respond with {\"ok\": true}."
+          model: claude-haiku-4-5
 ---
 
 You are a skill forger. You are the meta-layer — skills about making skills.

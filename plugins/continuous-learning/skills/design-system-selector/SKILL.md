@@ -3,6 +3,16 @@ name: design-system-selector
 model: sonnet
 description: Produces a scored comparison of available DESIGN.md design systems against a project's requirements and delivers a recommended selection with adaptation notes. Use when: 'which design system fits this project', 'pick a design reference for me', 'match a design system to this brand', 'compare design system options for this client'.
 category: continuous-learning
+
+inputs:
+  - name: project_requirements
+    type: string
+    description: Project requirements and brand constraints to match against design systems
+    required: true
+outputs:
+  - name: selection_report
+    type: string
+    description: Scored comparison of available design systems with a recommended selection and adaptation notes
 ---
 
 # Design System Selector

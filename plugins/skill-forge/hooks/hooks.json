@@ -1,0 +1,39 @@
+{
+  "PreToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/batch-preflight.sh\"",
+          "async": false,
+          "if": "Bash(* batch-normalize*)"
+        }
+      ]
+    }
+  ],
+  "PostToolUse": [
+    {
+      "matcher": "Bash",
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/artifact-tracking.sh\"",
+          "async": true,
+          "if": "Bash(* skill package*)"
+        }
+      ]
+    }
+  ],
+  "ConfigChange": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "The plugin configuration changed during this session. Did any new skills get added, removed, or renamed that might indicate skill ecosystem drift? If yes, respond with {\"ok\": false, \"reason\": \"Skills changed: [describe]\"} to continue for a drift check. If the change was expected, respond with {\"ok\": true}.",
+          "model": "claude-haiku-4-5"
+        }
+      ]
+    }
+  ]
+}

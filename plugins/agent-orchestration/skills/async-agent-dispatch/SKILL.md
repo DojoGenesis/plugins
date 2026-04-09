@@ -3,6 +3,20 @@ name: async-agent-dispatch
 model: sonnet
 description: Produces a structured background-dispatch handoff — task description, output contract, success criteria, and timeout — so long-running work completes without blocking the user. Use when: "run this in the background", "dispatch agent for long task", "I need this to run async", "parallel agent dispatch".
 category: agent-orchestration
+
+inputs:
+  - name: task_description
+    type: string
+    description: Description of the long-running task to dispatch
+    required: true
+  - name: expected_duration_minutes
+    type: number
+    description: Estimated task duration in minutes
+    required: false
+outputs:
+  - name: dispatch_plan
+    type: string
+    description: Structured handoff block with task description, output contract, success criteria, and timeout
 ---
 
 # Async Agent Dispatch

@@ -3,6 +3,17 @@ name: multi-surface-strategy
 model: opus
 description: Produces a feature-to-surface mapping table, handoff design, and business model for a product spanning multiple platforms (desktop, mobile, web, CLI, etc.), where each surface has a distinct role rather than duplicating the others. Use when: "we need a desktop and mobile version", "what belongs on each surface", "how do users move between our apps", "we're adding a new platform to an existing product".
 category: strategic-thinking
+
+inputs:
+  - name: product_description
+    type: string
+    description: Description of the multi-platform product and its surfaces (desktop, mobile, web, CLI, etc.)
+    required: true
+outputs:
+  - name: surface_strategy
+    type: ref
+    format: cas-ref
+    description: Feature-to-surface mapping table, handoff design, and business model for the multi-surface product
 ---
 
 # Multi-Surface Product Strategy Skill

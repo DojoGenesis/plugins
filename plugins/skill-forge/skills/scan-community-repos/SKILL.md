@@ -4,6 +4,17 @@ model: sonnet
 description: Produces a compatibility catalog — skill-scan-report.md and skill-scan-catalog.json — classifying every SKILL.md in one or more GitHub repos or local paths as ready, normalizable, or incompatible, so you know exactly what normalization work lies ahead before committing to an import. Use when: "scan this repo for skills", "check which skills are dojo-compatible", "audit community skills", "catalog skills from a github repo", "find skill files in this repository", "assess community skill compatibility", "build a skill import report".
 license: Complete terms in LICENSE.txt
 category: skill-forge
+
+inputs:
+  - name: repo_paths
+    type: string[]
+    description: GitHub repo URLs or local paths to scan for SKILL.md files
+    required: true
+outputs:
+  - name: scan_report
+    type: ref
+    format: cas-ref
+    description: Compatibility catalog — skill-scan-report.md and skill-scan-catalog.json — classifying each SKILL.md as ready, normalizable, or incompatible
 ---
 
 # Scan Community Repos

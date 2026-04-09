@@ -3,6 +3,21 @@ name: zenflow-prompt-writer
 model: sonnet
 description: "Produces a structured Zenflow commission document (Objective, Context & Grounding with pattern files, step-by-step Requirements, File Manifest, binary Success Criteria, and explicit Constraints) from a finalized spec, saved to prompts/vX.X.X/. Use when: 'write a Zenflow prompt', 'commission Zenflow for this spec', 'turn this spec into a Zenflow prompt', 'create the implementation prompt for Zenflow'."
 category: specification-driven-development
+
+inputs:
+  - name: spec_path
+    type: string
+    description: Path to the finalized specification to convert into a Zenflow commission document
+    required: true
+  - name: version
+    type: string
+    description: Version string for the prompt (e.g. v3.1.0)
+    required: false
+outputs:
+  - name: zenflow_prompt
+    type: ref
+    format: cas-ref
+    description: Structured Zenflow commission document saved to prompts/vX.X.X/ with objective, context grounding, requirements, file manifest, and success criteria
 ---
 
 # Zenflow Prompt Writer Skill

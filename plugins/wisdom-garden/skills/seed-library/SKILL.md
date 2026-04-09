@@ -3,6 +3,16 @@ name: seed-library
 model: sonnet
 description: Suggests and loads Dojo Seed Patches as reusable thinking modules, producing a ranked seed recommendation with a full application guide. Use when: "which seed applies here", "suggest a seed pattern", "apply a seed to this", "what pattern should we use", "load the seed library".
 category: wisdom-garden
+
+inputs:
+  - name: context
+    type: string
+    description: The current situation or problem context to match against seed patterns
+    required: true
+outputs:
+  - name: seed_recommendation
+    type: string
+    description: Ranked seed recommendation with full application guide for the current context
 ---
 
 # Seed Module Library

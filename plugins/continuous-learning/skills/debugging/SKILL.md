@@ -3,6 +3,20 @@ name: debugging
 model: sonnet
 description: Produces a Debug Report documenting root cause, fix applied, and lessons learned through systematic hypothesis testing. Use when: 'debug this error', 'why is this failing', 'investigate the issue', 'find the root cause', 'fix this bug systematically'.
 category: continuous-learning
+
+inputs:
+  - name: error_description
+    type: string
+    description: Description of the error or failing behavior to debug
+    required: true
+  - name: context
+    type: string
+    description: Additional context — stack traces, logs, reproduction steps
+    required: false
+outputs:
+  - name: debug_report
+    type: string
+    description: Debug Report documenting root cause, fix applied, and lessons learned
 ---
 
 # Debugging & Troubleshooting Skills

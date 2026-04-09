@@ -3,6 +3,17 @@ name: status-template
 model: sonnet
 description: Produces a comprehensive `.status.md` file using a 10-section schema that bridges heartbeat (current state), anatomy (directory structure), and checkup (health assessment) perspectives into one document. Use when: "write a status report", "give me the lay of the land", "where are we right now", "prepare a handoff document", "document the current codebase state".
 category: system-health
+
+inputs:
+  - name: repo_path
+    type: string
+    description: Path to the repository or project to write status for
+    required: true
+outputs:
+  - name: status_file
+    type: ref
+    format: cas-ref
+    description: Comprehensive .status.md using a 10-section schema bridging heartbeat, anatomy, and checkup perspectives
 ---
 
 # Status Template Skill

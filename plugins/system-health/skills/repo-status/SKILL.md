@@ -3,6 +3,17 @@ name: repo-status
 model: sonnet
 description: Produces a comprehensive `.status.md` status document combining filesystem exploration, semantic clusters, file importance ranking, and health assessment — a single artifact any agent or human can use as the starting point for a project. Use when: "give me a complete repo overview", "understand this codebase", "create a system map", "build a mental model", "prepare a handoff document".
 category: system-health
+
+inputs:
+  - name: repo_path
+    type: string
+    description: Path to the repository to generate a status document for
+    required: true
+outputs:
+  - name: status_document
+    type: ref
+    format: cas-ref
+    description: Comprehensive .status.md combining filesystem exploration, semantic clusters, file importance ranking, and health assessment
 ---
 
 # Repo Status Skill

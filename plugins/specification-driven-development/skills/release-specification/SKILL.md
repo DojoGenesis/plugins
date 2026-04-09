@@ -3,6 +3,21 @@ name: release-specification
 model: opus
 description: Produces a production-ready release specification document (Full or Lean format) including current-state audit, technical architecture with code examples, implementation plan, and risk assessment. Use when 'write a release spec', 'create a release specification for vX.X.X', or 'ground this spec in the codebase'.
 category: specification-driven-development
+
+inputs:
+  - name: release_context
+    type: string
+    description: Description of what the release should accomplish (version, goals, scope)
+    required: true
+  - name: format
+    type: string
+    description: Specification format — Full, Lean, or Minimal
+    required: false
+outputs:
+  - name: release_spec
+    type: ref
+    format: cas-ref
+    description: Production-ready release specification document with current-state audit, architecture, implementation plan, and risk assessment
 ---
 
 # Write Release Specification Skill

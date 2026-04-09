@@ -3,6 +3,17 @@ name: seed-extraction
 model: opus
 description: Produces a seed file — a YAML-fronted markdown document capturing a reusable pattern with trigger, evidence, and application steps — from a conversation or project experience. Use when: "extract the learnings", "turn this into a seed", "what can we learn from this", "capture this insight", "document this pattern".
 category: wisdom-garden
+
+inputs:
+  - name: experience
+    type: string
+    description: Description of the conversation, project, or experience to extract a reusable pattern from
+    required: true
+outputs:
+  - name: seed_file
+    type: ref
+    format: cas-ref
+    description: Seed file capturing a reusable pattern with trigger, evidence, and application steps
 ---
 
 # Seed Reflector Skill

@@ -15,6 +15,20 @@ metadata:
   tier: 1
   agents: ["agent-orchestration"]
 category: agent-orchestration
+
+inputs:
+  - name: work_description
+    type: string
+    description: Description of the multi-agent parallel work to plan
+    required: true
+  - name: track_count
+    type: number
+    description: Target number of parallel tracks (default auto-selected)
+    required: false
+outputs:
+  - name: dispatch_plan
+    type: string
+    description: Dispatch plan with isolation model, agent count, sequencing, and model assignments
 ---
 
 # Agent Dispatch Playbook

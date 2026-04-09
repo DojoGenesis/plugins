@@ -3,6 +3,21 @@ name: research-modes
 model: opus
 description: Produces a Research Brief (deep mode) or Landscape Map (wide mode) document synthesizing findings into actionable recommendations. Use when: 'research this topic deeply', 'map the landscape of X', 'investigate and synthesize', 'do a wide scan of the competitive space', 'I need to understand before deciding'.
 category: continuous-learning
+
+inputs:
+  - name: topic
+    type: string
+    description: The research topic or question to investigate
+    required: true
+  - name: mode
+    type: string
+    description: Research mode — deep (Research Brief) or wide (Landscape Map)
+    required: false
+outputs:
+  - name: research_document
+    type: ref
+    format: cas-ref
+    description: Research Brief (deep mode) or Landscape Map (wide mode) with findings and actionable recommendations
 ---
 
 # Research Modes Skill

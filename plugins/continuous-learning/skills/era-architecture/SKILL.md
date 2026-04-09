@@ -3,6 +3,21 @@ name: era-architecture
 model: opus
 description: Produces an Era Master Plan document defining shared vocabulary, architectural constraints, and a release roadmap across 3-7 releases. Use when: 'plan this era', 'define the architecture for multiple releases', 'create a multi-release vision', 'transition to a new product era', 'establish conceptual coherence across releases'.
 category: continuous-learning
+
+inputs:
+  - name: era_description
+    type: string
+    description: High-level description of the product era and its goals
+    required: true
+  - name: release_count
+    type: number
+    description: Number of releases to plan across (3-7)
+    required: false
+outputs:
+  - name: era_master_plan
+    type: ref
+    format: cas-ref
+    description: Era Master Plan document defining shared vocabulary, architectural constraints, and release roadmap
 ---
 
 # era-architecture

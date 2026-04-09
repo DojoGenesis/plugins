@@ -3,6 +3,17 @@ name: status-writing
 model: sonnet
 description: Produces an updated STATUS.md file as a single source of truth for project health — covering current state, active workstreams, blockers, and next steps. Use when: "create a status file", "update the project status", "document where we are", "what's the current state", "create a status dashboard".
 category: system-health
+
+inputs:
+  - name: project_context
+    type: string
+    description: Current project context — what was done, what is active, what is blocked
+    required: false
+outputs:
+  - name: status_document
+    type: ref
+    format: cas-ref
+    description: Updated STATUS.md as a single source of truth covering current state, active workstreams, blockers, and next steps
 ---
 
 # Status Writer Skill

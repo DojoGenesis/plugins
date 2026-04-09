@@ -4,6 +4,17 @@ model: sonnet
 description: Produces an enriched SKILL.md with all six Dojo SkillRegistry.IsValid() fields populated — name, description, tier, agents, tool_dependencies, and trigger phrases — inferred from the existing body without rewriting it. Use when: "normalize this skill", "make this skill dojo-compatible", "import a community skill", "enrich skill frontmatter", "fix skill registry validation", "prepare skill for dojo", "community skill is missing fields".
 license: Complete terms in LICENSE.txt
 category: skill-forge
+
+inputs:
+  - name: skill_path
+    type: string
+    description: Path to the community SKILL.md file to normalize
+    required: true
+outputs:
+  - name: normalized_skill
+    type: ref
+    format: cas-ref
+    description: Enriched SKILL.md with all six Dojo SkillRegistry.IsValid() fields populated
 ---
 
 # Normalize Community Skill

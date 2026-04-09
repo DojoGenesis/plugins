@@ -3,6 +3,21 @@ name: specification-writer
 model: opus
 description: "Produces a format-calibrated specification document — Full (5,000-15,000 words, all sections), Lean (1,000-3,000 words, agent-ready), or Minimal (delta + code examples) — matched to the scope and audience of the request. Use when: 'write a spec for this feature', 'spec out this release', 'design the architecture for X', 'document this for the implementation agent'."
 category: specification-driven-development
+
+inputs:
+  - name: feature_description
+    type: string
+    description: Description of the feature, release, or system to specify
+    required: true
+  - name: format
+    type: string
+    description: Specification format — Full (5000-15000 words), Lean (1000-3000 words), or Minimal (delta + code examples)
+    required: false
+outputs:
+  - name: specification
+    type: ref
+    format: cas-ref
+    description: Format-calibrated specification document matched to the scope and audience of the request
 ---
 
 # Specification Writer Skill

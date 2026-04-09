@@ -1,0 +1,24 @@
+{
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Review the conversation transcript. Did any significant insights, corrections, user preferences, or project decisions emerge during this session that are not yet captured in memory? If yes, respond with {\"ok\": false, \"reason\": \"Uncaptured insights: [list them briefly]\"} to continue the session for memory gardening. If memory is current or the session had no memorable learnings, respond with {\"ok\": true}.",
+          "model": "claude-haiku-4-5"
+        }
+      ]
+    }
+  ],
+  "PostCompact": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/log-compact-event.sh\"",
+          "async": true
+        }
+      ]
+    }
+  ]
+}

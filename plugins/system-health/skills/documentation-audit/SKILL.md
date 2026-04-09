@@ -3,6 +3,17 @@ name: documentation-audit
 model: sonnet
 description: Produces a committed audit log file enumerating documentation drift — inaccuracies, broken links, missing sections, and outdated information — with severity ratings and action taken. Use when: "docs seem out of date", "audit the documentation", "is the README accurate", "check for broken links", "before onboarding a new team member".
 category: system-health
+
+inputs:
+  - name: docs_path
+    type: string
+    description: Path to the documentation directory or file to audit
+    required: true
+outputs:
+  - name: audit_log
+    type: ref
+    format: cas-ref
+    description: Committed audit log enumerating documentation drift — inaccuracies, broken links, missing sections — with severity ratings and action taken
 ---
 
 # Documentation Auditor Skill

@@ -4,6 +4,16 @@ model: sonnet
 description: Produces structured OTEL-compatible log entries and a session summary (call counts, success rate, cost, top tools by cost and frequency) for all tool executions within a session. Use when: "log tool calls for this session", "debug unexpected tool selection", "audit token cost by tool", "validate a new MCP integration", "build a session summary for handoff".
 license: proprietary
 category: system-health
+
+inputs:
+  - name: session_context
+    type: string
+    description: Session identifier or context for the logging run
+    required: false
+outputs:
+  - name: session_log
+    type: string
+    description: Structured OTEL-compatible log entries and session summary with call counts, success rate, cost, and top tools
 ---
 
 ## I. Philosophy

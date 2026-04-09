@@ -4,6 +4,17 @@ model: sonnet
 description: Produces a signed distribution manifest and CAS-packaged skill set by orchestrating the full community-to-Dojo pipeline: shallow-clone repos, scan for compatibility, normalize frontmatter in parallel batches of 10, package via dojo CLI, and emit manifest.json with source attribution for every entry. Use when: "import community skills", "batch normalize skills", "package skills from repos", "onboard external skills", "run the skill supply chain".
 license: Complete terms in LICENSE.txt
 category: skill-forge
+
+inputs:
+  - name: repo_urls
+    type: string[]
+    description: GitHub repository URLs or local paths containing community skills to import
+    required: true
+outputs:
+  - name: distribution_manifest
+    type: ref
+    format: cas-ref
+    description: Signed distribution manifest and CAS-packaged skill set with source attribution for every entry
 ---
 
 # Batch Normalize and Package

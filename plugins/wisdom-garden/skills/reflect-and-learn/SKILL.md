@@ -4,6 +4,16 @@ model: sonnet
 description: Captures user corrections from a session, validates them semantically, and writes approved learnings to the most specific persistence target (skill file, project CLAUDE.md, or global CLAUDE.md). Use when: "remember this for next time", "don't do that again", "update your behavior", "capture this correction", "reflect on what we learned".
 license: proprietary
 category: wisdom-garden
+
+inputs:
+  - name: corrections
+    type: string[]
+    description: User corrections or learnings from the session to validate and persist
+    required: true
+outputs:
+  - name: persisted_learnings
+    type: string
+    description: Approved learnings written to the most specific persistence target — skill file, project CLAUDE.md, or global CLAUDE.md
 ---
 
 # Reflect and Learn

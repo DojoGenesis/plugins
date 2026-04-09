@@ -99,21 +99,6 @@ tail -f .claude/cache/<batch>-status.txt
 - Wait for batch to complete before launching next
 - Use status file to track which completed
 
-## Integration Gate [MANDATORY]
-
-After all agents in a batch complete, ask the user:
-> _"All agents are done. Proceed with integration/wiring now, or defer?"_
-
-If deferred: document the open integration tasks and stop. Do **not** declare the work complete.
-
-If proceeding:
-1. Verify compilation gates pass across all touched modules
-2. Confirm wiring: every built component has a reachable entry point, call graphs traced, no orphaned output
-3. Run integration tests against the combined output
-4. Fix mismatches before marking the batch complete
-
-Parallel agents produce isolated work units. Nothing is "done" until the outputs are wired together and verified end-to-end.
-
 ## DO
 
 - Use `run_in_background: true` always

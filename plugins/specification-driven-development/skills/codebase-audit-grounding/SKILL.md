@@ -3,6 +3,16 @@ name: codebase-audit-grounding
 model: sonnet
 description: "Produces a quantified current-state report (test count, aria markers, error boundaries, storage usage, dependencies) used to anchor specifications in measured reality rather than assumptions. Use when: 'audit the codebase before speccing', 'ground this spec in reality', 'what does the code actually look like', 'measure before I write the spec'."
 category: specification-driven-development
+
+inputs:
+  - name: repo_path
+    type: string
+    description: Path to the codebase to audit before specification
+    required: true
+outputs:
+  - name: audit_report
+    type: string
+    description: Quantified current-state report with test count, aria markers, error boundaries, storage usage, and dependencies
 ---
 
 # Codebase Audit Grounding

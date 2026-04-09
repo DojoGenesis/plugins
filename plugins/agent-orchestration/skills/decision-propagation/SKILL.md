@@ -3,6 +3,20 @@ name: decision-propagation
 model: opus
 description: Produces a set of surgical edits across all documents affected by an architectural decision, plus a decisions block in STATUS.md that serves as the coherence checkpoint. Use when: 'propagate this decision through the system', 'trace where this decision echoes', 'this decision changes the scope — where else must it flow'.
 category: agent-orchestration
+
+inputs:
+  - name: decision
+    type: string
+    description: The architectural decision to propagate through the system
+    required: true
+  - name: affected_docs
+    type: string[]
+    description: List of document paths known to be affected
+    required: false
+outputs:
+  - name: propagation_edits
+    type: string
+    description: Set of surgical edits across affected documents and STATUS.md decisions block
 ---
 
 # Decision-Propagation Protocol

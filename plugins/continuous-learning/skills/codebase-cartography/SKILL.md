@@ -4,6 +4,16 @@ model: sonnet
 description: Produces a structured codebase map — directory roles, entry points, dependency graph, architectural patterns, and dragon locations — for any unfamiliar repository. Use when: 'map this codebase for me', 'I need to understand this repo before I start', 'give me a reading order for this project', 'where are the dragons in this code'.
 license: proprietary
 category: continuous-learning
+
+inputs:
+  - name: repo_path
+    type: string
+    description: Path to the repository root to map
+    required: true
+outputs:
+  - name: codebase_map
+    type: string
+    description: Structured codebase map with directory roles, entry points, dependency graph, architectural patterns, and dragon locations
 ---
 
 # Codebase Cartography

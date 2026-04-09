@@ -3,6 +3,16 @@ name: granular-visibility
 model: sonnet
 description: Produces a granular todo list where each item maps to one discrete deliverable or decision point, maintained at real-time accuracy throughout execution. Use when: 'what is the status', 'too many items in the list', 'simplify the progress tracking', 'long todo list'.
 category: agent-orchestration
+
+inputs:
+  - name: task_list
+    type: string
+    description: The current task list or work description to track
+    required: true
+outputs:
+  - name: todo_list
+    type: string
+    description: Granular todo list where each item maps to one discrete deliverable or decision point
 ---
 
 # Granular Visibility

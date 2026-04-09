@@ -3,6 +3,17 @@ name: process-extraction
 model: sonnet
 description: Produces a complete SKILL.md by extracting and formalizing a workflow that has been executed at least twice, converting implicit procedural knowledge into installable, agent-executable instructions. Use when: "turn this process into a skill", "standardize this workflow", "make this repeatable", "capture this procedure", "formalize this multi-step task".
 category: skill-forge
+
+inputs:
+  - name: process_description
+    type: string
+    description: Description or transcript of the workflow executed at least twice to formalize
+    required: true
+outputs:
+  - name: skill_file
+    type: ref
+    format: cas-ref
+    description: Complete SKILL.md converting the implicit procedural knowledge into installable, agent-executable instructions
 ---
 
 # Process-to-Skill Workflow

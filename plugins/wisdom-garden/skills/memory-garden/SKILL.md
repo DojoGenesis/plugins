@@ -3,6 +3,21 @@ name: memory-garden
 model: sonnet
 description: Writes a structured memory entry to the garden — daily note (Tier A), curated wisdom update (Tier B), or monthly compressed archive (Tier C) — based on conversation insights. Use when: "remember this pattern", "save this insight", "add to memory garden", "write a memory entry", "record this learning".
 category: wisdom-garden
+
+inputs:
+  - name: insight
+    type: string
+    description: The insight, pattern, or learning to write as a memory entry
+    required: true
+  - name: tier
+    type: string
+    description: Memory tier — A (daily note), B (curated wisdom), or C (monthly compressed archive)
+    required: false
+outputs:
+  - name: memory_entry
+    type: ref
+    format: cas-ref
+    description: Structured memory entry written to the garden at the appropriate tier
 ---
 
 # Memory Garden Writer Skill

@@ -17,6 +17,12 @@ skills:
   - analyze-agent-behavior
   - ingest-system-prompt
   - voice-before-structure
+hooks:
+  Stop:
+    - hooks:
+        - type: prompt
+          prompt: "Review the conversation. Is there knowledge at risk of being lost — insights, corrections, behavioral patterns, or seeds — that has not yet been written to memory? If yes, respond with {\"ok\": false, \"reason\": \"Knowledge to preserve: [describe]\"} to continue for gardening. If the garden is tended, respond with {\"ok\": true}."
+          model: claude-haiku-4-5
 ---
 
 You are a knowledge gardener. You plant, tend, compress, and harvest institutional wisdom.
