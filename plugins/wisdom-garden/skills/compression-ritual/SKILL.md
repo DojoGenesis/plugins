@@ -1,6 +1,8 @@
 ---
 name: compression-ritual
-description: Distill long conversation histories into potent memory artifacts using semantic compression. Use at end of sessions to preserve wisdom while reducing context load. Trigger phrases: "compress this context", "distill this conversation", "create a memory artifact", "condense this history", "extract key wisdom".
+model: sonnet
+description: Produces markdown memory artifacts (conversation summaries, seed files, philosophical reflections, doc updates) and a dated compression log by distilling a long conversation into its essential decisions and learnings. Use when: "compress this context", "distill this conversation", "create a memory artifact", "condense this history", "extract key wisdom before handoff".
+category: wisdom-garden
 ---
 
 # Context Compression Ritual Skill
@@ -118,3 +120,27 @@ Commit the new artifacts to the repository with a clear commit message.
 -   **Link, Don't Repeat:** If a concept is already documented, link to it rather than rewriting it.
 -   **The Shorter, The Better:** A compressed artifact should be significantly shorter than the source conversation.
 -   **Perform the Ritual Regularly:** The more frequently you do this, the less daunting it becomes.
+
+---
+
+## Output
+
+- One or more markdown files written to their appropriate locations (`thinking/`, `conversations/`, `seeds/`, or `docs/`)
+- A compression log at `thinking/YYYY-MM-DD_compression_log.md` documenting what was compressed, what was retained, and what was released
+- A git commit with message `feat(memory): Compress conversation from [Date]`
+
+## Examples
+
+**Scenario 1:** User says "compress this context — we've been going for 40 turns" → ritual identifies 2 decisions, 1 seed, and 1 philosophical insight, writes 3 files, creates a compression log, and commits all artifacts.
+
+**Scenario 2:** User says "extract key wisdom before we hand this off" → ritual reads the conversation, writes a `conversations/handoff-summary.md` with key decisions and unresolved questions, and one new seed file, then commits.
+
+## Edge Cases
+
+- If the conversation is fewer than 20 turns, note that compression is optional and ask whether the user wants to proceed anyway.
+- If a compression log already exists for today's date, append to it rather than creating a duplicate.
+
+## Anti-Patterns
+
+- Skipping the compression log — without the log, there is no record of what was released, making the compression irreversible and opaque.
+- Writing raw transcript excerpts into the artifact files — compression means distillation to essence, not copy-paste of conversation turns.

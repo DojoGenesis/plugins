@@ -1,6 +1,8 @@
 ---
 name: seed-to-skill-converter
-description: Elevate a frequently-used Dojo Seed into a fully-fledged reusable Skill with templates and workflows. Use when a seed has proven value and describes a repeatable process. Trigger phrases: "promote this seed to a skill", "convert this seed into a skill", "make this seed into a skill", "formalize this pattern", "turn this seed active".
+model: sonnet
+description: Produces a new SKILL.md file by converting a proven Dojo Seed into a fully-structured skill with philosophy, workflow, templates, and quality checklist. Use when: "promote this seed to a skill", "convert this seed into a skill", "make this seed into a skill", "formalize this pattern", "turn this seed active".
+category: wisdom-garden
 ---
 
 # Seed-to-Skill Converter Skill
@@ -95,3 +97,27 @@ This would likely become a Skill called `mindful-workflow-check`. The workflow w
 -   **Skills Should Be Actionable:** A Skill must describe a *process*. If a Seed is purely a philosophical reminder, it should remain a Seed.
 -   **Skills Require Maintenance:** Once a Seed becomes a Skill, it is part of our formal infrastructure and must be kept up-to-date.
 -   **The Goal is Utility:** The purpose of this conversion is to create a useful instrument. If the resulting Skill is not useful, the conversion has failed.
+
+---
+
+## Output
+
+- A new directory at `SKILLS/[skill-name]/` containing `SKILL.md` with all 5 standard sections (Philosophy, When to Use, Workflow, Best Practices, Quality Checklist)
+- The skill committed to the AROMA repository and copied to `/home/ubuntu/skills/` for immediate availability
+- The original seed file updated with a note pointing to the promoted skill
+
+## Examples
+
+**Scenario 1:** User says "promote the 'Dry-Run as Founding Gate' seed to a skill" → deconstructs the seed's trigger (new scripts), process (run with --dry-run first), and outcome (caught bash crashes before file corruption); writes a `dry-run-gate/SKILL.md` with a 4-step workflow and checklist.
+
+**Scenario 2:** User says "formalize this pattern — we always read before editing, no exceptions" → identifies the pattern as a candidate, checks that it describes a multi-step process (check file exists → read → verify understanding → edit), and produces `read-before-edit/SKILL.md`.
+
+## Edge Cases
+
+- If the seed is purely a philosophical reminder with no concrete steps, explain that it should remain a seed — skills must describe an actionable process, not just a mindset.
+- If a skill already exists in `SKILLS/` that covers the same ground as the seed, compare them and propose merging rather than creating a duplicate skill.
+
+## Anti-Patterns
+
+- Promoting every seed to a skill — most seeds are appropriately lightweight as seeds. Only promote when the pattern has a clear multi-step workflow and is referenced frequently.
+- Writing the skill without verifiable workflow steps — a skill that says "apply good judgment" is not actionable. Every step must be concrete enough to execute without ambiguity.

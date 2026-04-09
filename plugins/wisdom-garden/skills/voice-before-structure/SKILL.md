@@ -1,6 +1,8 @@
 ---
 name: voice-before-structure
+model: sonnet
 description: "Read the project's design language and philosophy before writing structural artifacts. Ground manifests, READMEs, and descriptions in the project's voice, not boilerplate. Use when creating manifests or READMEs for established projects, writing ecosystem-level documentation, building plugin descriptions or marketplace metadata, or authoring metadata that carries a project's identity. Trigger phrases: 'write the manifest', 'create a README', 'describe this plugin', 'ground yourself in the philosophy', 'ecosystem-level work'."
+category: wisdom-garden
 ---
 
 # Voice Before Structure
@@ -85,6 +87,29 @@ Avoid using this when working on utility code or implementation details that don
 - **seed-extraction**: Extracts patterns that become part of the project's voice
 - **specification-writer**: Benefits from voice grounding when writing identity-bearing sections
 - **compression-ritual**: Preserves the "why" that feeds future voice grounding
+
+---
+
+## Output
+
+- The identity-bearing artifact itself (manifest, README, plugin description, marketplace metadata) written in the project's established voice
+- A brief voice-grounding note (1-2 sentences in-line or as a comment) citing which philosophy documents were read and what language was adopted
+
+## Examples
+
+**Scenario 1:** User says "write the manifest for this plugin" on a project that has a PHILOSOPHY.md → reads PHILOSOPHY.md and one other founding doc, then writes `plugin.json` descriptions that use the project's own vocabulary and framing rather than generic boilerplate.
+
+**Scenario 2:** User says "describe this plugin for the marketplace" → reads 2-3 design language docs, identifies core tensions and metaphors, drafts the description, and passes the read-aloud test before finalizing.
+
+## Edge Cases
+
+- If no philosophy documents exist in the project, ask the user for 2-3 sentences describing the project's design philosophy before drafting. Do not invent the voice.
+- If the project has conflicting philosophy documents (e.g., an old VISION.md and a newer README with different framing), surface the conflict to the user before choosing which to ground in.
+
+## Anti-Patterns
+
+- Writing the manifest first and then "adding voice" afterward — voice must inform structure from the start, not be layered on top.
+- Reading too many documents before drafting — more than 3 documents causes analysis paralysis. 2-3 is the ceiling; start drafting.
 
 ---
 

@@ -1,7 +1,9 @@
 ---
 name: analyze-agent-behavior
+model: opus
 description: Map an external AI tool's behavioral patterns to Dojo ADA disposition fields by analyzing its ingested system prompt. Produces a disposition YAML approximation and similarity score against Dojo defaults. Use when understanding how other agents think or when designing new disposition presets. Trigger phrases: "analyze this agent's behavior", "map prompt to disposition", "compare agent behavior", "what disposition does this tool use", "reverse-engineer agent personality".
 license: Complete terms in LICENSE.txt
+category: wisdom-garden
 ---
 
 # Analyze Agent Behavior
@@ -177,3 +179,24 @@ Rationale: {why this combination is interesting}
 - [ ] Analysis report includes all evidence with source quotes
 - [ ] No disposition values assigned without textual evidence
 - [ ] Unspecified fields explicitly marked as such
+
+## Output
+
+- A disposition YAML block (`[tool-name]-inspired` preset) suitable for import into Dojo ADA
+- A markdown analysis report with the disposition matrix table, key behavioral differences, evidence catalog, and similarity score against Dojo defaults
+
+## Examples
+
+**Scenario 1:** User provides a Cursor `.cursorrules` file → skill reads it, maps "be concise" to `pacing: rapid`, "verify before applying" to `validation: thorough`, and produces a `cursor-inspired` YAML preset plus a one-page report with quoted evidence.
+
+**Scenario 2:** User asks "how does Copilot handle errors compared to Dojo?" → loads the ingested Copilot prompt from MemoryStore, extracts error handling signals, compares to Dojo defaults, and produces a two-row comparison table with evidence quotes.
+
+## Edge Cases
+
+- If the ingested prompt has no text for a dimension, mark it `unspecified` with confidence 0.0 — do not default to Dojo values.
+- If fewer than 3 behavioral indicators are found in total, return a partial analysis and flag it as insufficient for a reliable preset.
+
+## Anti-Patterns
+
+- Assigning a disposition value because it "seems right" for a well-known tool rather than because the prompt text supports it — every value requires a quoted source phrase.
+- Silently resolving conflicting signals by picking the higher-confidence one without documenting the conflict — conflicts must appear in the report.

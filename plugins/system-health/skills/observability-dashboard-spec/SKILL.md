@@ -1,7 +1,9 @@
 ---
 name: observability-dashboard-spec
-description: Design an MCP App dashboard specification that maps Gateway SSE events and OTEL spans to real-time visualization widgets. Produces an architectural spec for a multi-agent observability dashboard hosted via the Gateway's MCP Apps infrastructure. Use when planning observability surfaces. Trigger phrases: "design the observability dashboard", "spec the monitoring app", "map events to widgets", "plan the agent dashboard", "create observability MCP app spec".
+model: sonnet
+description: Produces an architectural specification document mapping Gateway SSE events and OTEL spans to named dashboard widgets, a data flow diagram, and an MCP App config — ready to hand to an implementation agent. Use when: "design the observability dashboard", "spec the monitoring app", "map events to widgets", "plan the agent dashboard", "extend the dashboard with new widget types".
 license: Complete terms in LICENSE.txt
+category: system-health
 ---
 
 # Observability Dashboard Spec
@@ -226,3 +228,19 @@ Produce a spec document that includes:
 - [ ] Data flow diagram accounts for SSE disconnection/reconnection
 - [ ] Spec is implementable without external dependencies (vanilla JS)
 - [ ] Estimated bundle size documented and under 50KB gzipped
+
+## Output
+- A spec document containing: widget inventory (name, data source, rendering approach, update mechanism), data flow diagram (SSE to EventSource to widget handlers), MCP App YAML config (permissions, app-only tools, sandbox model), and HTML/CSS/JS architecture notes.
+- Estimated bundle size and browser compatibility documented.
+
+## Examples
+**Scenario 1:** "Design the first observability MCP App for the Gateway" → Full spec document produced with 6 widgets (DAG visualization, token burn-down, tool latency histogram, budget gauges, live event feed, trace waterfall), data flow diagram, MCP App config with 3 permissions, and vanilla JS architecture targeting < 50KB gzipped.
+**Scenario 2:** "Add a new widget for memory hit rate" → Incremental spec update: new `memory_retrieved` event mapped to a rolling hit-rate counter widget in the left panel, event handler signature defined, state slice specified.
+
+## Edge Cases
+- If the SSE connection drops, the spec must account for degraded state: show a "disconnected" banner, keep last-known state visible, and auto-reconnect with exponential backoff — design the spec to handle this explicitly.
+- The two-layer iframe sandbox means all data must pass through postMessage; no direct DOM access across the iframe boundary — widget handlers must be designed accordingly.
+
+## Anti-Patterns
+- Specifying a framework dependency (React, Vue) in a spec destined for a single-file MCP App — the Gateway serves a single HTML file directly; Alpine.js is the maximum acceptable dependency.
+- Designing for polling when SSE provides push — only BudgetTracker state (which has no event emission) should be polled; everything else is push-driven.

@@ -1,6 +1,8 @@
 ---
 name: multi-surface-strategy
-description: Design a coherent multi-surface strategy where desktop, mobile, and web each have unique complementary roles. Use when planning multiple surfaces or adding a new platform. Trigger phrases: 'design the multi-surface strategy', 'map surfaces to contexts not devices', 'what is each surface uniquely good at', 'define the handoffs between surfaces'.
+model: opus
+description: Produces a feature-to-surface mapping table, handoff design, and business model for a product spanning multiple platforms (desktop, mobile, web, CLI, etc.), where each surface has a distinct role rather than duplicating the others. Use when: "we need a desktop and mobile version", "what belongs on each surface", "how do users move between our apps", "we're adding a new platform to an existing product".
+category: strategic-thinking
 ---
 
 # Multi-Surface Product Strategy Skill
@@ -253,6 +255,31 @@ Before delivering the strategy, ensure you can answer "yes" to all of the follow
 - **`parallel-tracks`** - Use this to build multiple surfaces in parallel (if needed)
 
 ---
+
+## Output
+
+- Feature-to-surface mapping table (Markdown table, inline in conversation or saved to `thinking/[product]_surface_map.md`)
+- Handoff design document: sync architecture choice and UX transition patterns per surface pair
+- Business model summary: which surfaces are free/paid, pricing tiers, and phased rollout order
+
+## Examples
+
+**Scenario 1:** "We have a web app and are about to build a desktop app. Should mobile be next?" → Surface audit identifying web's unique job (discovery/onboarding), desktop's job (deep focused work), and a recommendation to defer mobile until desktop v1 ships, with a PWA path to validate mobile demand first.
+
+**Scenario 2:** "Our users complain the desktop and mobile apps feel like completely different products." → Feature-to-surface audit revealing feature overlap (same screens duplicated across both), followed by a re-mapping that strips mobile down to quick-capture and status-check flows and removes them as primary on desktop.
+
+## Edge Cases
+
+- If the product has only one surface today, skip Step 4 (handoff design) and focus Steps 1-3 on what the second surface should uniquely own before committing to build it.
+- If the user already has a clear surface strategy but wants to add a fourth surface (e.g., CLI or voice), run only Steps 2-4 scoped to the new surface — do not re-litigate existing surfaces.
+- If a surface is being retired (not added), redirect to `product-positioning` first to confirm the retirement decision is not a false binary before proceeding.
+
+## Anti-Patterns
+
+- Producing a strategy where every surface has the same primary features — this defeats the purpose of the skill; each surface must have at least one feature the others do not.
+- Designing handoffs without specifying the sync mechanism (real-time vs. eventual consistency vs. manual export) — handoff UX is impossible to evaluate without a concrete sync model.
+- Recommending all surfaces be built simultaneously — this skill should always produce a phased rollout with a single lead surface.
+- Framing surfaces by device type ("the phone app") instead of context of use ("the on-the-go capture surface") — device framing leads to feature parity thinking rather than job-to-be-done differentiation.
 
 ## IX. Skill Metadata
 

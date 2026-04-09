@@ -1,6 +1,8 @@
 ---
 name: era-architecture
-description: Architect multi-release eras with shared vocabulary, architectural constraints, and design language for conceptual coherence. Use when planning major product pivots across multiple releases, defining conceptual architecture before decomposing into releases, or transitioning between product eras. Trigger phrases: 'plan this era', 'define the architecture for multiple releases', 'transition to a new era', 'create a multi-release vision', 'establish conceptual coherence across releases'.
+model: opus
+description: Produces an Era Master Plan document defining shared vocabulary, architectural constraints, and a release roadmap across 3-7 releases. Use when: 'plan this era', 'define the architecture for multiple releases', 'create a multi-release vision', 'transition to a new product era', 'establish conceptual coherence across releases'.
+category: continuous-learning
 ---
 
 # era-architecture
@@ -148,3 +150,36 @@ Before starting the next release, check: do the conceptual architecture constrai
 - [ ] Master plan written as single commissioning document
 - [ ] First release has detailed specs ready for implementation
 - [ ] Constraints are clear enough that any release can check compliance
+
+---
+
+## Output
+
+- An Era Master Plan markdown document saved to the project's `docs/` or `AgenticStackOrchestration/phases/` directory
+- Named: `[era-name]_master_plan.md`
+- Contents: Vision, What Came Before, Conceptual Architecture, Release Roadmap table, Dependency Graph, Constraints, Parallel Track Allocation, Commissioned Specifications, Next Steps
+
+---
+
+## Examples
+
+**Scenario 1:** "Plan the Fresh Shell era across 5 releases" → Era Master Plan with named conceptual architecture (metaphors, design language, data model), 5 releases defined with themes and dependencies, dependency graph showing Release 1 as blocking, Releases 3-5 as parallelizable
+
+**Scenario 2:** "We need to transition from the engine-building era to the social layer era" → Era Master Plan capturing what the engine era accomplished, what carries forward, and the new era's conceptual architecture for social features across 3 releases
+
+---
+
+## Edge Cases
+
+- **Only 1-2 releases planned:** This is a single-release scope, not an era — use `strategic-scout` + `parallel-tracks` instead
+- **Team disagrees on conceptual vocabulary during Step 3:** Surface the disagreement as an open decision, do not proceed to Step 4 until it is resolved — unresolved vocabulary disagreements invalidate downstream release plans
+- **First release's specs are not complete before commissioning begins:** Block commissioning until specs exist; attempting to build Release 1 without detailed specs turns the era plan into a wish list
+
+---
+
+## Anti-Patterns
+
+- Defining releases first and then trying to extract a conceptual architecture — architecture must precede decomposition, not follow it
+- Writing a master plan that changes with every release — the conceptual architecture should be stable; only the "Next Steps" and "Commissioned Specifications" sections evolve
+- Using era-architecture for a single feature or a bug-fix sprint — the overhead is only justified when shared architectural decisions span 3+ releases
+- Over-specifying later releases before earlier releases validate the architecture in practice — save detailed specs for when the patterns are proven

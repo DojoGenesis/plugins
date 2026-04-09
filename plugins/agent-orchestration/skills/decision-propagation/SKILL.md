@@ -1,6 +1,8 @@
 ---
 name: decision-propagation
-description: Record architectural decisions at source and propagate their effects through all dependent documents. Use when decisions arrive that answer open questions or change scope. Trigger phrases: 'propagate this decision through the system', 'trace where this decision echoes', 'update the status file last', 'this decision changes the scope—where else must it flow'.
+model: opus
+description: Produces a set of surgical edits across all documents affected by an architectural decision, plus a decisions block in STATUS.md that serves as the coherence checkpoint. Use when: 'propagate this decision through the system', 'trace where this decision echoes', 'this decision changes the scope — where else must it flow'.
+category: agent-orchestration
 ---
 
 # Decision-Propagation Protocol
@@ -112,3 +114,26 @@ Before considering the decision propagated:
 - [ ] Document copies synced across locations if they exist in multiple places
 - [ ] No orphaned references to old scope or pre-decision state remain in any document
 - [ ] Cross-references between documents are consistent (if one document says "deferred to v0.2.3," the v0.2.3 plan acknowledges it)
+
+## Output
+
+- Decisions block added to the source document, formatted with human name, date, decision text, reasoning, and implications
+- Surgical edits to each dependent document (master plan scope tables, scout deferral sections, implementation prompt scope boundaries)
+- Updated STATUS.md with a "Key Architecture Decisions" block and refreshed summary statements — written last
+- A diff-visible record of exactly which sections changed in each file
+
+## Examples
+
+**Scenario 1:** Human says "auth bypass — skip production auth in v0.2.0, move it to v0.2.2" → skill records the decision in the auth scout, updates the v0.2.0 master plan to remove auth scope, adds auth to the v0.2.2 plan, and updates STATUS.md with the decision block and new scope summary.
+
+**Scenario 2:** A decision demotes a feature from the current release to the next → skill adds a deferral note with rationale to the relevant scout, removes it from the current release's parallel track allocation, adds it to the next release's backlog section, and updates STATUS.md last.
+
+## Edge Cases
+
+- If a decision affects an implementation prompt that has already been dispatched to an agent, note the conflict in STATUS.md under "In-Flight Conflicts" rather than silently updating the prompt — the running agent may need to be recalled.
+- If two decisions arrive simultaneously and they contradict each other, record both at source and flag the contradiction explicitly before propagating either — propagating contradictory decisions corrupts the document graph.
+
+## Anti-Patterns
+
+- Propagating a decision by rewriting entire document sections rather than making surgical edits — wholesale rewrites obscure what actually changed and make the propagation unreviewable.
+- Updating STATUS.md first instead of last — STATUS.md should reflect the fully propagated state, not lead it; updating it early creates a false impression that propagation is complete.

@@ -1,6 +1,8 @@
 ---
 name: specification-writer
-description: Write production-ready, A+ quality specifications for software releases. Use when designing new features, systems, or architectures. Encodes the pattern used in Dojo Genesis v0.0.17-v0.0.23 specifications. Trigger phrases include 'write a spec', 'create a specification', 'spec this feature', 'design this system', 'write a release spec'.
+model: opus
+description: "Produces a format-calibrated specification document — Full (5,000-15,000 words, all sections), Lean (1,000-3,000 words, agent-ready), or Minimal (delta + code examples) — matched to the scope and audience of the request. Use when: 'write a spec for this feature', 'spec out this release', 'design the architecture for X', 'document this for the implementation agent'."
+category: specification-driven-development
 ---
 
 # Specification Writer Skill
@@ -86,275 +88,7 @@ Ask yourself:
 
 ## The A+ Specification Template
 
-### Part 1: Vision & Context (10-15% of document)
-
-```markdown
-# [Project Name] v[X.X.X]: [Memorable Tagline]
-
-**Author:** [Your Name]
-**Status:** [Draft | Final | Approved]
-**Created:** [Date]
-**Grounded In:** [What this builds on - previous versions, research, feedback]
-
-## 1. Vision
-
-> A single, compelling sentence that captures the essence of this release.
-
-**The Core Insight:**
-[2-3 paragraphs explaining WHY this release matters, what problem it solves, and how it advances the overall vision]
-
-**What Makes This Different:**
-[2-3 paragraphs explaining what makes this approach unique, innovative, or better than alternatives]
-
-## 2. Goals & Success Criteria
-
-**Primary Goals:**
-1. [Specific, measurable goal]
-2. [Specific, measurable goal]
-3. [Specific, measurable goal]
-
-**Success Criteria:**
-- ✅ [Concrete, testable criterion]
-- ✅ [Concrete, testable criterion]
-- ✅ [Concrete, testable criterion]
-
-**Non-Goals (Out of Scope):**
-- ❌ [What this release explicitly does NOT include]
-- ❌ [What is deferred to future versions]
-```
-
-### Part 2: Technical Architecture (40-50% of document)
-
-```markdown
-## 3. Technical Architecture
-
-### 3.1 System Overview
-
-[High-level diagram or description of how components fit together]
-
-**Key Components:**
-1. **[Component Name]** - [Purpose and responsibility]
-2. **[Component Name]** - [Purpose and responsibility]
-3. **[Component Name]** - [Purpose and responsibility]
-
-### 3.2 [Feature/Component 1] - Detailed Design
-
-**Purpose:** [What this component does and why it's needed]
-
-**Architecture:**
-
-[Detailed explanation with diagrams if helpful]
-
-**Backend Implementation (Go):**
-
-```go
-// Complete, production-ready code example
-package [package_name]
-
-type [StructName] struct {
-    Field1 string `json:"field1"`
-    Field2 int    `json:"field2"`
-}
-
-func (s *[StructName]) [MethodName]() error {
-    // Implementation with error handling
-    return nil
-}
-```
-
-**Frontend Implementation (React/TypeScript):**
-
-```typescript
-// Complete, production-ready code example
-interface [InterfaceName] {
-  field1: string;
-  field2: number;
-}
-
-export const [ComponentName]: React.FC<Props> = ({ prop1, prop2 }) => {
-  const [state, setState] = useState<StateType>(initialState);
-
-  // Implementation
-
-  return (
-    <div className="...">
-      {/* JSX */}
-    </div>
-  );
-};
-```
-
-**API Endpoints:**
-
-| Method | Endpoint | Request | Response | Purpose |
-|--------|----------|---------|----------|---------|
-| POST | `/api/v1/[resource]` | `{ field: value }` | `{ id: string }` | [Description] |
-| GET | `/api/v1/[resource]/:id` | - | `{ data: object }` | [Description] |
-
-**Database Schema (if applicable):**
-
-```sql
-CREATE TABLE [table_name] (
-    id TEXT PRIMARY KEY,
-    field1 TEXT NOT NULL,
-    field2 INTEGER DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE INDEX idx_[field] ON [table_name]([field]);
-```
-
-**Integration Points:**
-- Integrates with [existing component] via [method]
-- Depends on [existing service] for [functionality]
-- Extends [existing pattern] from v[X.X.X]
-
-**Performance Considerations:**
-- [Specific optimization or constraint]
-- [Caching strategy or database indexing]
-- [Expected latency or throughput]
-
-### 3.3 [Feature/Component 2] - Detailed Design
-
-[Repeat structure for each major component]
-
-### 3.4 [Feature/Component 3] - Detailed Design
-
-[Repeat structure for each major component]
-```
-
-### Part 3: Implementation Plan (20-25% of document)
-
-```markdown
-## 4. Implementation Plan
-
-### 4.1 Phased Approach
-
-**Timeline:** [X] weeks
-
-| Phase | Duration | Focus | Deliverables |
-|-------|----------|-------|--------------|
-| 1 | Week 1-2 | [Focus area] | [Specific deliverables] |
-| 2 | Week 3-4 | [Focus area] | [Specific deliverables] |
-| 3 | Week 5-6 | [Focus area] | [Specific deliverables] |
-
-### 4.2 Week-by-Week Breakdown
-
-**Week 1: [Focus]**
-- [ ] Task 1: [Specific, actionable task]
-- [ ] Task 2: [Specific, actionable task]
-- [ ] Task 3: [Specific, actionable task]
-
-**Success Criteria:** [What "done" looks like for this week]
-
-**Week 2: [Focus]**
-[Repeat structure]
-
-[Continue for all weeks]
-
-### 4.3 Dependencies & Prerequisites
-
-**Required Before Starting:**
-- ✅ [Prerequisite 1]
-- ✅ [Prerequisite 2]
-
-**Parallel Work:**
-- [What can be developed simultaneously]
-
-**Blocking Dependencies:**
-- [What must be completed before other work can start]
-
-### 4.4 Testing Strategy
-
-**Unit Tests:**
-- [Component/module to test]
-- Target coverage: [X]%
-
-**Integration Tests:**
-- [Integration point to test]
-- [Expected behavior]
-
-**E2E Tests:**
-- [User flow to test]
-- [Success criteria]
-
-**Performance Tests:**
-- [Metric to measure]
-- Target: [Specific number]
-
-**Manual QA:**
-- [Scenario to test manually]
-- [Edge cases to verify]
-```
-
-### Part 4: Risk & Quality (10-15% of document)
-
-```markdown
-## 5. Risk Assessment & Mitigation
-
-| Risk | Likelihood | Impact | Mitigation Strategy |
-|------|------------|--------|---------------------|
-| [Risk description] | High/Med/Low | High/Med/Low | [Specific mitigation] |
-| [Risk description] | High/Med/Low | High/Med/Low | [Specific mitigation] |
-
-## 6. Rollback & Contingency
-
-**Feature Flags:**
-- `[flag_name]`: Controls [feature], default: `false`
-
-**Rollback Procedure:**
-1. [Step 1]
-2. [Step 2]
-3. [Step 3]
-
-**Monitoring & Alerts:**
-- [Metric to monitor]: Alert if [condition]
-- [Error rate]: Alert if > [threshold]
-
-## 7. Documentation & Communication
-
-**User-Facing Documentation:**
-- [ ] Update user guide with [new feature]
-- [ ] Create tutorial for [workflow]
-
-**Developer Documentation:**
-- [ ] Update API documentation
-- [ ] Document new database schema
-- [ ] Add code examples to README
-
-**Release Notes:**
-- [ ] Prepare changelog
-- [ ] Highlight breaking changes (if any)
-- [ ] Include migration guide (if needed)
-```
-
-### Part 5: Appendices (5-10% of document)
-
-```markdown
-## 8. Appendices
-
-### 8.1 Related Work & Inspiration
-
-- [Project/Paper]: [What we learned from it]
-- [Tool/System]: [How it influenced this design]
-
-### 8.2 Future Considerations
-
-**v[X+1] Candidates:**
-- [Feature that didn't make this release but is planned]
-- [Enhancement that can build on this foundation]
-
-### 8.3 Open Questions
-
-- [ ] [Question that needs resolution before or during implementation]
-- [ ] [Decision that can be made during development]
-
-### 8.4 References
-
-1. [Link to related spec]
-2. [Link to research paper]
-3. [Link to GitHub issue or discussion]
-```
+See `references/a-plus-template.md` for the full five-part template (Vision & Context, Technical Architecture, Implementation Plan, Risk & Quality, Appendices) with fill-in-the-blank examples for Go, TypeScript, SQL, and API tables.
 
 ---
 
@@ -468,3 +202,30 @@ Before finalizing a specification, verify:
 **Last Updated:** 2026-02-16
 **Maintained By:** Manus
 **Status:** Active (v1.1 with Lean Spec Adaptation guidance)
+
+---
+
+## Output
+
+- A specification document saved to `docs/vX.X.X/[project]_specification.md`, formatted at the appropriate tier (Full, Lean, or Minimal)
+- For Full specs: all eight sections populated — Vision, Current State, Goals, Technical Architecture, Implementation Plan, Risk Assessment, Documentation plan, and Appendices
+- For Lean specs: Feature context, component table, API/route table, behavior list, code examples, test cases
+- A completed quality checklist appended to the document confirming readiness for implementation
+
+## Examples
+
+**Scenario 1:** "Write a spec for the entity data model feature in DojoGenesis v0.2.4." → A Lean-format spec covering the entity schema, Go struct definitions, CRUD API table, TypeScript interface, test cases, and rollout notes — ready to hand to an implementation agent.
+
+**Scenario 2:** "Design the architecture for a new WebSocket hub replacing the current SSE system." → A Full-format spec with vision statement, system overview diagram, detailed component designs with Go and TypeScript examples, phased implementation plan, risk table, and rollback procedure.
+
+## Edge Cases
+
+- When the feature is still being designed (architecture undecided), stop and run a strategic scout first — writing a spec before the architecture is settled produces a spec that will require full rewrite
+- When writing specs for work that will be split into parallel tracks, use Lean format for each track's spec and link to the master parallel-tracks plan for dependencies
+- When the codebase has changed since the last release, run `codebase-audit-grounding` before writing the current-state section — do not estimate counts from memory
+
+## Anti-Patterns
+
+- Defaulting to Full Template for every spec regardless of scope — a well-scoped feature handed to a single agent does not need stakeholder-facing vision prose; use Lean format
+- Writing specs without running a current-state audit — specs grounded in assumptions generate Track 0 remediation work that could have been avoided
+- Marking success criteria as "looks good" or "feels responsive" — every criterion must be binary: either the component renders at the route or it does not

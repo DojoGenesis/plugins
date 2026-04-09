@@ -1,6 +1,8 @@
 ---
 name: memory-garden
-description: Write structured memory entries following the 4-Tier Context Iceberg for efficient context management. Use when recording daily learnings, documenting decisions, or extracting seeds. Trigger phrases: "write a memory entry", "record this learning", "save this to memory", "create a context artifact", "document this insight".
+model: sonnet
+description: Writes a structured memory entry to the garden — daily note (Tier A), curated wisdom update (Tier B), or monthly compressed archive (Tier C) — based on conversation insights. Use when: "remember this pattern", "save this insight", "add to memory garden", "write a memory entry", "record this learning".
+category: wisdom-garden
 ---
 
 # Memory Garden Writer Skill
@@ -14,7 +16,7 @@ description: Write structured memory entries following the 4-Tier Context Iceber
 
 ## Overview
 
-This skill encodes the pattern for writing memory entries that follow the **4-Tier Context Iceberg** and **Hierarchical Memory** principles from Dojo Genesis v0.0.19. Use this skill to create memory entries that are easy to search, retrieve, and compress.
+This skill encodes the pattern for writing memory entries that follow the **4-Tier Context Iceberg** and **Hierarchical Memory** principles. Use this skill to create memory entries that are easy to search, retrieve, and compress.
 
 **Philosophy:** Memory should be a garden, not a landfill. Cultivate what matters, compost what doesn't.
 
@@ -30,7 +32,7 @@ This skill encodes the pattern for writing memory entries that follow the **4-Ti
 
 ---
 
-## Memory Hierarchy (From v0.0.19)
+## Memory Hierarchy
 
 ### Tier A: Raw Daily Notes
 - **Location:** `memory/YYYY-MM-DD.md`
@@ -50,255 +52,11 @@ This skill encodes the pattern for writing memory entries that follow the **4-Ti
 - **Lifespan:** Permanent, read-only
 - **Format:** Semantic summaries
 
----
-
-## Daily Memory Entry Template (Tier A)
-
-```markdown
-# Memory: YYYY-MM-DD
-
-**Session:** [Morning Planning | Deep Work | Creative Session | Review]  
-**Context:** [What we were working on]  
-**Duration:** [Approximate time spent]
+See [references/memory-templates.md](references/memory-templates.md) for the full templates for each tier.
 
 ---
 
-## Key Activities
-
-### [HH:MM] [Activity Name]
-
-**What:** [Brief description of what happened]
-
-**Why:** [The goal or motivation]
-
-**Outcome:** [What was produced or decided]
-
-**Insights:**
-- [Specific insight or learning]
-- [Pattern or principle discovered]
-
-**Related:**
-- Links to: [file, artifact, or previous memory]
-- Builds on: [previous work or decision]
-
----
-
-## Decisions Made
-
-### Decision: [Short title]
-
-**Context:** [What led to this decision]
-
-**Options Considered:**
-1. [Option A] - [Pros/Cons]
-2. [Option B] - [Pros/Cons]
-
-**Chosen:** [Selected option]
-
-**Rationale:** [Why this was the best choice]
-
-**Trigger:** [When to revisit this decision]
-
----
-
-## Seeds Extracted
-
-### Seed: [Name]
-
-**Pattern:** [The reusable insight or principle]
-
-**Why It Matters:** [The value or application]
-
-**Trigger:** [When to apply this seed]
-- [Context or situation]
-- [Keywords or signals]
-
-**Example:** [Concrete example from this session]
-
-**Related Seeds:** [Other seeds this connects to]
-
----
-
-## Open Questions
-
-- [ ] [Question that needs resolution]
-- [ ] [Uncertainty or ambiguity to clarify]
-
----
-
-## Next Steps
-
-- [ ] [Actionable task]
-- [ ] [Follow-up or continuation]
-
----
-
-## Metadata
-
-**Tags:** #[category] #[topic] #[type]  
-**Compression Status:** Raw (not yet compressed)  
-**Importance:** High | Medium | Low  
-**Retention:** [How long to keep in Tier A before compression]
-```
-
----
-
-## Curated Memory Template (Tier B)
-
-```markdown
-# Memory (Curated Wisdom)
-
-**Last Updated:** YYYY-MM-DD  
-**Maintenance Cycle:** Every 3-7 days  
-**Purpose:** Distilled insights, decisions, and patterns that matter beyond a single session
-
----
-
-## Core Principles
-
-### [Principle Name]
-
-**Statement:** [Clear, concise principle]
-
-**Origin:** [Where this came from - date, context, or experience]
-
-**Application:** [When and how to apply this]
-
-**Examples:**
-- [Concrete example 1]
-- [Concrete example 2]
-
-**Trigger:** [Keywords or contexts that should surface this principle]
-
----
-
-## Key Decisions
-
-### [Decision Title]
-
-**Date:** YYYY-MM-DD  
-**Context:** [What led to this decision]  
-**Decision:** [What was decided]  
-**Rationale:** [Why this was chosen]  
-**Status:** Active | Revisit on [date] | Deprecated
-
-**Trigger:** [When to recall this decision]
-
----
-
-## Patterns & Insights
-
-### [Pattern Name]
-
-**Observation:** [What we've noticed repeatedly]
-
-**Evidence:**
-- [Instance 1: date, context]
-- [Instance 2: date, context]
-- [Instance 3: date, context]
-
-**Implication:** [What this means for future work]
-
-**Trigger:** [When to apply this pattern]
-
----
-
-## Seeds (Reusable Knowledge)
-
-### Seed: [Name]
-
-**Pattern:** [The reusable insight]  
-**Why It Matters:** [The value]  
-**Trigger:** [When to apply]  
-**Origin:** [Where this came from]  
-**Last Used:** YYYY-MM-DD  
-**Usage Count:** [Number of times applied]
-
----
-
-## Compression History
-
-| Date | Compressed From | Summary | Retained |
-|------|-----------------|---------|----------|
-| YYYY-MM-DD | memory/YYYY-MM-DD.md | [Brief summary] | [What was kept] |
-
----
-
-## Metadata
-
-**Total Seeds:** [Number]  
-**Total Decisions:** [Number]  
-**Total Patterns:** [Number]  
-**Last Maintenance:** YYYY-MM-DD  
-**Next Maintenance:** YYYY-MM-DD
-```
-
----
-
-## Compressed Archive Template (Tier C)
-
-```markdown
-# Memory Archive: YYYY-MM
-
-**Compressed:** YYYY-MM-DD  
-**Source:** [List of daily files compressed]  
-**Compression Ratio:** [X]%  
-**Method:** Semantic compression (3-month rule)
-
----
-
-## Summary
-
-[2-3 paragraph summary of the month's activities, focusing on decisions, lessons, and patterns]
-
----
-
-## Significant Events
-
-### [Event Name]
-
-**Date:** YYYY-MM-DD  
-**What:** [Brief description]  
-**Impact:** [Why this mattered]  
-**Outcome:** [Result or consequence]
-
----
-
-## Lessons Learned
-
-1. **[Lesson Title]:** [What we learned and why it matters]
-2. **[Lesson Title]:** [What we learned and why it matters]
-
----
-
-## Decisions Made
-
-| Date | Decision | Rationale | Status |
-|------|----------|-----------|--------|
-| YYYY-MM-DD | [Brief decision] | [Why] | [Active/Deprecated] |
-
----
-
-## Seeds Extracted
-
-| Seed Name | Pattern | Trigger |
-|-----------|---------|---------|
-| [Name] | [Brief pattern] | [When to apply] |
-
----
-
-## Metadata
-
-**Compression Method:** Semantic (3-month rule)  
-**Original Size:** [X] lines  
-**Compressed Size:** [Y] lines  
-**Compression Ratio:** [Z]%  
-**Retention:** Permanent (read-only)
-```
-
----
-
-## The "3-Month Rule" (From Cipher)
+## The "3-Month Rule"
 
 **Rule:** If it wouldn't matter in 3 months → compress or discard.
 
@@ -400,47 +158,47 @@ Before finalizing a memory entry, verify:
 
 ---
 
-## Examples
-
-**From Dojo Genesis:**
-- Daily notes from v0.0.17-v0.0.23 development
-- Curated wisdom from Cipher collaboration
-- Compressed archives from backend migration
-
-**Study these for:**
-- How to extract seeds from experiences
-- How to document decisions with context
-- How to apply the 3-month rule
-- How to maintain the memory hierarchy
-
----
-
 ## Common Pitfalls to Avoid
 
-❌ **Hoarding Everything:** Keeping every detail → ✅ Compress ruthlessly  
-❌ **Vague Insights:** "This was useful" → ✅ "This pattern applies when X"  
-❌ **Missing Triggers:** Seed without context → ✅ Seed with clear "when to apply"  
-❌ **No Maintenance:** Let Tier A grow forever → ✅ Compress every 3-7 days  
-❌ **Duplicate Information:** Same thing in multiple places → ✅ Single source of truth
+- **Hoarding Everything:** Keeping every detail — compress ruthlessly
+- **Vague Insights:** "This was useful" — write "This pattern applies when X"
+- **Missing Triggers:** Seed without context — include clear "when to apply"
+- **No Maintenance:** Letting Tier A grow forever — compress every 3-7 days
+- **Duplicate Information:** Same thing in multiple places — single source of truth
 
 ---
 
-## Usage Instructions
+## Output
 
-1. **Read this skill** before writing memory entries
-2. **Choose the right template** (Tier A, B, or C)
-3. **Fill in each section** with specific, structured content
-4. **Apply the 3-month rule** when compressing
-5. **Maintain the cycle** every 3-7 days
-6. **Run the quality checklist** before finalizing
+- **Tier A:** `memory/YYYY-MM-DD.md` — new or appended daily note with timestamped sections
+- **Tier B:** `MEMORY.md` — updated curated wisdom entry (principle, decision, or seed block)
+- **Tier C:** `memory/archive/YYYY-MM.md` — new monthly archive file with compression log
 
 ---
 
-## Skill Metadata
+## Examples
 
-**Token Savings:** ~5,000-8,000 tokens per session (structured format enables efficient retrieval)  
-**Quality Impact:** Ensures consistent memory format across sessions  
-**Maintenance:** Update when new memory patterns emerge  
+**Scenario 1:** User says "remember this pattern — always read before editing" → writes a Tier A seed entry under today's date with pattern, trigger, and one concrete example from the session.
+
+**Scenario 2:** User says "compress last week's notes into memory" → reads all Tier A files from the week, applies 3-month rule, writes a Tier B update to MEMORY.md with seeds and decisions retained, and marks Tier A files for deletion.
+
+---
+
+## Edge Cases
+
+- If no tier is specified, default to Tier A (daily note) and state the assumption.
+- If the user asks to "save" something that is already in MEMORY.md verbatim, note the duplicate and skip.
+- If Tier A is more than 7 days old without compression, prompt the user before writing more raw notes.
+
+---
+
+## Anti-Patterns
+
+- Writing a Tier B entry directly from raw conversation without distillation — always compress first.
+- Adding a seed without a trigger phrase — a seed without "when to apply" has no retrieval value.
+- Using this skill to store code or file content verbatim — memory entries hold insights and decisions, not raw code.
+
+---
 
 **Related Skills:**
 - `specification-writer` - For documenting technical decisions

@@ -1,11 +1,13 @@
 ---
 name: iterative-scouting
-description: Iterate through scouting cycles by gathering feedback, identifying reframes, and re-scouting with new lenses. Use when initial scouting raises deeper questions. Trigger phrases: 'scout this, gather feedback, then re-scout', 'what is the reframe hiding in this feedback', 'iterate the scout', 'two-scout rule'
+model: opus
+description: Produces a follow-up scout document that reframes the original question based on what feedback revealed (a reframe = a new strategic lens that changes which problem is worth solving). Use when: 'scout this again with fresh eyes', 'the first scout raised deeper questions', 'what is the real question here', 'iterate the scout'
+category: strategic-thinking
 ---
 
 # Iterative Scouting Pattern Skill
 
-**Version:** 1.0
+**Version:** 1.1
 **Created:** 2026-02-07
 **Author:** Manus AI
 **Purpose:** To formalize the meta-process of strategic scouting, emphasizing its iterative nature and the importance of reframing.
@@ -15,6 +17,8 @@ description: Iterate through scouting cycles by gathering feedback, identifying 
 ## I. The Philosophy: Scouting as a Conversation
 
 Strategic scouting is not a linear process of finding the "right" answer. It is a **conversation** with the strategic landscape. The goal of the first scout is not to produce a final decision, but to generate a set of provocative routes that will elicit a deeper, more insightful response. The real prize is not the initial answer, but the **reframe** of the original question.
+
+A **reframe** is a new strategic lens that changes which problem is worth solving — not a refinement of the original question, but a replacement of it with a better one.
 
 This skill operationalizes the pattern of **scout → feedback → reframe → re-scout**, turning a simple exploration into a powerful engine for strategic discovery.
 
@@ -50,6 +54,7 @@ This is a 4-step workflow for the iterative scouting pattern.
 -   Present the initial routes.
 -   Listen not just for agreement or disagreement, but for the *way* the feedback is framed.
 -   Identify the "question behind the question" (e.g., the shift from "what to do with the web app" to "what is the mobile experience for?").
+-   Explicitly ask: "Did this feedback confirm the original question, or reveal a different one?"
 
 ### Step 3: Re-Scout with the New Lens
 
@@ -59,6 +64,7 @@ This is a 4-step workflow for the iterative scouting pattern.
 -   Articulate the new, reframed tension (e.g., "Deep Work vs. On-the-Go").
 -   Use `/strategic-scout` again with this new lens.
 -   Explore routes that are native to the new framing.
+-   Document the before/after: original tension → reframe → second scout headline.
 
 ### Step 4: Synthesize and Align on the Final Vision
 
@@ -73,9 +79,10 @@ This is a 4-step workflow for the iterative scouting pattern.
 
 ## IV. Best Practices
 
--   **The Two-Scout Rule:** For any non-trivial strategic decision, assume you will need at least two rounds of scouting.
+-   **Plan for a second scouting pass:** For any non-trivial strategic decision, assume you will need at least two rounds of scouting. The first pass surfaces routes; the second pass answers the real question.
 -   **The Reframe is the Prize:** The most valuable output of the process is the new, more powerful question you discover.
 -   **Scout for Provocation, Not for Consensus:** The goal of the first scout is to provoke a better conversation, not to find an answer that everyone agrees with.
+-   **Name the reframe explicitly:** When a reframe occurs, write it down as "Original question: X → Reframed question: Y" before re-scouting. This makes the pivot visible and prevents reverting to the original framing mid-execution.
 
 ---
 
@@ -88,3 +95,34 @@ Before concluding the process, ensure you can answer "yes" to all of the followi
 -   [ ] Did the reframe lead to a richer, more insightful set of strategic options?
 -   [ ] Is the final vision aligned with the insights from the second scouting round?
 -   [ ] Is the final decision documented and socialized?
+
+---
+
+## Output
+
+- A second scout document saved to `thinking/[topic]_scout_v2.md` (or equivalent project thinking directory)
+- The document includes: original tension, reframe statement, second-pass routes with tradeoffs, and selected direction with rationale
+
+---
+
+## Examples
+
+**Scenario 1:** "The first scout on mobile vs. web raised more questions than it answered — scout this again with fresh eyes." → Produces a second scout document that leads with the reframe ("Original: deprecate web. Reframed: what is mobile uniquely for?") and explores routes native to that new question.
+
+**Scenario 2:** "What is the real question here? We keep debating the same two options." → Runs the feedback-listening step explicitly, surfaces the hidden reframe ("we're actually deciding who the primary user is"), and produces a targeted second scout scoped to that question.
+
+---
+
+## Edge Cases
+
+- **Feedback confirms the original scout** — no reframe is needed. Document this explicitly ("second pass confirms original framing") and move to decision rather than forcing a reframe that isn't there.
+- **Multiple competing reframes emerge from feedback** — pick the one that changes the most about the original question, not the one that feels safest. Scout the boldest reframe first.
+- **The second scout also raises new questions** — limit to two scouting passes unless the stakes are very high. A third pass usually signals the question is not yet well-formed enough to scout; step back and clarify scope instead.
+
+---
+
+## Anti-Patterns
+
+- **Iterating without capturing the reframe decision** — running a second scout without documenting what changed between pass 1 and pass 2. This causes the reframe to disappear in later conversations and the team reverts to the original framing.
+- **Mistaking refinement for reframing** — adjusting route details from the first scout is not a reframe. A reframe changes which problem is being solved, not how a solution is described.
+- **Forcing a reframe when feedback confirms the original** — not every first scout needs a second pass. If feedback aligns with the original question, commit and move on rather than manufacturing a reframe to justify the process.

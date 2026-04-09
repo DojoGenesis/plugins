@@ -1,41 +1,14 @@
 ---
 name: normalize-community-skill
-description: Enrich a community SKILL.md file's YAML frontmatter so it passes Dojo Gateway SkillRegistry.IsValid(). Use when importing a skill from an external repo (alirezarezvani/claude-skills, slavingia/skills, trailofbits/skills, or any community source) that is missing tier, agents, tool_dependencies, or trigger phrases. Trigger phrases: "normalize this skill", "make this skill dojo-compatible", "import a community skill", "enrich skill frontmatter", "fix skill registry validation", "prepare skill for dojo", "community skill is missing fields".
+model: sonnet
+description: Produces an enriched SKILL.md with all six Dojo SkillRegistry.IsValid() fields populated — name, description, tier, agents, tool_dependencies, and trigger phrases — inferred from the existing body without rewriting it. Use when: "normalize this skill", "make this skill dojo-compatible", "import a community skill", "enrich skill frontmatter", "fix skill registry validation", "prepare skill for dojo", "community skill is missing fields".
 license: Complete terms in LICENSE.txt
+category: skill-forge
 ---
 
 # Normalize Community Skill
 
----
-
-## I. Philosophy: Compatibility Is a Gift to the Author
-
-Community skills represent good work done in a different context. The author solved a real problem and shared it. Normalization honors that intent by making the skill usable in a new environment without rewriting the underlying knowledge.
-
-The gap is structural, not intellectual: community SKILL.md files typically carry only `name` and `description` in frontmatter. The Dojo Gateway's `SkillRegistry.IsValid()` requires four additional fields before a skill can be registered and routed: `tier`, `agents`, `tool_dependencies`, and at least one trigger phrase. This skill bridges that gap through inference rather than invention—every added field should be derivable from what the original author already wrote.
-
-**Core Insight:** Never invent what you can infer. If the description mentions file reading, infer `file_system`. If the body invokes other skills by name, infer tier 3. The markdown body is evidence; the frontmatter is a structured summary of that evidence.
-
----
-
-## II. When to Use This Skill
-
-Use this skill when:
-
-- Importing a skill from a community repository and it fails `SkillRegistry.IsValid()`
-- A SKILL.md has only `name` and `description` in its frontmatter
-- A skill is stuck in "pending" state in the SkillRegistry because fields are missing
-- Running a batch import pipeline that calls this skill per file
-- A scan-community-repos report marks a skill as "normalizable"
-
-Do not use this skill when:
-
-- The skill is missing both `name` and `description` — that is an "incompatible" classification, not a normalization case
-- The skill body does not exist or is empty — request the original author for the full file
-
----
-
-## III. Workflow
+## I. Workflow
 
 ### Step 1: Read and Parse the Input File
 
@@ -184,7 +157,7 @@ If IsValid() would still fail after normalization, report the specific failure a
 
 ---
 
-## IV. Best Practices
+## II. Best Practices
 
 **Preserve the body exactly.** The markdown body is the intellectual content of the skill. Only the frontmatter changes. Do not reformat, reorder, or summarize the body.
 
@@ -198,7 +171,7 @@ If IsValid() would still fail after normalization, report the specific failure a
 
 ---
 
-## V. Quality Checklist
+## III. Quality Checklist
 
 Before delivering the normalized skill, confirm:
 
@@ -214,9 +187,33 @@ Before delivering the normalized skill, confirm:
 
 ---
 
-## VI. Related Skills
+## IV. Related Skills
 
 - `scan-community-repos` - Identifies which skills in a repo need normalization before you run this skill
 - `batch-normalize-and-package` - Calls this skill in a loop across an entire repo's skill set
 - `skill-creation` - Use when a community skill is so incomplete it needs a full rewrite rather than normalization
 - `skill-maintenance` - Use after normalization to rename or refactor skills that don't follow verb-object naming
+
+## Output
+
+- Enriched SKILL.md written back to the same path (or a specified output path) with all six required frontmatter fields populated
+- Normalization summary reported to the user: which fields were added, what evidence supported each inference, and whether IsValid() passes
+- Markdown body is byte-for-byte identical to the original — only frontmatter changes
+
+## Examples
+
+**Scenario 1:** "Import this skill from alirezarezvani/claude-skills — it only has name and description" → Read the file, extract trigger phrases from the description, scan the body for tool usage to infer tier and tool_dependencies, set agents to ["primary"], reconstruct frontmatter, write back, report normalization summary.
+
+**Scenario 2:** "A skill is stuck in 'pending' state in the SkillRegistry" → Read the skill, run IsValid() simulation to identify the failing check, apply only the steps needed to fix the missing fields, write and re-validate.
+
+## Edge Cases
+
+- Skill has a `metadata:` nested block instead of flat frontmatter — hoist `name` and `description` to the top level, discard vendor-specific fields (`version`, `author`, `created_at`), log which fields were dropped so the original author can audit
+- Skill body is empty or under 100 bytes — this is a stub, not a normalizable skill; report it as incompatible and request the full file from the original author
+- Skill is missing `name` or `description` — this is an "incompatible" classification, not a normalization case; do not attempt to infer these fields, redirect to `skill-creation` if a rewrite is needed
+
+## Anti-Patterns
+
+- **Inventing fields instead of inferring:** Adding `tool_dependencies: ["bash"]` because it seems likely, without evidence in the body — every added field must be traceable to specific language in the skill
+- **Rewriting the body:** Reformatting, summarizing, or reordering the markdown body violates the principle that normalization is structural, not editorial — only frontmatter changes
+- **Defaulting tier to 2 without checking:** Tier 2 is the most common correct answer but not the automatic answer; scan the body for tool action evidence before assigning

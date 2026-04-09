@@ -1,6 +1,8 @@
 ---
 name: skill-audit-upgrade
-description: Audit all skills in a repository to assess completeness and upgrade incomplete skills to quality standards. Use when you've created many new skills, before a major release, to maintain ecosystem consistency, or to improve skill usability. Trigger phrases: 'audit all the skills', 'upgrade skills to A+ standard', 'check skill quality and completeness', 'are the skills production-ready', 'improve the skills ecosystem'.
+model: sonnet
+description: Produces a graded audit report and upgraded SKILL.md files by systematically assessing all skills against an A+ quality framework (8 sections, concrete examples, pitfalls, related skills) and patching gaps. Use when: "audit all the skills", "upgrade skills to A+ standard", "after creating 5+ new skills", "before a major release", "quarterly skills maintenance".
+category: system-health
 ---
 
 # Skill Audit and Upgrade
@@ -409,3 +411,20 @@ Before completing the audit, ensure you can answer "yes" to all of the following
 **Last Updated:** 2026-02-07  
 **Maintained By:** Manus AI  
 **Status:** Active
+
+## Output
+- `skills_audit_framework.md` defining quality criteria and assessment scale for this audit run.
+- `skills_audit_report.md` with per-skill grades (A+, A, B, C, D), gaps identified, and prioritized upgrade list with time estimates.
+- Upgraded SKILL.md files for all high-priority (C/D) and medium-priority (B) skills, committed with comprehensive messages documenting grade improvements.
+
+## Examples
+**Scenario 1:** "Audit all skills after a sprint that added 6 new skills" → 6 new skills assessed: 4 graded A (missing Related Skills and Pitfalls), 2 graded B (missing examples and quality checklist). All 6 upgraded to A+. Audit report committed.
+**Scenario 2:** "Are the system-health skills production-ready?" → 17 skills assessed, grades assigned. 3 skills graded C (missing workflow and quality checklist sections). All 3 upgraded with structural fixes, version bumped, and ecosystem connections added.
+
+## Edge Cases
+- If a skill is intentionally minimal (e.g., a stub or pointer), document this in the audit report rather than upgrading it — not all skills need all 8 sections.
+- If a skill's content is correct but line count exceeds 500, prioritize trimming over adding sections — length is a quality signal, not just a constraint.
+
+## Anti-Patterns
+- Trying to upgrade all skills to A+ in a single pass without grading first — grade before upgrading so effort is directed to the highest-impact gaps.
+- Using generic examples in upgraded skills ("Example: User asks about X") — examples must reference real project work to be credible and useful.

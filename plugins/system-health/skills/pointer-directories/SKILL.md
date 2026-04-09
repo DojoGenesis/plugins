@@ -1,6 +1,8 @@
 ---
 name: pointer-directories
-description: "Investigate empty directories before creating content, because they may be intentional references to content that lives elsewhere. Ask 'Is this a pointer or a gap?' before filling the void. Use when encountering empty skill or component directories, when coverage gaps exist that nobody has complained about, during audits or registry reorganizations, or before creating content to fill something that feels incomplete. Trigger phrases: 'this directory is empty', 'missing SKILL.md', 'coverage gap', 'fill the void', 'why is this empty'."
+model: sonnet
+description: Produces a provenance determination — pointer or gap — for empty or apparently incomplete directories, with a documented rationale and recommended action. Use when: "this directory is empty", "missing SKILL.md", "coverage metric shows a gap", "why is this directory here with nothing in it", "before creating content to fill an apparent void".
+category: system-health
 ---
 
 # Pointer Directories
@@ -98,3 +100,20 @@ If it's a gap:
 - **documentation-audit**: Documentation gaps and pointer directories follow the same investigation pattern
 - **skill-audit-upgrade**: When auditing skills, pointer directories need investigation not automatic content creation
 - **repo-context-sync**: Understanding registry architecture helps distinguish pointers from gaps
+
+## Output
+- A written provenance determination: "pointer" or "gap", which level holds the authoritative content (source / system-installed / platform), and the recommended action (document, symlink, create, or defer).
+- If a pointer: a changelog entry explaining provenance for future maintainers.
+- If a gap: a decision on whether to create content now or defer with a documented reason.
+
+## Examples
+**Scenario 1:** "The `hooks-reference` directory in the registry is empty — should I write content?" → Investigation finds the skill exists at the system-installed level (.skills/skills/hooks-reference/SKILL.md). Provenance documented: pointer, not a gap. No content created.
+**Scenario 2:** "Coverage audit shows `semantic-clusters` skill missing from the plugin" → Investigation finds no content at any level (source, system, platform). Confirmed gap. Content creation initiated.
+
+## Edge Cases
+- A directory that has existed for months without anyone filing an issue is probably a pointer — the "nobody complained" signal is evidence, not proof. Verify at all three levels before concluding.
+- If the content is found at multiple levels with different versions, flag this as a divergence requiring reconciliation rather than treating either as authoritative.
+
+## Anti-Patterns
+- Creating a new SKILL.md for content that already exists at the system-installed level — produces duplicate content that will diverge from the authoritative source over time.
+- Treating all coverage metrics as actionable gaps without investigation — coverage gaps may reflect the registry structure, not missing content.

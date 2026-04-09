@@ -1,14 +1,9 @@
 ---
 name: agent-performance-report
-description: >
-  Generates a performance report from stored trace and span data, aggregating
-  tool call metrics, token usage, cost, and bottleneck analysis across a time
-  range. Trigger this skill when a user asks for a "performance report",
-  "agent metrics", "how much did this cost?", "what was slow?", "show me token
-  usage", "summarize agent activity", or "find bottlenecks". Also triggers
-  after incidents, after sprint completions, or when configuring a new agent
-  and establishing a performance baseline from early sessions.
+model: sonnet
+description: Produces an aggregated markdown performance report from stored trace data — tool call metrics, token usage, cost, bottlenecks, and numbered recommendations. Use when: "session cost report", "what ran this week", "why did this spike", "end-of-sprint performance review", "budget alert fired".
 license: proprietary
+category: system-health
 ---
 
 ## I. Philosophy
@@ -231,3 +226,21 @@ Before completing this skill, verify:
 - [ ] Recommendations are specific and numbered (3-5 items)
 - [ ] Report includes generated timestamp and applied filters
 - [ ] Incomplete span data disclosed in affected sections, not silently omitted
+
+## Output
+- Markdown report returned inline (or offered as file if > 300 lines)
+- Sections: Summary, Tool Call Metrics table, Token and Cost Breakdown tables, DAG Execution table, Performance Issues (slow tools, expensive ops, failed nodes, budget trend), Recommendations (numbered 3-5 items)
+- Generated timestamp and applied filters included in report header
+
+## Examples
+**Scenario 1:** "Give me a performance report for last week" → Full markdown report covering all agents for the prior 7-day window, with tool latency tables, cost breakdown by operation type, and 5 actionable recommendations.
+**Scenario 2:** "Why did costs spike on April 3rd?" → Report filtered to 2026-04-03, identifying the top 5 expensive operations, any failed nodes that triggered retries, and the binding budget tier.
+
+## Edge Cases
+- If TraceStorage has no spans for the requested time range, report this explicitly rather than returning empty tables.
+- If DAG parallel_ratio cannot be computed from span data, report it as "unavailable (insufficient span data)" rather than approximating.
+- If time range spans multiple months, break down cost and budget utilization by month — monthly budget resets make cross-month aggregates misleading.
+
+## Anti-Patterns
+- Using this skill for real-time monitoring during an active session — use `tool-intercept-logger` instead, which captures live per-call data.
+- Listing every individual span failure rather than grouping repeated errors by pattern — five instances of the same timeout is one finding, not five.

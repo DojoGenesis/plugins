@@ -1,41 +1,14 @@
 ---
 name: scan-community-repos
-description: Scan one or more GitHub repositories or local paths for SKILL.md files and produce a compatibility catalog showing which skills are Dojo-ready, which need normalization, and which are incompatible. Use before importing community skills to understand the work required. Trigger phrases: "scan this repo for skills", "check which skills are dojo-compatible", "audit community skills", "catalog skills from a github repo", "find skill files in this repository", "assess community skill compatibility", "build a skill import report".
+model: sonnet
+description: Produces a compatibility catalog — skill-scan-report.md and skill-scan-catalog.json — classifying every SKILL.md in one or more GitHub repos or local paths as ready, normalizable, or incompatible, so you know exactly what normalization work lies ahead before committing to an import. Use when: "scan this repo for skills", "check which skills are dojo-compatible", "audit community skills", "catalog skills from a github repo", "find skill files in this repository", "assess community skill compatibility", "build a skill import report".
 license: Complete terms in LICENSE.txt
+category: skill-forge
 ---
 
 # Scan Community Repos
 
----
-
-## I. Philosophy: Know Before You Commit
-
-Importing community skills without inspection is how broken registries happen. A single incompatible file can block a batch normalization run or, worse, silently enter the SkillRegistry in a state that fails at route time rather than at load time.
-
-This skill treats the scan as a first-class deliverable. The catalog it produces is not a side effect — it is the output. A well-formed catalog tells you exactly how much normalization work lies ahead, which skills can be adopted immediately, and which are structurally unrecoverable without contacting the original author.
-
-**Core Insight:** Classification is not judgment. "Incompatible" means the skill is missing structural prerequisites, not that the knowledge inside it is bad. The catalog preserves that distinction so the human operator can decide whether to invest in repair.
-
----
-
-## II. When to Use This Skill
-
-Use this skill when:
-
-- Planning to import skills from a community repository (alirezarezvani/claude-skills, slavingia/skills, trailofbits/skills, or any GitHub org)
-- Evaluating a local plugin directory before a batch normalization run
-- Auditing your own skills ecosystem for drift from the Dojo schema
-- Building a dependency list before invoking `batch-normalize-and-package`
-- Responding to a user question like "how many skills in this repo can we use?"
-
-Do not use this skill when:
-
-- The goal is to actually normalize the skills — use `normalize-community-skill` or `batch-normalize-and-package` for that
-- A single known file needs inspection — read it directly; the scan overhead is unnecessary
-
----
-
-## III. Workflow
+## I. Workflow
 
 ### Step 1: Accept and Validate Inputs
 
@@ -233,7 +206,7 @@ Clean up temp directories created during the scan (`/tmp/skill-scan/`).
 
 ---
 
-## IV. Best Practices
+## II. Best Practices
 
 **Scan before you normalize, always.** Running `normalize-community-skill` on every file without a prior scan wastes compute on incompatible files that cannot be fixed by normalization anyway.
 
@@ -249,7 +222,7 @@ Clean up temp directories created during the scan (`/tmp/skill-scan/`).
 
 ---
 
-## V. Quality Checklist
+## III. Quality Checklist
 
 Before delivering the scan results, confirm:
 
@@ -266,9 +239,34 @@ Before delivering the scan results, confirm:
 
 ---
 
-## VI. Related Skills
+## IV. Related Skills
 
 - `normalize-community-skill` - The per-file normalization skill invoked after this scan identifies "normalizable" candidates
 - `batch-normalize-and-package` - Consumes the JSON catalog produced by this skill to run normalization at scale
 - `skill-maintenance` - Use after import to rename skills that don't follow verb-object naming conventions
 - `health-audit` - Use to audit the Dojo skill ecosystem after a batch import completes
+
+## Output
+
+- `skill-scan-report.md` — human-readable markdown report with summary table, skills inventory, recommendations, and source accessibility log
+- `skill-scan-catalog.json` — machine-readable catalog consumed by `batch-normalize-and-package`; includes per-skill classification, missing fields, and body structure signals
+- One-line summary delivered to the user: "Found N skills across M repos: X ready, Y normalizable, Z incompatible."
+- Temp directories cleaned up (`/tmp/skill-scan/`)
+
+## Examples
+
+**Scenario 1:** "Scan alirezarezvani/claude-skills and tell me which skills we can use" → Clone repo with `--depth=1`, find all SKILL.md files, parse frontmatter and body, classify each as ready/normalizable/incompatible, produce report and catalog, deliver one-line summary with next-step recommendation.
+
+**Scenario 2:** "Before running batch normalization, audit our local plugin directory" → Walk the local path in place (no clone), apply the same two-pass file discovery and classification, write report and catalog to the current directory.
+
+## Edge Cases
+
+- Repository is private or returns 404 — log as inaccessible, skip, continue with other sources; name it explicitly in the accessibility log section of the report
+- A file matches the pattern heuristic (contains `skill` in path, has `---` delimiter) but has no actual YAML fields — classify as "not a skill" (false positive), not "incompatible"; incompatible implies the author intended a skill
+- Source list is a mix of GitHub URLs and local paths — process each independently and merge results into a single catalog; source type is tracked in the `url` field
+
+## Anti-Patterns
+
+- **Normalizing without scanning first:** Running `normalize-community-skill` on every file before classification wastes compute on files that cannot be salvaged by normalization
+- **Treating "incompatible" as "bad knowledge":** The classification is structural, not qualitative — log the reason, preserve the name, and let the operator decide whether to invest in manual repair
+- **Omitting `source_path` from the catalog:** Without the source path, `batch-normalize-and-package` cannot locate the file and must re-scan; always populate this field

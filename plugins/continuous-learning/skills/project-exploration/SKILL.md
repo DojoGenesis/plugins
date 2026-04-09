@@ -1,6 +1,8 @@
 ---
 name: project-exploration
-description: Explore a new project's philosophy and patterns before committing to collaboration. Assess architecture fit, map resonances, and identify entry points. Use when encountering a new codebase, repository, or project. Trigger phrases include 'explore this project', 'assess this codebase', 'should we collaborate on this', 'onboard me to this repo', 'evaluate this project for fit'.
+model: sonnet
+description: Produces an Exploration Brief rating a project GREEN/YELLOW/RED for collaboration fit, with architecture snapshot, resonance map, and ranked entry points. Use when: 'explore this project', 'assess this codebase', 'should we collaborate on this', 'onboard me to this repo', 'evaluate this project for fit'.
+category: continuous-learning
 ---
 
 # Project Exploration Skill
@@ -150,3 +152,36 @@ Produce a comprehensive assessment.
 - [ ] Resonance map connects project to existing knowledge
 - [ ] Entry points ranked by approachability and impact
 - [ ] Risks identified with mitigation strategies
+
+---
+
+## Output
+
+- An Exploration Brief markdown document saved to the session working directory or `docs/exploration/`
+- Named: `[date]_[project-name]_exploration.md`
+- Sections: Project Summary, Architecture Snapshot, Fit Assessment (GREEN/YELLOW/RED), Resonance Map, Recommended Entry Points, Risks and Concerns
+
+---
+
+## Examples
+
+**Scenario 1:** "Explore this repo and tell me if we should collaborate" → Exploration Brief with GREEN rating, architecture snapshot (plugin pattern, 87 tests, Go + Wails), 3 entry points ranked by risk, and resonance map connecting it to existing HTMLCraft work
+
+**Scenario 2:** "Onboard me to this new codebase before we start implementing" → Exploration Brief with YELLOW rating noting sparse test coverage, architecture mapped, 2 risky areas flagged, quick-win entry points identified for building familiarity
+
+---
+
+## Edge Cases
+
+- **Project has no README:** Begin Phase 2 directly with structural survey; note the absence of documentation as a codebase health signal in the Fit Assessment
+- **Repository is private with limited access:** Explore what is accessible, note access limitations explicitly, and rate only what can be verified
+- **Project is extremely large (monorepo with 1000+ files):** Limit structural survey to top-level and highest-traffic directories; do not attempt full traversal
+
+---
+
+## Anti-Patterns
+
+- Reading implementation files before completing the README and structural survey — entry into details before understanding the whole produces a distorted architecture picture
+- Assigning GREEN without completing all 5 phases — partial exploration that misses health assessment or resonance mapping produces false confidence
+- Using this skill to evaluate whether to *use* a library as a dependency (use web-research instead) — project-exploration is for collaboration potential, not dependency selection
+- Skipping the Risks section because the project seems good — surfacing low-probability risks during exploration is cheaper than discovering them mid-implementation

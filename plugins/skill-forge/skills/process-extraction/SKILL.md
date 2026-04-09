@@ -1,35 +1,13 @@
 ---
 name: process-extraction
-description: Transform valuable workflows into reusable skills through documentation and structured conversion. Use after completing complex multi-step tasks you'll repeat. Trigger phrases: "turn this process into a skill", "standardize this workflow", "make this repeatable", "capture this procedure", "formalize this multi-step task".
+model: sonnet
+description: Produces a complete SKILL.md by extracting and formalizing a workflow that has been executed at least twice, converting implicit procedural knowledge into installable, agent-executable instructions. Use when: "turn this process into a skill", "standardize this workflow", "make this repeatable", "capture this procedure", "formalize this multi-step task".
+category: skill-forge
 ---
 
 # Process-to-Skill Workflow
 
-**Version:** 1.0
-**Created:** 2026-02-07
-**Author:** Manus AI
-**Purpose:** To provide a structured, repeatable process for identifying a valuable workflow, documenting it with concrete examples, and transforming it into a reusable skill.
-
----
-
-## I. The Philosophy: From Process to Practice
-
-We often develop valuable, multi-step processes for complex tasks. These processes are a form of implicit knowledge, a sequence of actions that leads to a high-quality outcome. This skill is about making that implicit knowledge explicit, transforming a one-off process into a repeatable practice.
-
-By documenting a valuable workflow and then using the `/seed-to-skill-converter` to formalize it, we build a library of institutional knowledge that can be shared, improved, and reliably executed by any agent.
-
----
-
-## II. When to Use This Skill
-
--   **After completing a complex, multi-step task** that you believe will be repeated in the future.
--   **When you find yourself manually repeating the same sequence of actions** across different projects.
--   **During a retrospective**, when you identify a successful workflow that should be standardized.
--   **When you want to onboard a new agent** to a complex process.
-
----
-
-## III. The Workflow
+## I. The Workflow
 
 This is a 4-step workflow for transforming a process into a skill.
 
@@ -44,9 +22,9 @@ This is a 4-step workflow for transforming a process into a skill.
 
 ### Step 2: Convert the Process to a Skill
 
-**Goal:** Use the `/seed-to-skill-converter` to transform the documented process into a SKILL.md file.
+**Goal:** Use the `seed-to-skill-converter` to transform the documented process into a SKILL.md file.
 
-1.  **Invoke the Converter:** Use the command `/seed-to-skill-converter` on the process example document you just created.
+1.  **Invoke the Converter:** Use the `seed-to-skill-converter` skill on the process example document you just created.
 2.  **Deconstruct the Process:** The converter will guide you through deconstructing the process into its core components (insight, trigger, process, outcome).
 3.  **Draft the Skill:** The converter will then help you draft a `SKILL.md` file using the standard template.
 
@@ -62,27 +40,18 @@ This is a 4-step workflow for transforming a process into a skill.
 
 **Goal:** Ensure the skill is complete, correct, and ready for use.
 
-1.  **Validate Structure:** Check that the SKILL.md has all required sections: Philosophy, When to Use, Workflow, Best Practices, Quality Checklist. Grade against the skill-audit rubric.
+1.  **Validate Structure:** Check that the SKILL.md has all required sections and grades against the skill-audit rubric.
 2.  **Test the Skill:** Use the skill in a real scenario to verify the workflow is complete and the instructions are clear.
 3.  **Place the Skill:** Add the skill directory to the appropriate plugin in the repository.
 
 ---
 
-## IV. Best Practices
-
--   **Focus on the "Why":** When documenting the process, don't just list the steps. Explain *why* each step is important.
--   **Generalize the Pattern:** The goal is to create a reusable skill, so abstract the specific details of your example into a general pattern.
--   **The Template is Your Friend:** The `process_example_template.md` is designed to capture all the information needed for a successful conversion.
--   **Iterate:** The first version of a skill is rarely perfect. Be prepared to iterate on it after using it in a real-world scenario.
-
----
-
-## V. Quality Checklist
+## II. Quality Checklist
 
 Before delivering the skill, ensure you can answer "yes" to all of the following questions:
 
 -   [ ] Have you documented the process with concrete examples using the provided template?
--   [ ] Have you used the `/seed-to-skill-converter` to generate the initial `SKILL.md`?
+-   [ ] Have you used `seed-to-skill-converter` to generate the initial `SKILL.md`?
 -   [ ] Have you added a quality checklist and best practices to the skill?
 -   [ ] Have you created any necessary bundled resources (scripts, templates, references)?
 -   [ ] Have you validated the skill structure against the skill-audit rubric?
@@ -90,43 +59,27 @@ Before delivering the skill, ensure you can answer "yes" to all of the following
 
 ---
 
-## VI. Common Pitfalls
+## Output
 
-### Documenting Too Specifically
+- A process example document capturing the specific instance: steps, tools, inputs, outputs, and key insights (using `references/process_example_template.md`)
+- A `SKILL.md` file generated by `seed-to-skill-converter` from the documented process, with a generalized workflow, quality checklist, and best practices
+- Any bundled resources identified during documentation (scripts, templates, reference files) placed in the skill directory
+- The completed skill placed in the appropriate plugin directory and validated against the skill-audit rubric
 
-**Problem:** Recording every detail of the specific instance instead of the generalizable pattern. The resulting skill only works for one exact scenario.
+## Examples
 
-**Solution:** After documenting the concrete example, do a second pass where you replace specific names, paths, and values with placeholders and describe the *category* of thing, not the instance.
+**Scenario 1:** "We just finished migrating our plugin directories for the third time — turn that into a skill" → Document the specific migration (which directories, which renames, which cross-reference updates) using the process template, then use `seed-to-skill-converter` to generalize it into a `directory-reconciliation` skill with a 5-step workflow.
 
-### Skipping the "Why"
+**Scenario 2:** During a retrospective: "Every sprint we do the same release-verification sequence manually — can we capture it?" → Document the sequence from the last sprint with concrete tool calls and decision points, convert it to a skill, validate, and place it in the appropriate plugin.
 
-**Problem:** A process document that says "do X, then do Y, then do Z" without explaining why each step matters. The resulting skill is fragile — any deviation breaks it because the user can't adapt.
+## Edge Cases
 
-**Solution:** For every step, add one sentence: "This matters because..." If you can't explain why, the step may be unnecessary.
+- Process has only been done once — do not extract yet; one instance is not enough to distinguish essential steps from accidental ones; wait for a second or third run before formalizing
+- Process is highly environment-specific (e.g., depends on a particular server's file paths) — generalize paths to parameters during Step 2; if it cannot be generalized, document it as a runbook rather than a skill
+- User wants to capture a half-formed idea, not a completed process — redirect to `seed-extraction` for capturing the insight as a seed; extract to a skill once the pattern has been validated in practice
 
-### Premature Formalization
+## Anti-Patterns
 
-**Problem:** Turning a process into a skill after doing it once. One instance isn't enough to know what's essential vs. accidental. The skill encodes noise alongside signal.
-
-**Solution:** Wait until you've done the process at least twice — ideally three times — before extracting it. The second and third times reveal which steps are truly reusable.
-
----
-
-## VII. Example
-
-**Context:** After the third time running a "merge and reconcile plugin directories" workflow, the team recognized a repeatable pattern: inventory both sides, map naming differences, do renames, copy additive content, update cross-references, verify.
-
-**Step 1 output:** A detailed process example documenting the specific merge (which directories, which files, which renames), with key insights like "always rename longest strings first to avoid partial matches" and "verify zero stale references after replacement."
-
-**Step 2 output:** A generalized "directory-reconciliation" SKILL.md with a 5-step workflow: Inventory → Map → Transform → Update References → Verify.
-
-**Step 3 refinements:** Added a pitfall about filesystem permission restrictions preventing deletions, and a quality checklist item about checking JSON manifests alongside markdown files.
-
----
-
-## VIII. Related Skills
-
-- **skill-creation** — For building new skills from scratch (this skill starts from a completed process)
-- **seed-extraction** — For capturing smaller patterns as seeds before they're ready to be full skills
-- **seed-to-skill-converter** — The tool used in Step 2 to transform documented processes into SKILL.md format
-- **retrospective** — Often the trigger for identifying processes worth extracting
+- **Documenting too specifically:** Recording every detail of the specific instance (exact file names, dates, one-off decisions) instead of the generalizable pattern — the resulting skill only works for that exact scenario
+- **Skipping the "why":** A process document that lists steps without explaining why each step matters produces a skill that breaks on any deviation, because the user cannot adapt
+- **Extracting too early:** Formalizing after one use encodes noise alongside signal — the second and third runs reveal which steps are truly essential

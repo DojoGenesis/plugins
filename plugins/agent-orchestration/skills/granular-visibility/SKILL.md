@@ -1,6 +1,8 @@
 ---
 name: granular-visibility
-description: "Maintain granular progress tracking that serves the user's need for steering, not the agent's preference for tidiness. Default to detail; let the user request compression. Use on any task with 10+ discrete steps, multi-phase work, or when the instinct arises to simplify progress tracking. Trigger phrases: 'long todo list', 'simplify the progress', 'clean this up', 'what is the status', 'too many items'."
+model: sonnet
+description: Produces a granular todo list where each item maps to one discrete deliverable or decision point, maintained at real-time accuracy throughout execution. Use when: 'what is the status', 'too many items in the list', 'simplify the progress tracking', 'long todo list'.
+category: agent-orchestration
 ---
 
 # Granular Visibility
@@ -110,3 +112,25 @@ If the user says the todo list feels long:
 - **workspace-navigation**: Navigating shared work benefits from detailed status visibility
 - **decision-propagation**: Decisions surface faster when progress is visible and granular
 - **agent-teaching**: Teaching another agent requires understanding where work stands — visibility enables this
+
+## Output
+
+- A structured todo list with one item per discrete deliverable or decision point, each in imperative form with unambiguous scope
+- Real-time status markers (`pending`, `in_progress`, `completed`, `blocked`) updated as work changes state
+- Blocker annotations on any item that cannot proceed, including the reason and what is needed to unblock
+
+## Examples
+
+**Scenario 1:** User asks to migrate a codebase across 14 files with 3 decision points → skill produces a 17-item list (14 file items + 3 decision items), each named specifically (e.g., "Parse auth settings in config.go and determine if migration required"), updated to `in_progress` before work starts and `completed` immediately after.
+
+**Scenario 2:** User says "the todo list feels too long" on a 22-item task → skill confirms length reflects actual complexity, offers to reorganize items by phase without removing any, and asks whether the user wants a compressed summary alongside the full list — not instead of it.
+
+## Edge Cases
+
+- If the user explicitly requests compression and accepts the tradeoff of reduced steering visibility, provide a phased summary view but preserve the full granular list internally and offer to restore it at any time.
+- If scope changes mid-task (new requirements added or items dropped), update the list visibly — add new items, mark removed items as `cancelled` with a reason — do not silently restructure.
+
+## Anti-Patterns
+
+- Grouping multiple deliverables under a single "Phase N" item to keep the count low — this hides complexity and breaks real-time status accuracy because the phase item cannot be marked complete until all sub-work finishes.
+- Updating todo status in batch at the end of a work block rather than in real-time — the user sees stale data and cannot steer during execution.

@@ -1,6 +1,8 @@
 ---
 name: repo-status
-description: Generate comprehensive living status documents for software repositories combining filesystem exploration, semantic clustering, file importance ranking, and health assessment. Use when understanding codebases, auditing repos, creating system maps, assessing health, or onboarding to projects. Trigger phrases: 'give me a complete repo overview', 'understand this codebase', 'what does this repo do', 'create a system map', 'audit this repository', 'build a mental model'.
+model: sonnet
+description: Produces a comprehensive `.status.md` status document combining filesystem exploration, semantic clusters, file importance ranking, and health assessment — a single artifact any agent or human can use as the starting point for a project. Use when: "give me a complete repo overview", "understand this codebase", "create a system map", "build a mental model", "prepare a handoff document".
+category: system-health
 ---
 
 # Repo Status Skill
@@ -222,3 +224,19 @@ Before delivering the `.status.md`, confirm:
 - [ ] Active workstreams reflect actual current work
 - [ ] Next steps are concrete and actionable
 - [ ] The document reads coherently from top to bottom
+
+## Output
+- `.status.md` saved at the project root (dot-prefixed, stays discoverable without cluttering the root alongside README).
+- Ten sections: Vision and Purpose, Current State (emoji table), Directory Structure (annotated tree), Semantic Clusters (per-verb component tables), File Importance Ranking (4 tiers), Health Assessment, Active Workstreams, Blockers and Dependencies, Next Steps, Aggregate Statistics.
+
+## Examples
+**Scenario 1:** "Give me a complete overview of the Gateway repo before the sprint" → `.status.md` generated with all 10 sections. Semantic clusters reveal REASON and ORCHESTRATE are the most complex clusters. Health assessment surfaces a missing CI/CD config as a sustainability concern.
+**Scenario 2:** "Prepare a handoff doc for the HTMLCraft Studio" → `.status.md` produced for a Wails v2 + Go project. 8-module architecture mapped into 5 clusters. Tier 1 files identified. Handed off to incoming agent who begins from the status doc rather than a 30-minute walkthrough.
+
+## Edge Cases
+- If the project has fewer than 50 files, skip semantic clusters (Section 4) and file importance ranking (Section 5) — they add little value at small scale.
+- On subsequent runs, diff against the existing `.status.md` and update incrementally rather than regenerating from scratch — especially critical for aggregate statistics that change with every commit.
+
+## Anti-Patterns
+- Conflating this skill with `health-audit` — repo-status produces status documents; health-audit produces engineering commissions. The outputs are complementary but distinct.
+- Verifying statistics by estimation rather than running `find` and `wc -l` — a beautiful document full of wrong numbers is worse than no document.

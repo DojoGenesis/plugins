@@ -1,7 +1,9 @@
 ---
 name: figma-to-code
-description: Bridge between Figma MCP server and code generation. Extract design tokens, component structure, and layout from Figma nodes, then generate framework-specific code (HTML, Svelte, React, Vue). Use when the user shares a Figma URL or asks to implement a design. Trigger phrases: "implement this figma design", "convert figma to code", "extract tokens from figma", "build this component from the design", "generate HTML from figma".
+model: sonnet
+description: Extracts design tokens, component structure, and layout from a Figma file and produces framework-specific code (HTML, Svelte, React, or Vue) that preserves design intent rather than pixel-copying. Use when: 'implement this Figma design', 'convert this Figma file to code', 'extract tokens from Figma', 'build this component from the design'.
 license: Adapted from nafiurrahmanniloy/figma-skill (MIT)
+category: continuous-learning
 ---
 
 # Figma to Code
@@ -103,3 +105,27 @@ Compare generated code against the Figma screenshot:
 - `canvas-design` — Visual artifact generation
 - `theme-factory` — Styling toolkit for HTML pages
 - `artifacts-builder` — HTML artifact scaffolding
+
+## Output
+
+- CSS custom properties block documenting all extracted design tokens (colors, typography, spacing, radius, shadows)
+- Framework-specific component file: `.html` + `.css`, `.svelte`, `.tsx` (React), or `.vue` based on user's target
+- Fidelity verification notes comparing generated output against the Figma screenshot
+
+## Examples
+
+**Scenario 1:** "Implement this Figma card component in HTML" -> Token set extracted (primary blue #1a73e8, Inter 16/24, 8px radius, 16px padding), semantic HTML `<article>` with CSS custom properties generated, auto-layout mapped to flexbox, accessibility attributes (`aria-label`, `role`) added
+
+**Scenario 2:** "Build this navigation sidebar from the Figma design in Svelte" -> Svelte component with scoped styles generated, Figma auto-layout (vertical stack, 8px gap) mapped to `display: flex; flex-direction: column; gap: 8px`, active state variant captured as CSS class, mobile-first responsive breakpoint added
+
+## Edge Cases
+
+- **Figma file has no design tokens defined (all values are hardcoded in nodes):** Extract values directly from node properties and name them semantically based on their usage (e.g., `--color-nav-active` not `--color-1a73e8`); note in output that token naming is inferred
+- **Design contains overlapping absolute-positioned layers (not auto-layout):** Preserve relative positioning using CSS `position: relative/absolute`; flag in output that this area did not use auto-layout and may need manual responsive handling
+- **User provides a Figma URL but the MCP tool returns an error:** Ask user to verify the file is shared with link access enabled; do not guess at the design from the URL alone
+
+## Anti-Patterns
+
+- Generating `div` soup instead of semantic HTML — use `nav`, `section`, `article`, `button`, `header` based on the element's role in the design
+- Hardcoding hex values directly in component styles instead of extracting them as CSS custom properties — hardcoded values cannot be themed or updated centrally
+- Treating the Figma screenshot as the acceptance gate without also verifying that the code works at mobile breakpoints

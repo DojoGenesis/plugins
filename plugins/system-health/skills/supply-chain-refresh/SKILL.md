@@ -1,7 +1,9 @@
 ---
 name: supply-chain-refresh
-description: Automated pipeline that refreshes the Dojo skill supply chain by pulling latest from watched repos, re-scanning, normalizing, and packaging new or updated skills into CAS. Use for periodic maintenance of the community skill library. Trigger phrases: "refresh the supply chain", "update community skills", "run skill supply chain", "sync skills from repos".
+model: sonnet
+description: Produces a Supply Chain Refresh Report and updated manifest.json by pulling the latest from all watched repos, scanning for new or changed skills, normalizing, and packaging them into CAS. Use when: "refresh the supply chain", "update community skills", "weekly skill library maintenance", "a community repo announced a new release".
 license: Complete terms in LICENSE.txt
+category: system-health
 ---
 
 # Supply Chain Refresh
@@ -96,3 +98,20 @@ Overwrite `manifest.json` with new state.
 - [ ] Diff report generated with complete change summary
 - [ ] Manifest.json updated with new state
 - [ ] Previous manifest archived
+
+## Output
+- A Supply Chain Refresh Report (markdown) showing new, updated, removed, and unchanged skill counts with a details table for new skills (name, source repo, tier, CAS hash).
+- An updated `manifest.json` at `/AgenticStackOrchestration/specs/starred-repos-supply-chain/manifest.json`.
+- A archived copy of the previous manifest saved as `manifest-{date}.json` before overwriting.
+
+## Examples
+**Scenario 1:** "Weekly skill library maintenance" → 3 repos pulled, scan finds 2 new skills and 1 updated. Both new skills normalized and packaged into CAS. Report shows 495 → 497 community skills. Manifest updated.
+**Scenario 2:** "A community repo announced a new release with 5 new skills" → Targeted pull of that repo, scan detects all 5 as new (absent in manifest). All 5 normalized and packaged. Diff report generated listing names, source, and CAS hashes.
+
+## Edge Cases
+- If a repo pull fails (rate limit, auth, network), log the failure but continue processing the remaining repos — a partial refresh with a complete failure log is better than a failed run.
+- Content-addressed storage (CAS) is idempotent for unchanged content — re-running on the same state produces no new CAS entries, making the operation safe to re-run.
+
+## Anti-Patterns
+- Scanning before pulling — stale clones produce false "unchanged" reports that hide new skills from recently updated repos.
+- Overwriting `manifest.json` without archiving the previous version — without the archive, diffs cannot be reconstructed and the audit trail is broken.

@@ -1,6 +1,8 @@
 ---
 name: strategic-to-tactical-workflow
-description: Execute the complete workflow from recognizing strategic tensions through tactical commission and reflection. Use at the start of major development cycles or when moving from strategy to implementation. Trigger phrases: 'walk me through the full workflow', 'from tension to commission', 'ground this in the codebase then spec and commission', 'what did we learn this cycle'.
+model: opus
+description: Produces a complete set of phase-by-phase artifacts for a development cycle — scout document, backend grounding doc, parallel track specifications, implementation prompts, and a post-cycle reflection — by orchestrating the other strategic-thinking skills in sequence. Use when: "walk me through the full workflow", "we're starting a new release cycle", "take me from our strategic question all the way to commissioned implementation prompts", "what did we learn this cycle and what should we formalize".
+category: strategic-thinking
 ---
 
 # Strategic-to-Tactical Workflow Skill
@@ -358,6 +360,33 @@ This skill is the **meta-pattern** that connects all other strategic and tactica
 - `seed-extraction` - Capture smaller learnings
 
 ---
+
+## Output
+
+- Phase 1-2: Scout document (`thinking/[topic]_strategic_scout.md`) with tension, routes, and selected direction
+- Phase 5: Backend grounding document (`docs/vX.X.X/[release]_backend_grounding.md`) mapping API endpoints, data models, and integration points
+- Phase 6: Track specification documents (`docs/vX.X.X/[release]_track_[N]_spec.md`), one per parallel workstream
+- Phase 7: Implementation prompt files (`docs/vX.X.X/prompts/track_[N]_prompt.md`), self-contained and commission-ready
+- Phase 8: New skills or seeds in the knowledge base, and a compression note summarizing key learnings from the cycle
+
+## Examples
+
+**Scenario 1:** "We're starting v0.0.32. We're not sure whether to prioritize the API layer or the frontend shell." → Full 8-phase run: tension named ("API completeness vs. UI polish"), 5 routes scouted, decision made (parallel tracks: API track + UI shell track), codebase grounded, two spec docs written, two implementation prompts commissioned, post-cycle reflection extracts one new pattern as a seed.
+
+**Scenario 2:** "We shipped v0.0.31. What did we learn and what should we formalize?" → Phase 8 only: compression ritual surfaces 3 patterns from the cycle, one is strong enough to become a skill (written and committed), two become seeds, all artifacts committed to the repository.
+
+## Edge Cases
+
+- If the user is mid-cycle (e.g., specs are written but prompts are not), enter at the appropriate phase rather than restarting from Phase 1 — ask which phase they are on before proceeding.
+- If the codebase has not been read recently (Phase 5 skipped in a prior cycle), treat grounding as mandatory even if the user wants to move quickly — specs built on stale assumptions produce rework.
+- For small changes (a single-file bug fix or a minor UI tweak), this 8-phase workflow is overkill — redirect to `strategic-scout` for just the decision, then directly to an implementation prompt. Reserve the full workflow for releases that span multiple files or architectural decisions.
+
+## Anti-Patterns
+
+- Running Phase 6 (spec writing) before Phase 5 (codebase grounding) — specifications written without reading the current code routinely miss existing abstractions, causing implementation agents to rebuild what already exists.
+- Treating Phase 8 as optional — skipping reflection means the patterns from this cycle are not available to the next cycle, which defeats the compounding-velocity goal of the workflow.
+- Commissioning all parallel tracks simultaneously before Track 0 (the foundation track) is verified — always complete the dependency-order gate before releasing parallel agents.
+- Using this skill as a checklist to tick boxes rather than a thinking tool — the value is in the quality of the tension articulation and the depth of the codebase grounding, not in completing all 8 phases mechanically.
 
 ## IX. The Vision
 

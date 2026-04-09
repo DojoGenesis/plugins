@@ -1,6 +1,8 @@
 ---
 name: parallel-tracks
-description: Split large tasks into independent parallel tracks to maximize velocity. Use when coordinating multiple parallel development streams or organizing dependent tracks. Trigger phrases: 'split into parallel tracks', 'organize these tracks', 'phased parallelism', 'coordinate parallel development', 'define track dependencies'.
+model: sonnet
+description: Produces a parallel-tracks execution plan with phased structure, self-contained track specifications, integration contracts, and a mandatory wiring gate. Use when 'split into parallel tracks', 'organize these tracks into phases', or 'plan parallel development for this release'.
+category: specification-driven-development
 ---
 
 # Parallel Tracks Pattern Skill
@@ -139,3 +141,30 @@ Before commissioning the tracks, ensure you can answer "yes" to all of the follo
 7.  [ ] Has integration/wiring been completed or explicitly deferred (with open tasks and deferral reason documented)?
 
 If you cannot answer "yes" to all of these, revisit the planning phase before proceeding.
+
+---
+
+## Output
+
+- A parallel-tracks execution plan document (markdown), typically saved to `docs/vX.X.X/parallel_tracks_plan.md`
+- One self-contained track specification per track (markdown files), each executable independently
+- A dependency graph or phase table showing execution order
+- An integration/wiring checklist confirming all tracks are merged and wired before the work is declared done
+
+## Examples
+
+**Scenario 1:** "We have a new desktop shell with three major pieces — scaffold, backend, and UI. How do we parallelize this?" → A three-track plan with Phase 0 (scaffold) running first, then Phase 1 (backend + UI in parallel), plus integration contracts defining the API the UI consumes from the backend.
+
+**Scenario 2:** "I have four specs ready. Let's organize these tracks and get agents running." → A phased execution plan enumerating Track 0 remediation (if needed), Tracks 1-4 with dependency arrows, and a mandatory integration gate prompt for after all tracks complete.
+
+## Edge Cases
+
+- When the codebase has no existing patterns to ground track specs in, run `codebase-audit-grounding` first before writing specifications
+- When fewer than two agents are available, collapse parallel tracks into a sequential plan rather than forcing parallelism that will block on a single executor
+- When a track produces a shared type used by three or more other tracks, treat that track as Phase 0 regardless of its apparent independence
+
+## Anti-Patterns
+
+- Writing track specs that assume the output of sibling tracks — if Track B needs Track A's API, Track B is dependent and must run in a later phase, not in parallel
+- Skipping the integration gate and calling tracks "done" once they compile individually — isolated tracks that are never wired produce dead code
+- Over-parallelizing: creating five or more tracks adds coordination overhead that cancels the speed benefit; aim for two to four

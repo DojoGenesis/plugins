@@ -1,6 +1,8 @@
 ---
 name: retrospective
-description: Conduct structured post-sprint retrospectives for continuous improvement and learning harvest. Use after major releases, significant milestones, or when projects feel stuck. Trigger phrases: 'do a retrospective', 'what did we learn', 'reflect on this release', 'harvest the learnings', 'what went well and what was hard'.
+model: opus
+description: Produces a Retrospective Document with structured reflection (what went well, what was hard, what to change) and seeds for the memory garden. Use when: 'do a retrospective', 'what did we learn from this sprint', 'reflect on this release', 'harvest the learnings', 'what went well and what was hard'.
+category: continuous-learning
 ---
 
 # Retrospective Skill
@@ -126,3 +128,37 @@ Commit the completed retrospective document to the repository. Share the key fin
 -   **Be Specific and Concrete:** Avoid vague statements. Use specific examples.
 -   **End with Action:** Every retrospective should result in at least one concrete action item for the next sprint.
 -   **Keep it Lightweight:** The process should feel energizing, not burdensome.
+
+---
+
+## Output
+
+- A Retrospective Document saved to the project's `docs/retrospectives/` directory
+- Named: `[sprint-or-release-name]_retrospective.md`
+- Sections: Three Core Questions, Key Themes and Insights table, Seeds for Memory Garden, Closing
+- At least one Action Item per theme that enters the next sprint's planning
+
+---
+
+## Examples
+
+**Scenario 1:** "Do a retrospective on v0.3 ship" → Retrospective Document with What Went Well / What Was Hard / What Would We Do Differently, 3 themes with action items, and 1-2 memory garden seeds from the most reusable lessons
+
+**Scenario 2:** "The project feels stuck, let's reflect" → Retrospective triggered mid-sprint, identifies friction source (a recurring integration bottleneck), synthesizes into an action item to fix the integration pattern, and seeds a lesson about early integration testing
+
+---
+
+## Edge Cases
+
+- **Solo retrospective (no collaborators):** Run the three questions as a self-interview; treat your own perspective as a single data point and note where additional perspectives would change the synthesis
+- **Retrospective immediately after a failure or conflict:** Lead with the "What Went Well" section first to establish psychological safety before surfacing friction
+- **Too many themes identified (6+):** Cluster into 3 parent themes; sub-themes belong inside those clusters, not as separate rows
+
+---
+
+## Anti-Patterns
+
+- Conducting a retrospective during a crisis or before the sprint is complete — retrospective requires a closed period to reflect on, not an open one
+- Producing only a list of complaints without action items — every friction point must map to a concrete next step
+- Conflating "what was hard" with "who was at fault" — retrospectives analyze process, never individuals
+- Skipping the Seeds section when a lesson is particularly reusable — the seeds are how retrospective learning transfers to future sprints

@@ -1,15 +1,9 @@
 ---
 name: tool-intercept-logger
-description: >
-  Captures structured logs of tool executions using OTEL-compatible attributes
-  for visibility into what tools are called, with what arguments, and at what
-  cost. Trigger this skill when a user asks to "log tool calls", "trace what
-  tools are running", "capture tool execution history", "monitor MCP tool
-  usage", or "see what's being called in this session". Also triggers when
-  debugging unexpected agent behavior where tool invocation patterns are
-  unknown, or when establishing observability baselines for a new agent
-  configuration.
+model: sonnet
+description: Produces structured OTEL-compatible log entries and a session summary (call counts, success rate, cost, top tools by cost and frequency) for all tool executions within a session. Use when: "log tool calls for this session", "debug unexpected tool selection", "audit token cost by tool", "validate a new MCP integration", "build a session summary for handoff".
 license: proprietary
+category: system-health
 ---
 
 ## I. Philosophy
@@ -184,3 +178,20 @@ Before completing this skill, verify:
 - [ ] Session summary computed with all six aggregate metrics
 - [ ] Exporter status noted in session log header if OTEL pipeline not configured
 - [ ] Large sessions (>50 entries) summarized by namespace in output
+
+## Output
+- Per-call log entries in OTEL-compatible format written to SQLite (local query) and forwarded to the OTEL exporter pipeline if configured.
+- A session summary block: total calls, success rate, total input/output tokens, total cost, avg duration, p95 duration, error rate, top 5 tools by cost, top 5 tools by call count.
+- A session log header noting scope, start timestamp, model, and exporter status.
+
+## Examples
+**Scenario 1:** "Log all tool calls for this session" → Scope set to `all`. Per-call entries captured for 23 tool calls. Session summary produced at session end showing `web_search` as top cost driver (42% of total cost) and `bash` as top by call count (11 calls).
+**Scenario 2:** "Validate that the new GitHub MCP integration is being called correctly" → Scope set to `namespace:mcp__github__*`. 6 calls logged. Result summaries confirm correct arguments being passed. One call returned a 404 — error_message captured and surfaced.
+
+## Edge Cases
+- Blocked calls (stopped by `budget-guard`) must be logged with `status: "blocked"` and a result_summary of `"[budget guard: BLOCK]"` — they are observable events even though they produced no tool output.
+- For SSE-delivered results, use the `tool_completed` event payload as the authoritative source for duration_ms and result rather than reconstructing from timestamps.
+
+## Anti-Patterns
+- Using this skill instead of `agent-performance-report` for historical analysis across sessions — tool intercept logging captures live, per-call data for the current session; performance reporting aggregates historical spans across sessions.
+- Logging raw argument values without sanitization — API keys, bearer tokens, and PII must be redacted to `[REDACTED]` before any persistence or output.

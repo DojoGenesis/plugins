@@ -1,6 +1,8 @@
 ---
 name: async-agent-dispatch
-description: Dispatch long-running agent tasks to background execution with structured result collection. Use when a task will take more than 2 minutes and shouldn't block the user. Trigger phrases: "run this in background", "dispatch agent for long task", "async agent execution", "background task with results", "parallel agent dispatch".
+model: sonnet
+description: Produces a structured background-dispatch handoff — task description, output contract, success criteria, and timeout — so long-running work completes without blocking the user. Use when: "run this in the background", "dispatch agent for long task", "I need this to run async", "parallel agent dispatch".
+category: agent-orchestration
 ---
 
 # Async Agent Dispatch
@@ -181,3 +183,30 @@ Output contract: `/tmp/test-results-2026-04-06.log`, plain text test output.
 - `granular-visibility` -- Progress tracking patterns for long-running work
 - `background-agent-parallelism` seed -- Long ops as background, short as foreground
 - `async-sandbox-dispatch` seed -- Control plane / data plane separation pattern
+
+## Output
+
+- Dispatch mode decision (Bash background, Agent sub-task, or parallel tracks) with rationale
+- Completed handoff block: task description, output contract (exact file path + format), success criteria, timeout
+- User-facing status message confirming what was dispatched and expected completion time
+- Result validation report after background task completes: success/failure against criteria, errors surfaced, temporary files cleaned up
+
+## Examples
+
+**Scenario 1:** "Run the full test suite while we keep working on the auth feature." → Task classified as 5-minute background (Bash mode); dispatched with `run_in_background=true`, output to `/tmp/test-results-2026-04-08.log`, timeout 600s; user informed; on completion, results read and failures reported with file and line numbers.
+
+**Scenario 2:** "Normalize all 47 community skills while I plan the next phase." → Task classified as 10+ minutes (Agent sub-task mode); split into 3 parallel agents (groups of ~16 skills each) each writing to a separate output path; main thread plans Phase 4; results merged and validated after all 3 complete.
+
+## Edge Cases
+
+- Task definition is ambiguous at dispatch time: do not dispatch; get clarity first — a background agent that guesses wrong produces unusable output and cannot ask mid-task
+- Background task completes but output file is missing or empty: do not silently accept; report the failure, check the exit code, and decide whether to retry with the same parameters or escalate
+- User asks to check background task status before notification arrives: do not poll in a sleep loop; tell the user the task is still running and you will report when notified
+
+## Anti-Patterns
+
+- Dispatching a task under 30 seconds to background — dispatch overhead exceeds the task duration; just run it inline
+- Not specifying an exact output file path before dispatch — "output it somewhere" means the foreground agent cannot find results
+- Running a polling loop (`while true; do sleep 5; check; done`) instead of waiting for `run_in_background` notification — wastes context and cycles
+- Dispatching more than 4 parallel agents at once — coordination overhead exceeds parallelism benefit past that threshold
+- Silently swallowing a failed background task — always surface errors to the user with what succeeded and what failed

@@ -1,0 +1,15 @@
+{
+  "name": "pretext-pdf",
+  "version": "0.2.0",
+  "description": "Pretext-powered PDF export connector. Converts code, Markdown, HTML, chat conversations, and structured Dojo ecosystem files into beautifully typeset PDFs using @chenglou/pretext for precise Canvas-based typography measurement and layout.",
+  "author": {
+    "name": "Dojo Genesis"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["pdf", "export", "pretext", "typography", "document", "renderer"],
+  "mcpServer": {
+    "command": "node",
+    "args": ["dist/index.js"],
+    "cwd": "../../PretextPDFByDojoGenesis"
+  }
+}

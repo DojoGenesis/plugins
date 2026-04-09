@@ -1,14 +1,9 @@
 ---
 name: ingest-system-prompt
-description: >
-  Parses and stores a system prompt from an external AI tool (Cursor, Windsurf,
-  Copilot, Cline, etc.) into the Dojo memory system as structured knowledge.
-  Trigger this skill when a user provides a system prompt file path or raw
-  prompt text and wants to import it, analyze its behavioral rules, or map its
-  dispositions into the Dojo agent model. Also triggers on phrases like "import
-  this prompt", "ingest Cursor rules", "store this system prompt", or "analyze
-  what this AI is configured to do".
+model: sonnet
+description: Produces a stored MemoryEntry (structured sections + ADA disposition indicators) and one or more MemorySeeds by parsing a system prompt from an external AI tool into Dojo memory. Use when: "ingest this system prompt", "store this prompt in memory", "parse this agent's rules", "import this Cursor prompt", "analyze what this prompt does".
 license: proprietary
+category: wisdom-garden
 ---
 
 ## I. Philosophy
@@ -176,3 +171,25 @@ Before completing this skill, verify:
 - [ ] At least one MemorySeed stored if any behavioral indicator was detected
 - [ ] Entry ID included in final output
 - [ ] No behavioral simulation of the foreign prompt performed
+
+## Output
+
+- A MemoryEntry stored via `gateway.MemoryStore.Store()` with `EntryType: "system_prompt"` and all five canonical sections in the Content field
+- One or more MemorySeeds storing detected behavioral indicators with dimension metadata and `source_entry_id`
+- A text summary returned to the user listing: stored entry ID, sections parsed, detected indicators per dimension, conflicts, and seed count
+
+## Examples
+
+**Scenario 1:** User pastes a Cursor `.cursorrules` file → skill identifies source as Cursor, parses into behavioral_rules and constraints sections, detects `pacing: rapid` and `initiative: responsive`, stores the MemoryEntry, creates 2 seeds, and returns the summary with entry ID.
+
+**Scenario 2:** User provides a file path `~/Downloads/copilot-instructions.md` → skill reads the file, identifies Copilot as the source tool, parses 4 sections, detects a conflict between `initiative: reactive` and `initiative: proactive` in different sections, surfaces the conflict in the summary, and stores the entry with both signals documented.
+
+## Edge Cases
+
+- If the file is shorter than 200 words, still ingest it but flag the analysis as low-fidelity — there is insufficient text to detect reliable behavioral signals.
+- If the source tool cannot be identified from the file name, header, or content, ask the user before storing. An unlabeled entry pollutes behavioral queries.
+
+## Anti-Patterns
+
+- Defaulting undetected dimensions to Dojo's standard values — if the prompt is silent on a dimension, the correct value is "not detected", not a borrowed default.
+- Simulating or executing the foreign prompt's instructions — this skill ingests for analysis only; it does not adopt the foreign agent's behavior.

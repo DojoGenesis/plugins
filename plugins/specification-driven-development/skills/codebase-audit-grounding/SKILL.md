@@ -1,6 +1,8 @@
 ---
 name: codebase-audit-grounding
-description: "Run quantified audits of an existing codebase before writing specifications. Measure actual patterns — test count, accessibility markers, error handling, dependencies, storage usage — and anchor specifications to measured reality rather than assumptions. Use when writing specs against existing code, before handing off to autonomous agents, or when grounding strategic analysis in current state. Trigger phrases: 'audit the codebase', 'measure before speccing', 'ground this in reality', 'what does the code actually look like', 'current state audit'."
+model: sonnet
+description: "Produces a quantified current-state report (test count, aria markers, error boundaries, storage usage, dependencies) used to anchor specifications in measured reality rather than assumptions. Use when: 'audit the codebase before speccing', 'ground this spec in reality', 'what does the code actually look like', 'measure before I write the spec'."
+category: specification-driven-development
 ---
 
 # Codebase Audit Grounding
@@ -150,3 +152,27 @@ Document how the measurements were taken:
 - **strategic-scout**: Can be grounded in codebase audit results for more precise analysis.
 - **specification-writer**: Works best paired with audit grounding to prevent ungrounded specs.
 - **implementation-prompt**: Receives higher-quality specs when grounding is done upstream.
+
+## Output
+
+- A "Current State (Measured)" section ready to paste into a specification document, containing exact counts and file samples for each chosen metric
+- The grep/find commands used, recorded in the spec for reproducibility
+- A delta framing ("From X → to Y") for each measured dimension, ready to anchor proposed changes
+
+## Examples
+
+**Scenario 1:** "Audit the DojoChat codebase before writing the v0.4 accessibility spec." → Current State section listing 207 aria instances across 18 files, 1 ErrorBoundary at App root, 0 localStorage usage, 8 Framer Motion files — plus the exact grep commands that produced those counts.
+
+**Scenario 2:** "Ground the new test strategy spec in what tests already exist." → A report showing 24 test files, the test framework (Vitest), current coverage gaps by directory, and a delta framing showing which modules have zero coverage.
+
+## Edge Cases
+
+- When the codebase is brand new with no existing files, skip the audit and note that all metrics start at zero — write the spec as greenfield.
+- When running audits on a monorepo, scope each grep command to the specific package directory; repo-wide counts mislead when only one package is being specced.
+- When the spec work spans multiple days, re-run all audits on the day of finalization — codebase changes invalidate counts taken earlier.
+
+## Anti-Patterns
+
+- Recording only totals without file names — a count of "207" without knowing which files contain the markers gives the implementing agent nothing to act on.
+- Running audits from a feature branch instead of main — branch-specific state produces measurements that won't match what the agent sees when it checks out.
+- Describing an ideal end state instead of a measured delta — "we should have full test coverage" is a wish, not a spec; "from 24 test files → add 8 more covering the Modal and Form modules" is a spec.

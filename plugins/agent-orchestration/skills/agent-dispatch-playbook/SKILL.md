@@ -1,6 +1,7 @@
 ---
 name: agent-dispatch-playbook
-description: Concrete patterns for orchestrating parallel agent work — worktree isolation, background delegation, fix agents, audit agents. Use when dispatching multiple agents, planning parallel tracks, or deciding foreground vs background execution.
+model: sonnet
+description: Produces a dispatch plan — isolation model, agent count, sequencing, and model assignments — for multi-agent parallel work. Use when: "dispatch agents in parallel", "run multiple tracks simultaneously", "plan parallel agent strategy", "should this be foreground or background".
 triggers:
   - "dispatch agents in parallel"
   - "orchestrate parallel work across repos"
@@ -13,6 +14,7 @@ metadata:
   portable: true
   tier: 1
   agents: ["agent-orchestration"]
+category: agent-orchestration
 ---
 
 # Agent Dispatch Playbook
@@ -174,12 +176,31 @@ run_health_audits()
 
 ## VI. Model Routing
 
+### Frontmatter Convention
+
+Every SKILL.md MUST declare `model: sonnet` or `model: opus` in YAML frontmatter. This is the authoritative routing signal — when the Dojo Gateway or a dispatch agent invokes a skill, it reads this field to select the model. Skills without a `model:` field default to the parent session's model, which wastes Opus tokens on mechanical work.
+
+### Routing Decision Matrix
+
 | Task Type | Model | Why |
 |-----------|-------|-----|
 | Planning, judgment, architecture | Opus | Needs reasoning depth |
+| Strategy, synthesis, pattern recognition | Opus | Ambiguity requires judgment |
 | Parsing, sed, template application | Sonnet | Fast, mechanical work |
-| Health audits, code exploration | Opus or Sonnet | Depends on codebase familiarity |
 | Fix agents with exact instructions | Sonnet | Instructions are complete, just execute |
+| Normalization, auditing, bulk edits | Sonnet | Deterministic operations |
+| Health audits, code exploration | Sonnet | Read-heavy, report-focused |
+| Deep research, retrospectives | Opus | Synthesis across sources |
+
+### Target Split: 60% Sonnet / 40% Opus
+
+The cost-optimal ratio for a solo operator running 200+ Agent calls per session. When in doubt, default to Sonnet — most agent work is mechanical once the main thread has made the judgment call.
+
+### Enforcement
+
+1. **New skills:** `model:` field is required in YAML frontmatter. Skill audit flags missing fields.
+2. **Agent dispatch:** When calling the Agent tool, specify `model: "sonnet"` or `model: "opus"` explicitly. Do not rely on parent session default.
+3. **Audit gate:** The nightly skill audit checks that all first-party skills declare a model. Missing `model:` is a quality defect.
 
 **Rule of thumb:** If the prompt contains all file paths and exact changes, use Sonnet. If the agent needs to make judgment calls, use Opus.
 
@@ -206,3 +227,31 @@ run_health_audits()
 | Files modified | 500+ |
 | New tests added | 78 |
 | Time saved (estimated) | 3-4x vs sequential |
+
+## Output
+
+- Named dispatch pattern (Worktree Tracks, Cross-Repo Parallel, Audit Swarm, Sequential Fix, or Phased Pipeline)
+- Agent prompt templates with: goal, file scope, verification command, files to avoid
+- Model assignment for each agent (sonnet or opus) with rationale
+- Sequencing diagram or phase list when the work has blockers
+- Decision Matrix row populated for the current task
+
+## Examples
+
+**Scenario 1:** "Run health audits across 5 repos while I continue coding" → Audit Swarm pattern; 3 background agents (repos grouped by size), each writing findings to `/tmp/audit-<repo>.md`; main thread continues foreground work and compiles unified report on completion.
+
+**Scenario 2:** "Wire the workflow executor and the WebSocket hub in the same repo" → Phased Pipeline; Phase A fixes any build errors foreground; Phase B launches two worktree agents (workflow/ and server/) in parallel; Phase C merges worktrees and runs `go build && go test`; shared file edits (router.go) applied manually after merge.
+
+## Edge Cases
+
+- Two planned tracks both modify a shared file (e.g., `server.go`): do not use worktrees; run one track foreground, then the second, applying shared-file changes sequentially
+- Agent task definition is ambiguous at dispatch time: do not dispatch; resolve definition in the main thread first, then dispatch with exact file paths and verification command
+- More than 4 parallel agents requested: cap at 3-4 active concurrently; queue remaining tracks to start as earlier agents complete
+
+## Anti-Patterns
+
+- Launching agents for tasks that are a single `sed` command or one-file edit — main thread is faster
+- Omitting file paths from agent prompts — agent wastes tokens on exploration
+- Using worktree isolation when two tracks both need to touch the same file — guarantees a merge conflict
+- Dispatching background agents for blocking work — if you need the result before proceeding, run foreground
+- Assigning Opus to a fix agent with complete exact instructions — mechanical work belongs on Sonnet

@@ -1,14 +1,9 @@
 ---
 name: codebase-cartography
-description: >
-  Map an unfamiliar codebase into a navigable mental model using layered
-  exploration from structure to behavior to patterns. Produces a codebase map
-  with entry points, dependency graphs, and architectural decision records.
-  Trigger phrases: "map this codebase", "explore the project structure",
-  "understand the architecture", "where does X happen in this code",
-  "create a codebase map", "orient me in this repo", "find the entry points",
-  "what patterns does this codebase use", "draw the dependency graph".
+model: sonnet
+description: Produces a structured codebase map — directory roles, entry points, dependency graph, architectural patterns, and dragon locations — for any unfamiliar repository. Use when: 'map this codebase for me', 'I need to understand this repo before I start', 'give me a reading order for this project', 'where are the dragons in this code'.
 license: proprietary
+category: continuous-learning
 ---
 
 # Codebase Cartography
@@ -132,3 +127,24 @@ Output a structured codebase map containing:
 - `repo-status` -- Generate living status documents for repositories
 - `health-audit` -- Comprehensive repository health assessment
 - `repo-context-sync` -- Sync and extract context from GitHub repositories
+
+## Output
+
+- Structured codebase map (markdown, under 200 lines) with: directory role table, entry point catalog, dependency graph (mermaid or ASCII), architectural pattern summary, dragon registry, recommended reading order
+
+## Examples
+
+**Scenario 1:** "Map this Go microservice repo before I add a new endpoint" -> Directory tree classified by role, entry point at `cmd/server/main.go` identified, handler->service->repository pattern named, circular dependency in `pkg/auth` flagged as dragon, reading order: go.mod -> cmd -> internal/service -> internal/handler
+
+**Scenario 2:** "I need to hand off this TypeScript monorepo to another developer" -> Map produced with workspace package roles, shared dependency graph across packages, test coverage gaps noted, recommended onboarding order from foundational packages outward
+
+## Edge Cases
+
+- **Generated directories are large (node_modules, dist, vendor):** List them in the map as "Generated — skip" rather than mapping their contents; their presence is a map feature, their contents are not
+- **Repo has no README or docs:** Note absence explicitly in the dragon registry; document what the build system reveals as a substitute
+
+## Anti-Patterns
+
+- Reading every source file before producing the map — cartography is breadth-first; depth comes after the map is complete
+- Including generated code content in the dependency graph — it inflates the graph and obscures real internal dependencies
+- Producing a map longer than 200 lines — link to details rather than inlining them; a map nobody reads has failed

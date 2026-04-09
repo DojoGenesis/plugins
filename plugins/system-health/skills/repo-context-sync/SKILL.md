@@ -1,17 +1,19 @@
 ---
 name: repo-context-sync
-description: Efficiently sync and extract context from GitHub repositories for grounding architectural, design, and orchestration work. Use when exploring codebases, starting refactoring or architecture conversations, tracking changes between sessions, or before writing implementation prompts. Trigger phrases: 'sync the repo', 'what changed in the codebase', 'clone this repository', 'extract context from', 'understand the repo structure'.
+model: sonnet
+description: Produces grounding context summaries — directory structure, recent diffs, and file patterns — from local repository state, enabling more accurate architectural and implementation decisions. Use when: "extract context from this repo", "what changed since last session", "understand the repo structure before writing a prompt", "ground a refactor in actual code state".
+category: system-health
 ---
 
 # Repo Context Sync
 
-Efficiently sync with relevant parts of GitHub repositories to ground reasoning in actual codebase state. This skill enables context-aware architectural decisions, refactoring, and implementation prompt writing by providing tools to clone, track changes, and extract patterns from repos.
+Efficiently sync with relevant parts of local repositories to ground reasoning in actual codebase state. This skill enables context-aware architectural decisions, refactoring, and implementation prompt writing by providing tools to clone, track changes, and extract patterns from repos.
 
 ## I. The Philosophy: Grounding in Reality
 
-Architectural decisions made in a vacuum are fragile. Implementation prompts written without understanding existing patterns create friction. The Repo Context Sync skill embodies **grounding in reality**—the practice of syncing with the actual codebase state before making decisions or writing specifications.
+Architectural decisions made in a vacuum are fragile. Implementation prompts written without understanding existing patterns create friction. The Repo Context Sync skill embodies grounding in reality — the practice of syncing with the actual codebase state before making decisions or writing specifications.
 
-This is not about reading every file, but about **surgical context extraction**: identifying what matters for the task at hand, syncing only those parts, and integrating that context into reasoning. It transforms vague architectural discussions into grounded, actionable decisions.
+This is not about reading every file, but about surgical context extraction: identifying what matters for the task at hand, syncing only those parts, and integrating that context into reasoning. It transforms vague architectural discussions into grounded, actionable decisions.
 
 ## II. When to Use This Skill
 
@@ -20,14 +22,14 @@ Trigger this skill when:
 - Starting a conversation about refactoring, architecture, or design
 - Writing implementation prompts that need to follow existing patterns
 - User asks about specific repo directories (e.g., `/00_Roadmap/`, `/02_Specs/`)
-- Need to understand current state of dojo-genesis or 11-11 repos
+- Need to understand current state of a local codebase before a sprint
 
 ## III. Core Workflow
 
 ### 1. Identify Context Need
 
 Parse the user's request to determine:
-- Which repo(s) are relevant (dojo-genesis, 11-11, etc.)
+- Which repo(s) are relevant
 - Which directories matter for the task
 - What keywords indicate focus areas
 
@@ -42,7 +44,7 @@ Use the appropriate script based on repo state:
 
 #### If repo not yet cloned:
 ```bash
-bash /home/ubuntu/skills/repo-context-sync/scripts/smart_clone.sh \
+bash {SKILLS_ROOT}/repo-context-sync/scripts/smart_clone.sh \
   <repo_url> \
   <local_path> \
   [dir1] [dir2] ...
@@ -50,9 +52,9 @@ bash /home/ubuntu/skills/repo-context-sync/scripts/smart_clone.sh \
 
 **Example:**
 ```bash
-bash /home/ubuntu/skills/repo-context-sync/scripts/smart_clone.sh \
+bash {SKILLS_ROOT}/repo-context-sync/scripts/smart_clone.sh \
   https://github.com/TresPies-source/dojo-genesis \
-  /home/ubuntu/repos/dojo-genesis \
+  <your-local-repos-path>/dojo-genesis \
   /00_Roadmap/ /02_Specs/ /04_System/
 ```
 
@@ -66,15 +68,15 @@ The script automatically detects existing repos and runs `git fetch && git pull`
 Generate a diff summary to see what changed since last sync:
 
 ```bash
-python3.11 /home/ubuntu/skills/repo-context-sync/scripts/diff_tracker.py \
+python3 {SKILLS_ROOT}/repo-context-sync/scripts/diff_tracker.py \
   <repo_path> \
   [last_commit_hash]
 ```
 
 **Example:**
 ```bash
-python3.11 /home/ubuntu/skills/repo-context-sync/scripts/diff_tracker.py \
-  /home/ubuntu/repos/dojo-genesis \
+python3 {SKILLS_ROOT}/repo-context-sync/scripts/diff_tracker.py \
+  <your-local-repos-path>/dojo-genesis \
   abc123
 ```
 
@@ -90,15 +92,15 @@ The summary is both printed and saved to `.diff_summary.md` in the repo.
 Create a comprehensive overview of the codebase:
 
 ```bash
-python3.11 /home/ubuntu/skills/repo-context-sync/scripts/context_mapper.py \
+python3 {SKILLS_ROOT}/repo-context-sync/scripts/context_mapper.py \
   <repo_path> \
   [focus_keywords...]
 ```
 
 **Example:**
 ```bash
-python3.11 /home/ubuntu/skills/repo-context-sync/scripts/context_mapper.py \
-  /home/ubuntu/repos/dojo-genesis \
+python3 {SKILLS_ROOT}/repo-context-sync/scripts/context_mapper.py \
+  <your-local-repos-path>/dojo-genesis \
   agent routing supervisor
 ```
 
@@ -118,8 +120,8 @@ Read the generated summaries and integrate into reasoning:
 1. **Read the context summary** to understand repo structure
 2. **Read relevant files** identified by the mapper
 3. **Check reference docs** for patterns:
-   - `/home/ubuntu/skills/repo-context-sync/references/file_hierarchy_patterns.md`
-   - `/home/ubuntu/skills/repo-context-sync/references/zenflow_repo_patterns.md`
+   - `{SKILLS_ROOT}/repo-context-sync/references/file_hierarchy_patterns.md`
+   - `{SKILLS_ROOT}/repo-context-sync/references/zenflow_repo_patterns.md`
 4. **Ground architectural decisions** in actual code state
 
 ## IV. Script Reference
@@ -138,7 +140,7 @@ bash smart_clone.sh <repo_url> <local_path> [dir1] [dir2] ...
 - If repo exists: Fetch and pull latest changes
 - Only downloads specified directories (if provided)
 
-**Storage location:** `/home/ubuntu/repos/{repo_name}/`
+**Storage location:** A local directory of your choosing, e.g. `<your-local-repos-path>/{repo_name}/`
 
 ### diff_tracker.py
 
@@ -146,7 +148,7 @@ bash smart_clone.sh <repo_url> <local_path> [dir1] [dir2] ...
 
 **Usage:**
 ```bash
-python3.11 diff_tracker.py <repo_path> [last_commit_hash]
+python3 diff_tracker.py <repo_path> [last_commit_hash]
 ```
 
 **Output:**
@@ -163,7 +165,7 @@ python3.11 diff_tracker.py <repo_path> [last_commit_hash]
 
 **Usage:**
 ```bash
-python3.11 context_mapper.py <repo_path> [focus_keywords...]
+python3 context_mapper.py <repo_path> [focus_keywords...]
 ```
 
 **Output:**
@@ -182,7 +184,7 @@ python3.11 context_mapper.py <repo_path> [focus_keywords...]
 
 ### file_hierarchy_patterns.md
 
-Describes the standard "Planning with Files" hierarchy used in 11-11 and Dojo Genesis:
+Describes the standard "Planning with Files" hierarchy used in Dojo Genesis and related repos:
 
 - `/00_Roadmap/` - High-level goals and task_plan.md
 - `/01_PRDs/` - Product Requirement Documents
@@ -252,7 +254,7 @@ Read this when:
 
 ## VII. State Management
 
-Track sync state in `/home/ubuntu/.repo-sync-state.json`:
+Track sync state in a `.repo-sync-state.json` file at a stable location in your workspace (e.g., your project root or a dedicated config directory):
 
 ```json
 {
@@ -260,14 +262,14 @@ Track sync state in `/home/ubuntu/.repo-sync-state.json`:
     "TresPies-source/dojo-genesis": {
       "last_sync": "2026-01-28T17:48:00Z",
       "commit_hash": "abc123",
-      "local_path": "/home/ubuntu/repos/dojo-genesis",
+      "local_path": "<your-local-repos-path>/dojo-genesis",
       "tracked_dirs": ["/00_Roadmap/", "/02_Specs/"]
     }
   }
 }
 ```
 
-Update this file after each sync to enable diff tracking.
+Update this file after each sync to enable diff tracking. Store it at your project root or another stable path — not at a platform-specific location.
 
 ## VIII. Integration with Implementation Agents
 
@@ -308,7 +310,7 @@ Implementation agents typically have full repo access, so prompts should leverag
 ## X. Limitations
 
 ### What This Skill Does
-- Efficiently clone/sync relevant repo parts
+- Efficiently clone/sync relevant repo parts locally
 - Track changes and generate diffs
 - Extract patterns and conventions
 - Provide grounded context for reasoning
@@ -319,6 +321,7 @@ Implementation agents typically have full repo access, so prompts should leverag
 - Execute implementation tasks
 - Replace manual code review
 - Store full repo history (only relevant parts)
+- Push or sync state to remote services — all operations are local
 
 ## XI. Troubleshooting
 
@@ -334,13 +337,19 @@ Implementation agents typically have full repo access, so prompts should leverag
 ### Issue: Scripts fail with permission errors
 **Solution:** Ensure scripts are executable (`chmod +x`)
 
-## XII. Quick Reference
+## Output
+- `.diff_summary.md` in the repo root: markdown summary of changes since the last sync (added, modified, deleted files; commit messages; statistics).
+- `.context_summary.md` in the repo root: file tree, detected stack, keyword-matched files, and summaries of top relevant files.
+- Updated `.repo-sync-state.json` at your workspace root recording the commit hash and sync timestamp.
 
-| Task | Command |
-|------|---------|
-| Clone repo (sparse) | `bash smart_clone.sh <url> <path> [dirs]` |
-| Update existing repo | `bash smart_clone.sh <url> <path>` (auto-detects) |
-| Track changes | `python3.11 diff_tracker.py <path> [commit]` |
-| Generate context | `python3.11 context_mapper.py <path> [keywords]` |
-| Read hierarchy patterns | `file read references/file_hierarchy_patterns.md` |
-| Read implementation patterns | `file read references/implementation_agent_patterns.md` |
+## Examples
+**Scenario 1:** "Understand the Gateway repo structure before writing a spec" → sparse checkout of `/02_Specs/` and `/04_System/`, context_mapper run with keywords "gateway routing middleware", `.context_summary.md` produced and read to ground the spec.
+**Scenario 2:** "What changed in the backend since last session?" → diff_tracker run against the stored commit hash, `.diff_summary.md` produced showing 3 modified files in the routing layer and 1 new migration, architectural implications surfaced.
+
+## Edge Cases
+- If no commit hash is stored in `.repo-sync-state.json`, diff_tracker defaults to comparing the last 10 commits — note this default explicitly in the output so the user knows the baseline.
+- If sparse checkout pulls more files than expected (e.g., a directory contains deeply nested subdirectories), the context map may be large — apply keyword filtering to keep output focused.
+
+## Anti-Patterns
+- Running context_mapper without first fetching latest changes — generates context from a stale local clone, which can produce misleading architectural suggestions.
+- Using this skill as a replacement for reading the actual code — context summaries are grounding artifacts, not substitutes for reading critical files directly.

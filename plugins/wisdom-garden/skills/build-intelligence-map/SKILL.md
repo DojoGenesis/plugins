@@ -1,7 +1,9 @@
 ---
 name: build-intelligence-map
-description: Synthesize behavioral analyses from multiple AI tools into a comparative intelligence map. Produces a cross-tool disposition matrix, identifies behavioral gaps in Dojo's ADA config, and recommends new disposition presets. Use when onboarding a batch of system prompts or evolving the ADA system. Trigger phrases: "build an intelligence map", "compare all agent behaviors", "what can we learn from other tools", "synthesize agent analyses", "generate disposition presets from external tools".
+model: opus
+description: Produces a cross-tool disposition matrix, behavioral cluster analysis, and a set of named YAML disposition presets by synthesizing analyses from 3+ ingested AI system prompts. Use when: "build an intelligence map", "compare all agent behaviors", "generate disposition presets from external tools", "what can we learn from other tools", "synthesize agent analyses".
 license: Complete terms in LICENSE.txt
+category: wisdom-garden
 ---
 
 # Build Intelligence Map
@@ -179,3 +181,25 @@ Store the map as a MemorySeed with `SeedType: "pattern"` for future reference.
 - [ ] All presets produce valid DispositionConfig YAML
 - [ ] Strategic recommendations are specific and actionable
 - [ ] Intelligence map stored as MemorySeed with type "pattern"
+
+## Output
+
+- A markdown intelligence map document (in-session or saved to `memory/intelligence-maps/YYYY-MM-DD_intelligence_map.md`) with the full disposition matrix, behavioral clusters, gap analysis, and recommended presets
+- A set of named YAML disposition presets ready to import into Dojo ADA
+- A MemorySeed stored with `SeedType: "pattern"` for future retrieval
+
+## Examples
+
+**Scenario 1:** User says "build an intelligence map from the 4 tools we've analyzed" → skill queries MemoryStore, constructs a 4-tool x 7-field disposition matrix, identifies 2 clusters, runs gap analysis, proposes 3 new presets (velocity-mode, guardian-mode, explorer-mode), and saves the map.
+
+**Scenario 2:** User says "what behavioral combinations haven't any tools tried?" → skill runs gap analysis step only, returns unexplored disposition field combinations with rationale for why they might be valuable.
+
+## Edge Cases
+
+- If fewer than 3 tools are analyzed, return an error explaining the minimum threshold and list which tools are currently available in MemoryStore.
+- If two tools produce identical disposition YAML, note the duplication in the matrix and treat them as a single data point for cluster analysis.
+
+## Anti-Patterns
+
+- Running the map with only 2 tools — with 2 data points there are no clusters, only a comparison. Use `analyze-agent-behavior` instead.
+- Naming presets after source tools (e.g., "cursor-mode") — preset names must describe the behavioral optimization target, not the tool that inspired it.

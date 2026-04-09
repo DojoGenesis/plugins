@@ -1,14 +1,9 @@
 ---
 name: observability-dashboard
-description: >
-  Configure and operate a real-time multi-agent observability dashboard using
-  hook events, SQLite storage, and WebSocket broadcasting. Use when setting up
-  agent monitoring, debugging parallel agent execution, or building visibility
-  into tool call patterns across sessions. Trigger phrases: "set up agent
-  monitoring", "show me what agents are doing", "configure the observability
-  dashboard", "monitor parallel agents", "debug agent coordination",
-  "trace tool calls across sessions", "view agent activity in real time".
+model: sonnet
+description: Produces a running multi-agent observability dashboard by deploying the hook capture pipeline, SQLite WAL store, and WebSocket-streaming Vue client — then validates it with a live test session. Use when: "set up monitoring for multi-agent workflows", "debug parallel agent coordination", "audit tool call history across a session", "build visibility for a demo or review".
 license: proprietary
+category: system-health
 ---
 
 # Observability Dashboard
@@ -124,3 +119,21 @@ preferred monitoring cadence.
 - `observability-dashboard-spec` -- Architectural spec for dashboard design
 - `tool-intercept-logger` -- OTEL-compatible per-call logging
 - `agent-performance-report` -- Aggregated metrics from historical spans
+
+## Output
+- A running Bun/Node.js server persisting events to SQLite (WAL mode) and broadcasting via WebSocket.
+- Hook scripts installed for all 12 observable event types in `.claude/hooks/`.
+- A Vue 3 (or vanilla JS) dashboard client connected to the server, showing Timeline, Pulse chart, Transcript modal, and Filtering views.
+- A validation report from the test session confirming both agents appear as distinct sessions and PreToolUse/PostToolUse events pair correctly.
+
+## Examples
+**Scenario 1:** "Set up monitoring before our multi-agent sprint" → Three-layer pipeline deployed, hooks installed, dashboard launched. Test session with 2 parallel agents in Tmux panes confirms both sessions are visible and color-coded.
+**Scenario 2:** "Debug why agent B stopped after agent A's tool call" → Dashboard filtering by session isolates agent B's event stream. Transcript modal on the SubagentStop event reveals the error message in the captured chat history.
+
+## Edge Cases
+- If multiple agents write simultaneously to SQLite without WAL mode, writes will block and events will be lost — always verify WAL mode is set before starting multi-agent sessions.
+- Keep event payloads under 10KB; large result blobs (e.g., full file contents) should be truncated to a summary before WebSocket broadcast to avoid congestion.
+
+## Anti-Patterns
+- Polling the server for events instead of using WebSocket push — polling adds latency and defeats the real-time purpose of the dashboard.
+- Using a single color for all sessions — without session-specific color coding, parallel agent events are indistinguishable in the timeline.

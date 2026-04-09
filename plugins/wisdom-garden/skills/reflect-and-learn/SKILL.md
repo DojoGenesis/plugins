@@ -1,14 +1,9 @@
 ---
 name: reflect-and-learn
-description: >
-  Capture user corrections during sessions, validate with semantic analysis,
-  and propagate approved learnings to CLAUDE.md files and skill definitions.
-  Implements the correction-driven learning loop from automatic capture through
-  manual review to permanent memory. Trigger phrases: "learn from my corrections",
-  "reflect on this session", "what have I corrected you on", "update CLAUDE.md
-  from corrections", "discover recurring patterns in my sessions",
-  "improve skills from usage", "capture what I taught you".
+model: sonnet
+description: Captures user corrections from a session, validates them semantically, and writes approved learnings to the most specific persistence target (skill file, project CLAUDE.md, or global CLAUDE.md). Use when: "remember this for next time", "don't do that again", "update your behavior", "capture this correction", "reflect on what we learned".
 license: proprietary
+category: wisdom-garden
 ---
 
 # Reflect and Learn
@@ -120,3 +115,24 @@ Analyze session history (14+ days) for semantically similar requests:
 - `memory-garden` -- Write structured memory entries for context management
 - `hooks-reference` -- Configure capture hooks for automatic correction detection
 - `claude-md-guardian` -- Protect CLAUDE.md integrity during learning application
+
+## Output
+
+- One or more corrections written to the appropriate target file (skill SKILL.md, project CLAUDE.md, or global CLAUDE.md) as new behavioral rules
+- A short review summary listing: corrections evaluated, confidence scores, routing decisions, and any conflicts surfaced for user resolution
+
+## Examples
+
+**Scenario 1:** User says "remember — always dry-run scripts before running them" → correction assigned confidence 0.90 (explicit marker), routed to global CLAUDE.md, written as a new behavioral rule, summary returned.
+
+**Scenario 2:** During a `/deploy` skill execution the user says "don't add the --force flag here" → correction identified as skill-specific (deploy context), routed to the deploy skill's SKILL.md, written under a "Corrections" section, summary returned.
+
+## Edge Cases
+
+- If the correction conflicts with an existing rule in the target file, surface the conflict to the user for resolution before writing — do not overwrite silently.
+- If confidence is below 0.60 (sarcasm, hypotheticals, conversational noise), discard the candidate and note it in the summary.
+
+## Anti-Patterns
+
+- Routing all corrections to global CLAUDE.md — skill-specific corrections must go to the skill file or they get diluted across all contexts.
+- Auto-applying corrections without user review — capture is automatic but application always requires explicit approval.

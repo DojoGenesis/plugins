@@ -1,6 +1,8 @@
 ---
 name: pre-commission-alignment
-description: "Quality gate before commissioning parallel implementation tracks. Discovers and closes gaps between specs/prompts and actual codebase through a pre-implementation checklist and targeted Track 0 remediation. Use when commissioning against a modified codebase, when time has passed between spec writing and implementation, when multi-track commissions share state, or when prompts reference entities or APIs that may not exist. Trigger phrases: 'commission these tracks', 'ready to hand off', 'Track 0', 'align before building', 'pre-commission check'."
+model: sonnet
+description: "Produces a gap inventory and Track 0 remediation commit that closes mismatches between implementation prompts and actual codebase state, ensuring parallel tracks start from a clean, type-safe foundation. Use when: 'commission these tracks', 'run Track 0 before handing off', 'check for spec-to-code drift', 'align before we build'."
+category: specification-driven-development
 ---
 
 # Pre-Commission Alignment
@@ -154,3 +156,26 @@ Before commissioning parallel tracks:
 **Origin:** v0.2.2 commissioning incident. Prompts assumed EntityType names and API patterns that didn't exist after v0.2.0/v0.2.1 implementation. Multiple agents encountered type errors simultaneously. Root cause: 5-day gap between spec writing and implementation start, during which codebase evolved.
 
 **Lesson:** Humans change specs; code changes implementation. Misalignment compounds at handoff points. This skill is the tax we pay for asynchronous, multi-agent work.
+
+## Output
+
+- A written gap inventory listing every mismatch between implementation prompts and actual codebase state
+- A Track 0 remediation commit (or commit message draft) documenting each fix made and why
+- A verification sign-off confirming build passes and all prompt references resolve before parallel tracks are released
+
+## Examples
+
+**Scenario 1:** Five days have passed since the v0.2.2 spec was written and the codebase was updated during that time. Running pre-commission alignment before releasing 3 parallel tracks reveals 4 mismatches: a renamed EntityType, a moved import path, a missing API endpoint stub, and a changed config key. Track 0 closes all 4 in under 2 hours; parallel tracks start cleanly.
+
+**Scenario 2:** A single-track commission where the spec was written 1 hour ago against a frozen codebase. Dual-read produces an empty gap inventory. The verification sign-off is issued immediately, confirming no remediation is needed.
+
+## Edge Cases
+
+- When Track 0 remediation starts uncovering structural problems (a module that needs full refactoring, not just a renamed type), stop — you have found a spec gap, not a commission gap. Return to the specification-writer skill to revise the spec before continuing.
+- When multiple agents are already running and a gap is discovered mid-flight, halt the affected tracks before fixing — do not let agents continue building on a mismatched foundation.
+
+## Anti-Patterns
+
+- Using the spec document as a substitute for reading the actual codebase — specs describe intent, not current state; only the filesystem tells you what actually exists.
+- Letting Track 0 expand into a refactoring session — it is strictly a gap-closing pass; any fix that takes more than 30 minutes signals scope creep.
+- Commissioning all parallel tracks before Track 0 is verified — staggered release (Track 0 first, then tracks 1-N) is mandatory, not optional.

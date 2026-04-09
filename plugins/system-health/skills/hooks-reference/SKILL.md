@@ -1,14 +1,9 @@
 ---
 name: hooks-reference
-description: >
-  Quick-reference guide for Claude Code hook lifecycle events, configuration
-  patterns, and security block implementations. Use when writing new hooks,
-  debugging hook execution order, or reviewing which events fire at which
-  lifecycle stage. Trigger phrases: "what hooks are available", "hook lifecycle
-  reference", "write a PreToolUse hook", "which hook fires before tool calls",
-  "configure hooks in settings.json", "add a security guard hook",
-  "block destructive commands with hooks".
+model: sonnet
+description: Produces a hook script scaffold and settings.json registration block by looking up the correct lifecycle event, exit code pattern, and configuration for a Claude Code hook. Use when: "write a new hook", "hook is not firing", "block a tool call mechanically", "configure sub-agent coordination", "implement a security block pattern".
 license: proprietary
+category: system-health
 ---
 
 # Hooks Reference
@@ -122,3 +117,20 @@ its side effects (log file, HTTP POST, blocked operation).
 - `tool-intercept-logger` -- OTEL-compatible tool call logging
 - `claude-md-guardian` -- Protect CLAUDE.md via hook enforcement
 - `agent-performance-report` -- Aggregate hook data into performance metrics
+
+## Output
+- A UV single-file Python hook script (with embedded dependency declarations) ready to drop into `.claude/hooks/{event-type}/`.
+- A `settings.json` snippet registering the hook under the correct event key.
+- Exit code guidance specific to the chosen enforcement pattern (0 = observe, 2 = block).
+
+## Examples
+**Scenario 1:** "I want to block sub-agents from writing to CLAUDE.md" → PreToolUse hook targeting Write/Edit operations on CLAUDE.md paths. Script exits 2 when the tool name matches and the path contains "CLAUDE.md". Settings.json snippet provided.
+**Scenario 2:** "Log every tool call to a file for debugging" → PostToolUse hook (exit 0) that appends tool_name, duration_ms, and status to `.claude/hooks/tool-log.jsonl`. No blocking behavior.
+
+## Edge Cases
+- Stop hooks that trigger agent re-runs must set a `stop_hook_active` guard to prevent infinite recursion — always include this guard when writing Stop hooks.
+- If a PreToolUse hook has heavy imports, move them inside the function or use lazy loading — a 2-second import delays every tool call.
+
+## Anti-Patterns
+- Using the wrong event name casing ("pre_tool_use" instead of "PreToolUse") — the hook will silently never fire.
+- Assuming hooks survive context compaction — use Setup hooks for re-initialization rather than relying on context that may have been compacted away.

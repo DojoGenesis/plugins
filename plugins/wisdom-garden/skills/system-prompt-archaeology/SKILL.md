@@ -1,6 +1,8 @@
 ---
 name: system-prompt-archaeology
-description: Reverse-engineer AI system prompts into reusable disposition presets, behavioral patterns, and constraint taxonomies. Use when analyzing how other AI tools behave to inform your own agent design. Trigger phrases: "analyze this system prompt", "extract disposition from prompt", "reverse-engineer agent behavior", "what patterns does this prompt use", "build a preset from this prompt".
+model: sonnet
+description: Produces a named ADA disposition preset (YAML) and a layered behavioral analysis (structural decomposition + evidence-cited classifications) from a system prompt. Use when: "analyze this system prompt", "extract disposition from prompt", "reverse-engineer agent behavior", "what patterns does this prompt use", "build a preset from this prompt".
+category: wisdom-garden
 ---
 
 # System Prompt Archaeology
@@ -157,3 +159,24 @@ most interesting findings because they reveal intentional design tradeoffs.
 - `build-intelligence-map` -- Synthesizes multiple tool analyses into comparative maps
 - `seed-extraction` -- Extracts reusable patterns (the output of archaeology becomes seeds)
 - `disposition-from-prompts` seed -- The original seed that inspired this skill
+
+## Output
+
+- A named disposition preset in valid YAML format (`[Tool]-[Version]-[Archetype]`) ready to import into Dojo ADA
+- A layered behavioral analysis document with each structural layer tagged, behavioral signals evidence-cited, cluster match noted, and notable design tradeoffs called out
+
+## Examples
+
+**Scenario 1:** User provides the Claude Code system prompt from Piebald-AI/claude-code-system-prompts → skill decomposes it into 7 layers, classifies pacing as deliberate and initiative as proactive (with quoted evidence for each), produces `Claude-Code-2026Q1-DeepInvestigator` preset at 93% cluster match.
+
+**Scenario 2:** User says "what patterns does the Windsurf prompt use?" → skill acquires the prompt from the Piebald-AI repo, identifies rapid pacing and surface depth as dominant signals, notes absence of error-handling instructions, produces `Windsurf-VelocityBuilder` preset and flags the missing safety layer.
+
+## Edge Cases
+
+- If the prompt is shorter than 200 words, return a note explaining the minimum length requirement and decline analysis — there is insufficient text for meaningful layer decomposition.
+- If the prompt is from behavioral inference (not a real text source), mark every classification as low-fidelity and require the user to confirm before saving the preset.
+
+## Anti-Patterns
+
+- Inferring behavioral intent without quoting the specific prompt text that supports it — every classification must cite evidence; "they probably meant X" is not archaeology.
+- Force-fitting hybrid prompts to the four cluster archetypes — when a prompt spans clusters, document the hybrid pattern; losing nuance by forcing a fit obscures useful signal.

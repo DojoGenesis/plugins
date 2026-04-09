@@ -1,0 +1,28 @@
+{
+  "name": "@dojogenesis/pretext-pdf-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for Pretext-powered PDF export",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@chenglou/pretext": "^0.0.4",
+    "@modelcontextprotocol/sdk": "^1.12.1",
+    "canvas": "^3.1.0",
+    "marked": "^15.0.0",
+    "pdf-lib": "^1.17.1",
+    "shiki": "^3.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

@@ -1,6 +1,8 @@
 ---
 name: research-synthesis
-description: Synthesize multiple research files into actionable insights through cross-referencing and pattern identification. Use when you have 3+ sources on a topic, need a literature review, consolidating notes from multiple sources, or understanding topics from multiple angles. Trigger phrases: 'synthesize these research files', 'find patterns across sources', 'consolidate these notes', 'create a literature review', 'understand by synthesizing'.
+model: sonnet
+description: Produces a unified Synthesis Document organized by themes with cross-source evidence, contradictions surfaced, and concrete recommendations. Use when: 'synthesize these research files', 'find patterns across these sources', 'consolidate my notes into insights', 'create a literature review', 'what do these sources agree and disagree on'.
+category: continuous-learning
 ---
 
 # Research Synthesis Engine
@@ -92,3 +94,36 @@ This is a 5-step workflow for synthesizing multiple research files.
 - [ ] Does the synthesis highlight both convergent evidence and contradictions?
 - [ ] Does the synthesis provide actionable recommendations?
 - [ ] Does the synthesis cite the source files for its claims?
+
+---
+
+## Output
+
+- A Synthesis Document saved to the project's `docs/research/` or `scouts/` directory
+- Named: `[date]_[topic]_synthesis.md`
+- Structure: File Catalog, Theme Map, Convergence Evidence, Contradictions, Actionable Recommendations, Source Citations
+
+---
+
+## Examples
+
+**Scenario 1:** User provides 5 research notes on MCP architecture patterns → Synthesis Document with 3 themes (lifecycle management, tool registration, error handling), convergence points, one major contradiction between sources surfaced, and 4 prioritized implementation recommendations
+
+**Scenario 2:** "Consolidate my notes from these 4 competitive analysis files" → Synthesis Document organized by competitive dimensions (pricing, features, positioning), gaps identified across all four sources, and a recommended differentiation strategy
+
+---
+
+## Edge Cases
+
+- **Fewer than 3 files:** Can still synthesize, but note that cross-referencing is limited with 1-2 sources; recommend gathering additional sources before drawing strong conclusions
+- **Files in different formats (PDF, markdown, raw text):** Use appropriate tool per format; normalize to the same note structure before cross-referencing
+- **Contradictions cannot be resolved from the files alone:** Surface them explicitly as open questions requiring a primary source or domain expert consultation
+
+---
+
+## Anti-Patterns
+
+- Summarizing each file in sequence rather than organizing by theme — produces a summary list, not a synthesis
+- Forcing consensus when sources genuinely disagree — contradictions are findings, not errors to be smoothed over
+- Treating the file with the most detail as the most authoritative — recency and methodology matter more than length
+- Producing recommendations before completing the cross-reference step — conclusions drawn from partial reading miss contradicting evidence

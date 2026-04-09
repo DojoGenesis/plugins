@@ -1,6 +1,8 @@
 ---
 name: strategic-scout
-description: Explore strategic tensions and scout multiple routes to find the best path forward. Use when facing a strategic decision with no clear answer. Trigger phrases: 'scout this tension', 'explore multiple routes', 'hold this question open before deciding', 'what are our options here', 'scout to spec pipeline'.
+model: opus
+description: Produces a scout document containing a stated tension, 3-5 distinct routes with tradeoffs, and a recommended direction with rationale — the first artifact in a four-step pipeline (scout → spec → prompts → commission). Use when: "we don't know which direction to take", "scout our options before we commit", "what are the tradeoffs here", "we're stuck between competing priorities", "I need routes before writing a spec".
+category: strategic-thinking
 ---
 
 # Strategic Scout Skill
@@ -137,3 +139,29 @@ Before moving to execution, ensure you can answer "yes" to all of the following 
 -   **Tension:** Speed vs. quality.
 -   **Insight:** With clear specifications and separation of concerns, you can have both.
 -   **Lesson:** Good governance multiplies velocity. Invest in planning and specification to enable parallel execution.
+
+---
+
+## Output
+
+- Scout document saved to `thinking/[topic]_strategic_scout.md` containing: tension statement, 3-5 routes (each with approach, risks, estimated impact, and duration), and a recommended direction with explicit rationale
+- If the user is proceeding to Phase 2, a handoff note naming the spec artifact and the relevant skill to invoke next
+
+## Examples
+
+**Scenario 1:** "Should we build a mobile app or focus on improving the desktop experience?" → Scout document with routes including (1) mobile-first PWA, (2) desktop-only deepening, (3) parallel mobile + desktop, (4) web-responsive as mobile substitute — each with risk profile and timeline, plus a recommendation with stated tradeoffs.
+
+**Scenario 2:** "We need to decide whether to open-source our core library." → Scout document exploring (1) full open-source with community model, (2) open-core (free tier + paid extensions), (3) source-available license, (4) stay closed — with business model implications and competitive risk for each. Recommended direction identifies which option fits the current revenue stage.
+
+## Edge Cases
+
+- If the user already knows their direction and just wants help specifying it, skip scouting and route directly to `release-specification` or `implementation-prompt` — running a full scout on a decided question wastes time and can introduce unnecessary doubt.
+- If the tension involves a third-party constraint (regulatory requirement, contractual obligation, hard deadline), surface that constraint upfront and remove any routes that violate it before presenting options.
+- If the tension is primarily interpersonal or organizational (e.g., disagreement between two team members), note that this skill addresses the strategic dimension only and flag that alignment work is a separate step.
+
+## Anti-Patterns
+
+- Presenting routes that are not genuinely distinct — if Routes 2 and 3 differ only in implementation detail rather than strategic approach, collapse them into one route.
+- Recommending a direction before presenting all routes — the recommendation must come after the options are on the table, not before, to avoid anchoring the user prematurely.
+- Scouting without naming the tension explicitly — a scout that jumps straight to routes without a stated tension gives users no way to evaluate whether the routes actually address their situation.
+- Treating scout output as final — the scout document is a starting point for conversation, not a decision. Always check for reframes before moving to Phase 2.

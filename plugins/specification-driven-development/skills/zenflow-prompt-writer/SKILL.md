@@ -1,6 +1,8 @@
 ---
 name: zenflow-prompt-writer
-description: Write clear, comprehensive prompts for the Zenflow autonomous development agent, ensuring high-quality and predictable implementation. Use after a specification is finalized. Trigger phrases include 'write a Zenflow prompt', 'commission Zenflow', 'create an implementation prompt', 'prompt this spec for Zenflow', 'turn this spec into a prompt'.
+model: sonnet
+description: "Produces a structured Zenflow commission document (Objective, Context & Grounding with pattern files, step-by-step Requirements, File Manifest, binary Success Criteria, and explicit Constraints) from a finalized spec, saved to prompts/vX.X.X/. Use when: 'write a Zenflow prompt', 'commission Zenflow for this spec', 'turn this spec into a Zenflow prompt', 'create the implementation prompt for Zenflow'."
+category: specification-driven-development
 ---
 
 # Zenflow Prompt Writer Skill
@@ -147,3 +149,29 @@ With a high-quality prompt in hand, you can now confidently commission Zenflow t
 -   **Be a Good Librarian:** The most important part of the prompt is the Context & Grounding section. Good inputs lead to good outputs.
 -   **Specify File Paths:** Always use full, explicit file paths. Never say "in the utils directory."
 -   **Define the "Done" State:** The Success Criteria are the definition of "done." Make them crystal clear.
+
+---
+
+## Output
+
+- A Zenflow commission prompt file (markdown) saved to `prompts/vX.X.X/NN_[task_name].md`
+- The prompt contains five sections: Objective, Context & Grounding (with spec link and pattern files), Detailed Requirements, File Manifest, and Constraints & Non-Goals
+- Each requirement is a numbered, atomic instruction referencing exact file paths and function names
+
+## Examples
+
+**Scenario 1:** "Spec for the breadcrumb component is finalized. Write the Zenflow prompt." → A prompt saved to `prompts/v0.0.26/01_implement_breadcrumb.md`, with a one-sentence objective, two pattern files pointing to existing nav components, five numbered requirements specifying file paths and data sources, and a constraint preventing Zenflow from touching the sidebar.
+
+**Scenario 2:** "Commission Zenflow to add the SSE streaming handler to the backend." → A prompt grounding Zenflow in the existing handler at `handlers/chat.go`, requirements numbered step-by-step from "add the route registration" through "write the SSE write loop", and success criteria checking that the `/api/v1/stream` endpoint returns `text/event-stream` content type.
+
+## Edge Cases
+
+- When the spec has not been finalized and approved, do not write a Zenflow prompt — ambiguous specs produce ambiguous implementations; complete the spec and run `pre-implementation-checklist` first
+- When the task is too large to complete in 1-2 hours, split it into multiple prompts before commissioning — Zenflow works best on atomic, bounded tasks
+- When Zenflow will work in parallel with another agent, add explicit file reservation constraints ("DO NOT modify `src/app/layout.tsx`") to prevent simultaneous edits to shared files
+
+## Anti-Patterns
+
+- Writing requirements that say "follow the spec" and link to a 15-page document — Zenflow needs the relevant requirements extracted and numbered in the prompt itself; the spec is context, not instructions
+- Omitting pattern files and expecting Zenflow to infer the correct code style — pattern files eliminate ambiguity about structure, naming, and conventions without requiring lengthy style-guide prose
+- Writing success criteria that require Zenflow to make judgment calls ("ensure the UI looks consistent") — every criterion must be verifiable without subjective assessment

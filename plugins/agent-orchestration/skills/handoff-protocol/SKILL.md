@@ -1,6 +1,8 @@
 ---
 name: handoff-protocol
-description: Hand off work between agents cleanly, preserving all context and enabling autonomy. Use when one agent completes work and another must begin. Trigger phrases: 'prepare this for handoff', 'hand off to the implementation agent', 'is this handoff package complete', 'ensure nothing is lost in the transition'.
+model: sonnet
+description: Produces a structured handoff package (markdown document) containing objective, required context file list, task definition, definition of done, constraints, and next steps for the receiving agent. Use when: 'hand off to the next agent', 'prepare this for handoff', 'is this handoff package complete', 'ensure nothing is lost in the transition'.
+category: agent-orchestration
 ---
 
 # Agent Handoff Protocol Skill
@@ -150,3 +152,25 @@ The receiving agent's first action is to read the handoff package and confirm th
 -   **Over-communicate:** It is better to provide too much context than too little.
 -   **The Receiver is the Gatekeeper:** Empower the receiving agent to reject incomplete handoffs. This maintains quality across the ecosystem.
 -   **Standardize Handoff Locations:** Create a `handoffs/` directory in each project to store these packages, creating a clear audit trail.
+
+## Output
+
+- A `handoffs/` directory entry containing the completed handoff package as a markdown file (e.g., `handoffs/v0.0.26/01_feature_handoff.md`)
+- The package includes: objective sentence, required context file list with full paths, task definition, definition-of-done checklist, explicit constraints, and next-steps attribution
+- A completed self-assessment against the Handoff Checklist (Section V)
+
+## Examples
+
+**Scenario 1:** Specification writing is complete and an implementation agent must build the feature → skill produces a handoff package at `handoffs/v0.0.26/breadcrumb_handoff.md` with the spec path, pattern file paths, definition of done as binary checkboxes, and a constraint list preventing architectural changes.
+
+**Scenario 2:** Research phase is complete and a creative agent must synthesize findings → skill produces a handoff package naming all research files, framing the synthesis objective in one sentence, and defining what a complete synthesis looks like.
+
+## Edge Cases
+
+- If the receiving agent is unknown at handoff time, leave the "To" field as `[TBD]` and note that the package will be routed by the orchestrator — do not hold the package waiting for that information.
+- If required context files do not yet exist (e.g., a spec that is still being written), flag them as `[PENDING — do not begin until available]` rather than omitting them from the list.
+
+## Anti-Patterns
+
+- Writing the handoff package as a prose summary rather than a structured template — the receiving agent cannot programmatically check what it has and what it is missing.
+- Marking the handoff complete before verifying all links in the Required Context section resolve to actual files — broken paths silently block the receiving agent.

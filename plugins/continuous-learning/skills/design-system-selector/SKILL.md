@@ -1,6 +1,8 @@
 ---
 name: design-system-selector
-description: Select the best matching design system reference (DESIGN.md) for a project based on target aesthetic, tech stack, and brand values. Use when starting a new UI project or choosing visual direction. Trigger phrases: "which design system fits this project", "pick a design reference", "match design to brand", "select design tokens", "find the right design system".
+model: sonnet
+description: Produces a scored comparison of available DESIGN.md design systems against a project's requirements and delivers a recommended selection with adaptation notes. Use when: 'which design system fits this project', 'pick a design reference for me', 'match a design system to this brand', 'compare design system options for this client'.
+category: continuous-learning
 ---
 
 # Design System Selector
@@ -202,3 +204,28 @@ documenting the color swap and referencing Linear DESIGN.md as source.
 - `web-artifacts-builder` -- Builds HTML components using applied design system
 - `canvas-design` -- Visual art creation using design philosophy principles
 - `brand-guidelines` -- Applies organization-specific brand to artifacts
+
+## Output
+
+- Scoring matrix table comparing all available systems across five dimensions
+- Top 3 match cards with: score, fit rationale, divergence notes, adaptation notes
+- Project DESIGN.md file created in the project directory referencing the selected source system and documenting any token adaptations
+- CSS custom properties block generated from selected system's tokens
+
+## Examples
+
+**Scenario 1:** "Which design system fits my internal analytics dashboard for a data engineering team?" -> Scoring matrix run against 8 systems; Linear scores 14/15 on technical/compact/precise axes; selection delivered with one adaptation noted (swap primary purple for brand blue); project DESIGN.md created
+
+**Scenario 2:** "I need to pick a design reference for a community-focused open source project" -> Scoring identifies Supabase (approachable, open-source-friendly) as best fit over Stripe (too authoritative); adaptation notes document switching monospace accent to humanist sans for community warmth
+
+## Edge Cases
+
+- **Client already has a brand guide with defined tokens:** Do not run the scoring workflow; map their existing tokens to the closest DESIGN.md system for reference, but use the brand guide as the authoritative token source
+- **No available system scores above 9/15:** Report the top match with a list of required adaptations; flag that a custom system may be warranted if adaptations exceed 3 dimensions
+- **Dark mode is a hard requirement:** Apply dark mode support as a pre-filter before scoring; eliminate any system without documented dark mode tokens
+
+## Anti-Patterns
+
+- Selecting a system based on the builder's aesthetic preference rather than running the five-dimension scoring matrix
+- Applying a system without documenting token adaptations — undocumented changes are invisible to the next developer and will be overwritten on re-import
+- Using a single-dimension match ("they both use Inter") as sufficient justification — typography is one of five dimensions

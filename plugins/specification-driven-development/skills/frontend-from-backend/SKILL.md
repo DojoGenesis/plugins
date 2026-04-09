@@ -1,6 +1,8 @@
 ---
 name: frontend-from-backend
-description: Write production-ready frontend specifications deeply grounded in existing backend architecture to prevent integration issues. Use when building frontend features on a working backend or redesigning UI for an existing API. Trigger phrases: 'spec the frontend', 'write frontend spec from backend', 'ground the UI in this API', 'integrate this frontend', 'frontend implementation guide'.
+model: opus
+description: Produces a backend-grounded frontend specification document covering API contracts, integration guide, auth flows, and updated track prompts. Use when 'spec the frontend for this API', 'write frontend spec from backend', or 'ground the UI in this existing backend'.
+category: specification-driven-development
 ---
 
 # Write Frontend Spec From Backend Skill
@@ -109,3 +111,30 @@ Before commissioning the work, ensure you can answer "yes" to all of the followi
 -   [ ] Have you created a backend integration guide with code examples?
 -   [ ] Have all development prompts been updated with a "Backend Grounding" section?
 -   [ ] Have you audited all documentation for completeness and pushed it to the repository?
+
+---
+
+## Output
+
+- A frontend feature specification document grounded in actual backend endpoints and data models (saved to `docs/vX.X.X/frontend_spec.md`)
+- A backend integration guide with code examples for each API call the frontend makes
+- Updated implementation prompts for all affected tracks, each containing a "Backend Grounding" section
+- An audit summary confirming no new backend routes are required
+
+## Examples
+
+**Scenario 1:** "We have a working Go API and need to spec the settings page for it." → A feature spec mapping each settings field to the exact backend endpoint, with TypeScript fetch examples and error-handling patterns drawn from the actual handler code.
+
+**Scenario 2:** "The agent keeps building frontend that doesn't match the API." → A backend integration guide extracted from `handlers/` and `middleware/`, then injected into each track prompt so agents reference real endpoint signatures instead of assumptions.
+
+## Edge Cases
+
+- When the backend has not been built yet, this skill should not be invoked — use `specification-writer` to design both layers together instead
+- When backend APIs are behind an authentication layer, document the full auth handshake in the integration guide before speccing any authenticated endpoints
+- When the backend uses streaming (SSE or WebSocket), add a dedicated "Streaming Architecture" section; generic fetch patterns are not sufficient
+
+## Anti-Patterns
+
+- Proposing new backend endpoints inside a frontend spec — the goal is to build a frontend against the existing backend; backend changes belong in a separate release spec
+- Writing frontend specs from API documentation instead of reading actual handler code — docs drift; the handler is ground truth
+- Skipping the integration guide and embedding API details only in the track prompt — the guide is the canonical reference; prompts should link to it, not duplicate it inline

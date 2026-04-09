@@ -1,14 +1,9 @@
 ---
 name: claude-md-guardian
-description: >
-  Protect CLAUDE.md files from drift, conflict, and unvalidated modifications
-  using hook-based enforcement and periodic audits. Ensures behavioral rules
-  remain consistent across global, project, and subdirectory CLAUDE.md files.
-  Trigger phrases: "audit CLAUDE.md for conflicts", "protect CLAUDE.md",
-  "check CLAUDE.md consistency", "guard agent configuration", "validate
-  CLAUDE.md rules", "prevent CLAUDE.md drift", "sync CLAUDE.md files",
-  "review behavioral rules for contradictions".
+model: sonnet
+description: Produces a CLAUDE.md health report listing conflicts, redundancies, and stale rules across the global, project, and subdirectory hierarchy — and optionally installs a PreToolUse hook to block unauthorized modifications. Use when: "agent behavior is inconsistent", "just merged branches that touched CLAUDE.md", "onboarding a new agent", "after applying learnings", "weekly maintenance".
 license: proprietary
+category: system-health
 ---
 
 # CLAUDE.md Guardian
@@ -115,3 +110,19 @@ Produce a health report listing:
 - `documentation-audit` -- Broader documentation health (not CLAUDE.md-specific)
 - `hooks-reference` -- Configure the mechanical protection hooks
 - `health-audit` -- Repository-wide health check (includes CLAUDE.md as one dimension)
+
+## Output
+- Health report: total rule count per file, list of conflicts with file locations and rule text, redundancies identified, staleness candidates, and recommended actions (merge, delete, promote, demote).
+- Optional: a PreToolUse hook script and settings.json registration blocking unauthorized CLAUDE.md edits from sub-agents.
+
+## Examples
+**Scenario 1:** "Agent started ignoring my no-emoji rule after a merge" → Guardian inventories all CLAUDE.md files, finds a subdirectory rule that overrides the project-level rule unintentionally, and recommends adding an explicit OVERRIDE marker or removing the duplicate.
+**Scenario 2:** "Weekly CLAUDE.md maintenance" → Identifies 3 rules referencing a deprecated tool path, 2 redundant rules between global and project files, and recommends consolidation. No conflicts found. Hook already installed from prior run.
+
+## Edge Cases
+- Intentional subdirectory overrides that genuinely contradict project rules are not bugs — confirm intent before flagging as conflicts. Check for explicit "OVERRIDE:" markers.
+- AGENTS.md files can contradict CLAUDE.md silently; always include them in the inventory even if the user only mentions CLAUDE.md.
+
+## Anti-Patterns
+- Treating rule count as a quality metric — more rules does not mean better agent behavior; favor fewer, precise rules.
+- Blocking all CLAUDE.md modifications via hook without a human override path — prevents legitimate learning and creates operational friction.

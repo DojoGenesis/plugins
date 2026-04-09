@@ -1,27 +1,14 @@
 ---
 name: batch-normalize-and-package
-description: Orchestrate the full pipeline from community skill repos to Dojo CAS distribution. Scans repos, normalizes frontmatter, packages via dojo CLI, and generates a distribution manifest. Use when onboarding external skills at scale. Trigger phrases: "import community skills", "batch normalize skills", "package skills from repos", "onboard external skills", "run the skill supply chain".
+model: sonnet
+description: Produces a signed distribution manifest and CAS-packaged skill set by orchestrating the full community-to-Dojo pipeline: shallow-clone repos, scan for compatibility, normalize frontmatter in parallel batches of 10, package via dojo CLI, and emit manifest.json with source attribution for every entry. Use when: "import community skills", "batch normalize skills", "package skills from repos", "onboard external skills", "run the skill supply chain".
 license: Complete terms in LICENSE.txt
+category: skill-forge
 ---
 
 # Batch Normalize and Package
 
-Meta-skill that orchestrates the full community-to-Dojo skill pipeline.
-
-## I. Philosophy
-
-Individual skill normalization is a solved problem. The hard part is orchestrating the pipeline at scale: scanning dozens of repos, triaging hundreds of files, normalizing the viable ones, packaging them into CAS, and producing a manifest that downstream consumers can trust. This skill is the assembly line foreman — it does not do the work itself but ensures every step happens in the right order with the right inputs.
-
-## II. When to Use
-
-- Onboarding a batch of community skills from multiple GitHub repos
-- Running periodic supply chain refreshes (new skills from watched repos)
-- After adding new repos to the starred/watched list
-- When `dojo skill package-all` needs pre-processing (normalization) before it can succeed
-
-Do NOT use for single-skill normalization (use `normalize-community-skill` directly) or for skills you are writing from scratch (use `skill-creation`).
-
-## III. Workflow
+## I. Workflow
 
 This is a 6-step DAG with dependency structure:
 
@@ -143,7 +130,7 @@ Also generate machine-readable `manifest.json`:
 }
 ```
 
-## IV. Best Practices
+## II. Best Practices
 
 1. **Run scan before normalize.** Never normalize blindly — the scan catalog prevents wasted effort on incompatible files.
 
@@ -157,7 +144,7 @@ Also generate machine-readable `manifest.json`:
 
 6. **Stage before packaging.** Always copy/normalize into a clean staging directory. Never modify source repos in-place.
 
-## V. Quality Checklist
+## III. Quality Checklist
 
 - [ ] All source repos acquired successfully (or failures logged)
 - [ ] Scan catalog generated with correct classifications
@@ -169,3 +156,31 @@ Also generate machine-readable `manifest.json`:
 - [ ] manifest.json is valid JSON and parseable
 - [ ] Source attribution preserved for every entry
 - [ ] Pipeline is idempotent (re-run produces same hashes)
+
+## Output
+
+- Normalized skill files in a clean staging directory (source repos untouched)
+- CAS entries for each packaged skill: `skill/{name}:config` and `skill/{name}:content` tags at the resolved version hash
+- `skill-distribution-manifest.md` — human-readable summary of scanned, normalized, failed, and skipped counts
+- `manifest.json` — machine-readable manifest with CAS hashes and source attribution for every entry
+- Pipeline run logged with timestamps for each step
+
+## Examples
+
+**Scenario 1:** "Import community skills from alirezarezvani/claude-skills and slavingia/skills" → Shallow-clone both repos in parallel, invoke `scan-community-repos` on the combined paths, filter catalog, normalize all normalizable skills in parallel batches of 10, run `dojo skill package-all` on staging, generate manifest.
+
+**Scenario 2:** "Run the weekly supply chain refresh on our watched repos" → Pull latest from cached clones (`git pull --ff-only`), re-scan, normalize only skills not already in CAS (idempotent check), package new additions, append to existing manifest.
+
+## Edge Cases
+
+- A single repo clone fails (network error, private repo) — log the failure, skip that source, continue with the rest; name the failed repo explicitly in the manifest's skipped section
+- A skill fails normalization (malformed YAML, encoding issues) — mark as "failed" in the manifest with the error message, continue; do not abort the pipeline
+- A normalized skill still fails IsValid() after normalization — mark as "needs-manual-review" in the manifest; do not attempt to package it
+- Re-run on the same repos — content-addressed storage guarantees the same input produces the same hash; use this as a verification check, not a guard against re-running
+
+## Anti-Patterns
+
+- **Modifying source repos in place:** All normalization must happen in the staging directory — never edit the cloned source repos directly
+- **Aborting on a single failure:** One malformed skill file should never stop the pipeline; log, skip, and continue
+- **Omitting source attribution:** Every entry in the manifest must name its source repo — provenance is required for trust and for rollback decisions
+- **Running without a prior scan:** Normalizing all files blindly wastes compute on incompatible files; always let `scan-community-repos` filter the work queue first

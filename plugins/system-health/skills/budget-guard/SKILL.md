@@ -1,15 +1,9 @@
 ---
 name: budget-guard
-description: >
-  Checks token budget before executing expensive operations using the Gateway's
-  BudgetTracker. Enforces a three-tier limit system (query, session, monthly)
-  with category-adjusted cost estimates. Trigger this skill before any
-  operation with significant token cost, when a user asks "can I afford this?",
-  "will this blow my budget?", "check my remaining tokens", or when an
-  orchestration plan requests a pre-flight budget check. Also triggers
-  automatically when BudgetMiddleware returns X-Budget-* headers indicating
-  elevated usage.
+model: sonnet
+description: Produces a structured APPROVE / WARN / BLOCK decision by checking remaining token budget across query, session, and monthly tiers before an expensive operation runs. Use when: "is this operation within budget", "pre-flight check before web search", "budget alert fired", "before a multi-step pipeline", "session above 70% utilization".
 license: proprietary
+category: system-health
 ---
 
 ## I. Philosophy
@@ -166,3 +160,21 @@ Before completing this skill, verify:
 - [ ] Monthly reset date included in output for WARN and BLOCK decisions
 - [ ] Full budget snapshot (all three tiers with utilization percentage)
   included in output
+
+## Output
+- Structured decision block: Decision (APPROVE / WARN / BLOCK), reason, adjusted cost estimate, per-tier budget status with utilization percentages, binding tier, and human-readable recommendation.
+- For WARN: includes the exact token count that would trigger a BLOCK if the current operation proceeds.
+- For BLOCK: includes token count required to resume and earliest reset date across blocked tiers.
+
+## Examples
+**Scenario 1:** "Check if a 10-URL web search is within budget" → APPROVE with adjusted cost (2000 tokens × 1.4x web multiplier = 2800), all three tiers shown at current utilization.
+**Scenario 2:** "Session is at 88% — can I run this summarize task?" → WARN at session tier. Compute multiplier (1.5x) applied. Shows exactly how many tokens remain before BLOCK threshold.
+
+## Edge Cases
+- If estimated_tokens is not provided, apply conservative defaults by operation type (web 2000, compute 3000, file 1500, memory 800) and note the default was used.
+- When an operation spans multiple categories, apply the highest multiplier — never stack multipliers.
+- BLOCK decisions cannot auto-proceed regardless of downstream urgency; surface the decision and wait for human confirmation.
+
+## Anti-Patterns
+- Caching the GetRemaining result across multiple checks — budget state changes between calls and a stale snapshot can produce false approvals.
+- Using this skill as a post-hoc ledger review — it is a forward-looking gate. For historical cost analysis, use `agent-performance-report`.

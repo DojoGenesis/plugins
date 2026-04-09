@@ -1,6 +1,8 @@
 ---
 name: semantic-clusters
-description: Map software system capabilities using action-verb clusters that group components by what they DO rather than where they live. Produces behavioral architecture revealing capabilities, gaps, and architectural confusion. Use when you need to understand what a codebase does, explain a system to others, plan refactors, audit feature coverage, or understand cross-cutting concerns. Trigger phrases: 'what does this app actually do', 'walk me through the features', 'what are the main capabilities', 'map the system architecture', 'understand this codebase'.
+model: opus
+description: Produces a behavioral architecture map grouping components by action-verb clusters (CONVERSE, REASON, REMEMBER, etc.) that reveals capabilities, gaps, and cross-cutting concerns invisible to directory trees. Use when: "what does this app actually do", "walk me through the features", "plan a refactor", "audit feature coverage", "explain this system to someone new".
+category: system-health
 ---
 
 # Semantic Clusters Skill
@@ -228,3 +230,20 @@ Before delivering your semantic cluster map, confirm:
 - [ ] The cluster map covers both frontend and backend (if applicable)
 - [ ] LOC estimates are approximate but not fictional
 - [ ] The map tells a coherent story about what the system does
+
+## Output
+- A semantic cluster map with one subsection per verb, each containing: a component table (Component, Location, Status, LOC), a one-line health assessment, and audit notes.
+- A cross-cluster components table listing integration points and their dual-cluster membership.
+- An orphans section documenting any directories that didn't map to any cluster, with an explanation.
+
+## Examples
+**Scenario 1:** "Walk me through what the Dojo Gateway actually does" → 9 clusters identified (CONVERSE, REASON, PROTECT, OBSERVE, PERSIST, CONNECT, BUILD, ORCHESTRATE, ACT). Cross-cluster table shows TraceLogger serves both OBSERVE and BUILD. One orphan directory found: `/legacy/` — documented as dead code candidate.
+**Scenario 2:** "Plan the refactor of the frontend" → PRESENT cluster has 25 components — flagged for splitting into PRESENT (layout) and COMPOSE (content editing). 3 components mapping to 4+ clusters flagged as architectural concerns requiring decomposition.
+
+## Edge Cases
+- If a component maps to three or more clusters, do not force it into one — flag it explicitly as an architectural concern and note which capabilities are bleeding into each other.
+- Tests always belong in BUILD, never in the cluster of the code they test — even if they live adjacent to the tested components.
+
+## Anti-Patterns
+- Assigning components to clusters based on directory location rather than behavior — a dashboard in `frontend/components/` that displays traces belongs in OBSERVE, not PRESENT.
+- Creating clusters with vague verbs like MANAGE, PROCESS, or HANDLE — if someone cannot guess the contents from the verb name alone, it's not a good cluster verb.
