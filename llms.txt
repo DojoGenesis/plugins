@@ -1,0 +1,36 @@
+# DojoGenesis Plugins
+
+> 84 first-party methodology skills across 8 behavioral plugins — strategic thinking, spec-driven development, system health, wisdom garden, and more.
+
+## What this is
+
+The canonical first-party skill collection for the Dojo Genesis platform. Each plugin is a directory containing skills in SKILL.md format with YAML frontmatter that defines metadata, trigger conditions, and usage guidance. Skills are active cognitive scaffolds — structured methodologies that guide AI agents through complex decisions, not passive documentation. All 84 skills are rated A+ quality and designed to work with the Dojo MCP Server and Claude Code.
+
+## Plugins (8)
+
+- **agent-orchestration** — Multi-agent coordination patterns, parallel dispatch, delegation playbooks
+- **continuous-learning** — Research modes, project exploration, synthesis, retrospectives, era architecture
+- **skill-forge** — Skill creation, maintenance, batch normalization, community skill scanning
+- **specification-driven-development** — Spec writing, parallel tracks, frontend-from-backend, implementation prompts
+- **strategic-thinking** — Strategic scout, product positioning, iterative scouting, multi-surface strategy
+- **system-health** — Documentation audit, health audit, observability dashboard, repo status, budget guard
+- **wisdom-garden** — Memory garden, compression ritual, seed extraction, system prompt archaeology
+- **pretext-pdf** — PDF export, typography configuration for AI-generated documents
+
+## Skill format
+
+Each skill lives at `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` with YAML frontmatter containing:
+- `name`, `description`, `version`, `quality` fields
+- `triggers` — when the skill should be invoked
+- `model` — recommended Claude model (sonnet/opus split)
+- Full workflow steps as markdown
+
+## How to use with LLMs
+
+Install via the Dojo MCP Server (`DOJO_SKILLS_PATH` pointing to this repo). Use `dojo.list_skills` to browse by plugin, `dojo.search_skills` to find by keyword, and `dojo.invoke_skill` to load any skill. For Claude Code directly, install the plugins package and reference skills via `.mcp.json` configuration. Community skills live in `plugins/community-skills/`.
+
+## Links
+
+- GitHub: https://github.com/DojoGenesis/plugins
+- MCP Server: https://github.com/DojoGenesis/mcp
+- Portability guide: https://github.com/DojoGenesis/plugins/blob/main/PORTABILITY.md
