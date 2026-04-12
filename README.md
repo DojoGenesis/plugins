@@ -1,12 +1,12 @@
 # Cowork Plugins by Dojo Genesis
 
-**44 skills that make autonomous software development actually work.**
+**84 skills that make autonomous software development actually work.**
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline.
 
-These plugins encode the discipline. 7 behavioral plugins, 44 skills — from strategic scouting to specification writing to structured retrospectives. Every skill exists because we needed it while shipping real software with autonomous agents. And then needed it again.
+These plugins encode the discipline. 8 behavioral plugins, 84 first-party skills — from strategic scouting to specification writing to structured retrospectives. Every skill exists because we needed it while shipping real software with autonomous agents. And then needed it again.
 
-**40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
+**84 first-party skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
 
 ## The Philosophy
 
@@ -20,13 +20,14 @@ These aren't "10 AI prompts for productivity." These are battle-tested workflows
 
 | Plugin | Verb | Skills | What it does |
 |--------|------|--------|--------------|
-| [strategic-thinking](plugins/strategic-thinking/) | STRATEGIZE | 5 | Scout tensions before committing to solutions. Position products, design multi-surface strategies, bridge vision to execution with iterative refinement. |
-| [specification-driven-development](plugins/specification-driven-development/) | SPECIFY | 10 | Write specs grounded in codebase reality, not wishful thinking. Transform them into implementation prompts, commission parallel tracks, verify alignment before handoff. |
-| [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 5 | Compress session context into lasting memory. Reflect on patterns as seeds, elevate proven seeds into reusable skills. Knowledge is cultivated, not just stored. |
-| [system-health](plugins/system-health/) | OBSERVE | 8 | Audit ecosystem health, map semantic clusters across codebases, track documentation drift, sync repo context. You cannot improve what you do not observe. |
-| [continuous-learning](plugins/continuous-learning/) | LEARN | 7 | Harvest sprint learnings through structured retrospectives. Research deeply and widely, diagnose systematically, explore new projects with curiosity as compass. |
-| [agent-orchestration](plugins/agent-orchestration/) | ORCHESTRATE | 4 | Handoffs are sacred relays, not tosses over the wall. Clean context preservation, shared workspace navigation, peer teaching, decision propagation across living documents. |
-| [skill-forge](plugins/skill-forge/) | BUILD | 4 | The meta-layer—skills about making skills. Create, maintain, audit, and evolve the reusable patterns that power every other plugin. |
+| [strategic-thinking](plugins/strategic-thinking/) | STRATEGIZE | 6 | Scout tensions before committing to solutions. Position products, design multi-surface strategies, bridge vision to execution with iterative refinement. |
+| [specification-driven-development](plugins/specification-driven-development/) | SPECIFY | 12 | Write specs grounded in codebase reality, not wishful thinking. Transform them into implementation prompts, commission parallel tracks, verify alignment before handoff. |
+| [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 13 | Compress session context into lasting memory. Reflect on patterns as seeds, elevate proven seeds into reusable skills. Knowledge is cultivated, not just stored. |
+| [system-health](plugins/system-health/) | OBSERVE | 19 | Audit ecosystem health, map semantic clusters across codebases, track documentation drift, sync repo context. You cannot improve what you do not observe. |
+| [continuous-learning](plugins/continuous-learning/) | LEARN | 13 | Harvest sprint learnings through structured retrospectives. Research deeply and widely, diagnose systematically, explore new projects with curiosity as compass. |
+| [agent-orchestration](plugins/agent-orchestration/) | ORCHESTRATE | 10 | Handoffs are sacred relays, not tosses over the wall. Clean context preservation, shared workspace navigation, peer teaching, decision propagation across living documents. |
+| [skill-forge](plugins/skill-forge/) | BUILD | 9 | The meta-layer—skills about making skills. Create, maintain, audit, and evolve the reusable patterns that power every other plugin. |
+| [pretext-pdf](plugins/pretext-pdf/) | PUBLISH | 2 | Export structured documents to print-quality PDF using the Pretext layout engine. Zero-reflow typography, adaptive pagination, auto table of contents. |
 
 ## What Makes This Different
 
@@ -114,7 +115,7 @@ These plugins encode patterns discovered through practice—retrospectives that 
 
 ## Versioning
 
-Current version: **1.1.0**
+Current version: **1.2.0**
 
 We follow semantic versioning with a cultivation mindset:
 - **Patch** (1.1.x): Bug fixes, typo corrections, minor clarifications
