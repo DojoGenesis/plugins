@@ -162,6 +162,7 @@ Document how the measurements were taken:
 - **strategic-scout**: Can be grounded in codebase audit results for more precise analysis.
 - **specification-writer**: Works best paired with audit grounding to prevent ungrounded specs.
 - **implementation-prompt**: Receives higher-quality specs when grounding is done upstream.
+- **gap-audit-then-fix** (specification-driven-development): This skill covers the measurement phase of a gap audit — producing quantified current state. For the full pipeline including gap classification by effort tier, parallel fix dispatch with file manifests, and a GAPS.md registry, see `gap-audit-then-fix` in specification-driven-development.
 
 ## Output
 

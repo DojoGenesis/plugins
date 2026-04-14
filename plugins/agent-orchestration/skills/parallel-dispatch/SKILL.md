@@ -49,6 +49,23 @@ Parallel dispatch is not "fire and forget" — it is "fire, verify, and integrat
    - The build/test commands that will be used to verify
 3. Model routing: Sonnet for straightforward implementation, Opus for architectural/complex tracks
 
+## File Manifest Protocol
+
+Every agent prompt must include an explicit file manifest stating exactly which files the agent may create or modify. This is the zero-overlap guarantee that makes parallel execution safe.
+
+**Agent Dispatch Template:**
+```
+"You own ONLY these files: [explicit list]. DO NOT read, modify, or create any files outside this list. If you need changes to files outside your manifest, report the need in your output — do not make the change."
+```
+
+**Ownership rules:**
+- Agents that CREATE new files never conflict — new-file creation is inherently exclusive
+- Agents that MODIFY existing files need exclusive ownership — one agent per file, no exceptions
+- One agent per concern, not per file. Assign a complete feature slice (component + test + wiring), not a single file
+- Main thread integrates: after all agents land, run `go build ./...`, `go test ./...`, wire cross-component imports, then one final build check
+
+**Evidence:** validated across 20+ parallel dispatches in a single HTMLCraft Studio session — 3 phases, ~20 agents, 81 files committed, zero merge conflicts. The manifest is the mechanism: without explicit ownership, silent collisions are inevitable; with it, parallelism scales to any team size.
+
 ### Phase 3: Verify
 After ALL agents complete, run independent verification for each track:
 1. `git status` to confirm expected files were changed
@@ -117,3 +134,13 @@ Track B: Add JWT validation to bridge.go
 - **Using Opus for simple tasks**: Model routing matters for cost and speed. Straightforward implementation gets Sonnet; architectural decisions get Opus.
 - **Committing before verification**: Every track must pass independent verification before any commit is made.
 - **Re-dispatching without diagnosing**: When a track fails, read the output first. The fix may be a one-line correction, not a full re-dispatch.
+
+## Model Enforcement
+
+As of Apr 14, 2026, a PostToolUse hook (`agent-model-enforce.sh`) warns whenever an agent is dispatched without an explicit `model:` parameter. The rule is non-negotiable: always specify `model: "sonnet"` or `model: "opus"` in every agent call — never inherit the default.
+
+**Routing split:**
+- `model: "sonnet"` — parsing, bulk transforms, template generation, audits, straightforward implementation (~80% of dispatches)
+- `model: "opus"` — architecture decisions, synthesis of competing constraints, strategic calls (~20% of dispatches)
+
+Inheriting the default is an anti-pattern because the default may change, may differ by environment, and makes cost and quality unpredictable across a large swarm. Explicit model selection is part of the dispatch contract.
