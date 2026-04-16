@@ -1,10 +1,10 @@
 # DojoGenesis Plugins
 
-**84 first-party methodology skills across 8 behavioral plugins for Claude Code and the Dojo platform.**
+**92 first-party methodology skills across 9 behavioral plugins for Claude Code and the Dojo platform.**
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline. These plugins encode the discipline: battle-tested workflows from actually shipping software with autonomous agents.
 
-**84 skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
+**92 skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
 
 ---
 
@@ -58,6 +58,7 @@ Or via the Dojo MCP tools: `dojo.list_skills`, `dojo.search_skills`, `dojo.invok
 | [system-health](plugins/system-health/) | OBSERVE | 19 | Audit ecosystem health: documentation audit, health audit, observability dashboard, repo status, semantic clusters, supply chain refresh, budget guard. |
 | [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 13 | Compress session context into lasting memory: compression ritual, memory garden, seed extraction, system prompt archaeology, session continuity ledger. |
 | [pretext-pdf](plugins/pretext-pdf/) | PUBLISH | 2 | Export structured documents to print-quality PDF using the Pretext layout engine. Zero-reflow typography, adaptive pagination, auto table of contents. |
+| [dojo-craft](plugins/dojo-craft/) | CRAFT | 8 | The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. |
 
 ---
 
@@ -111,6 +112,11 @@ plugins/
 ├── pretext-pdf/skills/
 │   ├── pdf-export/SKILL.md
 │   └── pdf-typography/SKILL.md
+├── dojo-craft/skills/
+│   ├── adr-writer/               ├── scout-writer/
+│   ├── claude-md-guardian/       ├── convergence-checker/
+│   ├── memory-curator/           ├── seed-curator/
+│   ├── codebase-viewer/          └── project-scaffolder/
 └── community-skills/             ← Community-contributed skills
 ```
 
@@ -217,7 +223,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.2.0** — 84 first-party skills, all rated A+.
+**1.3.0** — 92 first-party skills, all rated A+.
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications
