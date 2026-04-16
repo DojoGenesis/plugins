@@ -9,6 +9,7 @@ triggers:
   - "explore this repo"
 version: "1.0.0"
 model: sonnet
+category: dojo-craft
 ---
 
 # Codebase Viewer

@@ -9,6 +9,7 @@ triggers:
   - "organize memories"
 version: "1.0.0"
 model: sonnet
+category: dojo-craft
 ---
 
 # Memory Curator

@@ -10,6 +10,7 @@ triggers:
   - "elevate seed"
 version: "1.0.0"
 model: sonnet
+category: dojo-craft
 ---
 
 # Seed Curator

@@ -9,6 +9,7 @@ triggers:
   - "new project"
 version: "1.0.0"
 model: sonnet
+category: dojo-craft
 ---
 
 # Project Scaffolder
