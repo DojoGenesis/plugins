@@ -17,7 +17,21 @@ from pathlib import Path
 
 # ─── Tunables ───────────────────────────────────────────────────────────────
 DESCRIPTION_MAX_CHARS = 1024
+DESCRIPTION_MIN_CHARS = 30  # shorter = WARN (weak trigger surface)
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# Valid Claude Code hook event names (2026-06-09 shape-check)
+VALID_HOOK_EVENTS = {
+    "PreToolUse",
+    "PostToolUse",
+    "UserPromptSubmit",
+    "Stop",
+    "SubagentStop",
+    "SessionStart",
+    "SessionEnd",
+    "PreCompact",
+    "Notification",
+}
 
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
@@ -134,6 +148,67 @@ def check_plugin_manifest(plugin_dir: Path, result: LintResult):
         result.fail(plugin_name, None, "plugin.json missing or empty 'version'")
 
 
+def check_hooks_json(plugin_dir: Path, result: LintResult):
+    """
+    Validate plugin_dir/hooks/hooks.json (2026-06-09 shape-check):
+    - File must parse as valid JSON.
+    - Top-level structure must be an object containing a 'hooks' key.
+    - The 'hooks' value must be a dict (object), not a list or other type.
+    - Every key inside 'hooks' must be a known Claude Code event name.
+    - Presence of hooks.json.unsupported → WARN (quarantined content).
+    """
+    plugin_name = plugin_dir.name
+    hooks_dir = plugin_dir / "hooks"
+    hooks_path = hooks_dir / "hooks.json"
+    unsupported_path = hooks_dir / "hooks.json.unsupported"
+
+    # WARN if quarantined file exists
+    if unsupported_path.exists():
+        result.warn(plugin_name, None,
+                    f"hooks/hooks.json.unsupported present — quarantined content awaiting review")
+
+    if not hooks_path.exists():
+        # No hooks.json is fine — hook support is optional
+        return
+
+    # Must parse as JSON
+    try:
+        data = load_json(hooks_path)
+    except json.JSONDecodeError as e:
+        result.fail(plugin_name, None, f"hooks/hooks.json is not valid JSON: {e}")
+        return
+    except OSError as e:
+        result.fail(plugin_name, None, f"hooks/hooks.json unreadable: {e}")
+        return
+
+    # Must be a top-level object with a 'hooks' key
+    if not isinstance(data, dict):
+        result.fail(plugin_name, None,
+                    "hooks/hooks.json top-level must be an object, not "
+                    f"{type(data).__name__}")
+        return
+
+    if "hooks" not in data:
+        result.fail(plugin_name, None,
+                    "hooks/hooks.json missing top-level 'hooks' object "
+                    "(found keys: " + ", ".join(sorted(data.keys())) + ")")
+        return
+
+    hooks_val = data["hooks"]
+    if not isinstance(hooks_val, dict):
+        result.fail(plugin_name, None,
+                    f"hooks/hooks.json 'hooks' value must be an object, not "
+                    f"{type(hooks_val).__name__} — got: {str(hooks_val)[:60]}")
+        return
+
+    # Every event key must be a known event name
+    for event_key in hooks_val.keys():
+        if event_key not in VALID_HOOK_EVENTS:
+            result.fail(plugin_name, None,
+                        f"hooks/hooks.json contains unknown event '{event_key}'; "
+                        f"valid events: {', '.join(sorted(VALID_HOOK_EVENTS))}")
+
+
 def check_skill_frontmatter(plugin_dir: Path, skill_dir: Path, skill_md: Path,
                              result: LintResult):
     """
@@ -141,6 +216,7 @@ def check_skill_frontmatter(plugin_dir: Path, skill_dir: Path, skill_md: Path,
     - exists
     - non-empty name: field
     - non-empty description: field
+    - description >= DESCRIPTION_MIN_CHARS (< threshold → WARN: weak trigger surface)
     - description <= DESCRIPTION_MAX_CHARS
     """
     plugin_name = plugin_dir.name
@@ -165,6 +241,12 @@ def check_skill_frontmatter(plugin_dir: Path, skill_dir: Path, skill_md: Path,
     desc_val = extract_frontmatter_field(fm, "description")
     if not desc_val:
         result.fail(plugin_name, skill_name, f"{rel} — frontmatter 'description' missing or empty")
+    elif len(desc_val) < DESCRIPTION_MIN_CHARS:
+        result.warn(
+            plugin_name, skill_name,
+            f"{rel} — description is only {len(desc_val)} chars "
+            f"(< {DESCRIPTION_MIN_CHARS} threshold; weak trigger surface for skill dispatch)"
+        )
     elif len(desc_val) > DESCRIPTION_MAX_CHARS:
         result.fail(
             plugin_name, skill_name,
@@ -316,7 +398,10 @@ def main():
         # 1. Manifest check
         check_plugin_manifest(plugin_dir, result)
 
-        # 2. Skill-level checks
+        # 2. hooks.json shape + event-name validation
+        check_hooks_json(plugin_dir, result)
+
+        # 3. Skill-level checks
         skills = collect_skills(plugin_dir)
         for skill_dir, skill_md in skills:
             total_skills += 1
@@ -328,10 +413,10 @@ def main():
             else:
                 check_skill_frontmatter(plugin_dir, skill_dir, skill_md, result)
 
-    # 3. Cross-plugin collision detection
+    # 4. Cross-plugin collision detection
     check_skill_name_collisions(all_skill_names, result)
 
-    # 4. Marketplace consistency
+    # 5. Marketplace consistency
     if marketplace_path.exists():
         check_marketplace_consistency(marketplace_path, plugins_dir, result)
     else:
