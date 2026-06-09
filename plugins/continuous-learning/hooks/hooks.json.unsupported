@@ -10,5 +10,17 @@
         }
       ]
     }
+  ],
+  "_note_stop_quarantine": "quarantined 2026-06-09 — fires a haiku eval on every session Stop; recurring cost/latency arrived via version bump; operator to opt in deliberately via OPERATIONS.md runbook",
+  "Stop": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "Review the conversation. Is the research question, debugging task, or learning objective fully resolved or explicitly deferred with a clear next step noted? If unanswered open questions remain, respond with {\"ok\": false, \"reason\": \"Open questions: [list them]\"}. If the work is complete or intentionally paused, respond with {\"ok\": true}.",
+          "model": "claude-haiku-4-5"
+        }
+      ]
+    }
   ]
 }
