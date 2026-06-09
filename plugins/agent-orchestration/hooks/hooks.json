@@ -1,26 +1,28 @@
 {
-  "SubagentStop": [
-    {
-      "hooks": [
-        {
-          "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/validate-handoff.sh\"",
-          "async": false
-        }
-      ]
-    }
-  ],
-  "PostToolUse": [
-    {
-      "matcher": "Write",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/index-handoff.sh\"",
-          "async": true,
-          "if": "Write(**/handoffs/*.md)"
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/validate-handoff.sh\"",
+            "async": false
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/index-handoff.sh\"",
+            "async": true,
+            "if": "Write(**/handoffs/*.md)"
+          }
+        ]
+      }
+    ]
+  }
 }

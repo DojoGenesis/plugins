@@ -1,0 +1,14 @@
+{
+  "_note": "PostCompact is not a valid Claude Code hook event as of 2026-06-09; removed from hooks.json to unblock plugin load.",
+  "PostCompact": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/log-compact-event.sh\"",
+          "async": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "_note": "ConfigChange, WorktreeCreate, SessionEnd are not valid Claude Code hook events as of 2026-06-09; removed from hooks.json to unblock plugin load.",
+  "ConfigChange": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/audit-config-change.sh\"",
+          "async": true
+        }
+      ]
+    }
+  ],
+  "WorktreeCreate": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/init-worktree-context.sh\"",
+          "async": true
+        }
+      ]
+    }
+  ],
+  "SessionEnd": [
+    {
+      "hooks": [
+        {
+          "type": "command",
+          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/log-session-end.sh\"",
+          "async": true
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "_note": "ConfigChange is not a valid Claude Code hook event as of 2026-06-09; removed from hooks.json to unblock plugin load.",
+  "ConfigChange": [
+    {
+      "hooks": [
+        {
+          "type": "prompt",
+          "prompt": "The plugin configuration changed during this session. Did any new skills get added, removed, or renamed that might indicate skill ecosystem drift? If yes, respond with {\"ok\": false, \"reason\": \"Skills changed: [describe]\"} to continue for a drift check. If the change was expected, respond with {\"ok\": true}.",
+          "model": "claude-haiku-4-5"
+        }
+      ]
+    }
+  ]
+}
