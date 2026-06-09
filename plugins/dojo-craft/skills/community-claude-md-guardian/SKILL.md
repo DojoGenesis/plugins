@@ -1,5 +1,5 @@
 ---
-name: claude-md-guardian
+name: community-claude-md-guardian
 version: "1.0.0"
 model: sonnet
 description: "Audits CLAUDE.md files for conflicts, stale rules, missing sections, and cross-file coherence. Produces a health report with auto-fix suggestions. Use when: 'check claude.md', 'audit CLAUDE.md', 'fix claude.md', 'claude md health'."

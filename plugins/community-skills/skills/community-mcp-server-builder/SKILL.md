@@ -1,5 +1,5 @@
 ---
-name: "mcp-server-builder"
+name: "community-mcp-server-builder"
 description: "Scaffold production-ready MCP servers from OpenAPI specs with schema validation and versioning. Use when exposing APIs to LLM agents. Trigger phrases: \"build MCP server\", \"create tool server\", \"expose API to agent\"."
 ---
 

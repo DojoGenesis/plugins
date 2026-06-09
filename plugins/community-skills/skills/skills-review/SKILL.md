@@ -1,9 +1,6 @@
 ---
 name: "review"
-description: >-
-  Review Playwright tests for quality. Use when user says "review tests",
-  "check test quality", "audit tests", "improve tests", "test code review",
-  or "playwright best practices check".
+description: "Systematically reviews Playwright test files for anti-patterns, missed best practices, and coverage gaps, producing actionable improvement recommendations. Use when: 'review tests', 'check test quality', 'audit tests', 'improve tests', 'test code review', 'Playwright best practices check'."
 ---
 
 # Review Playwright Tests

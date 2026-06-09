@@ -1,6 +1,6 @@
 ---
 name: "env-secrets-manager"
-description: "Env & Secrets Manager"
+description: "Audits .env files and secrets hygiene across local development and production, detecting drift, leaked secrets, and rotation gaps. Use when: 'manage environment variables', 'secrets audit', 'env hygiene', 'rotate secrets', '.env review', 'check for leaked keys', 'environment config'."
 ---
 
 # Env & Secrets Manager

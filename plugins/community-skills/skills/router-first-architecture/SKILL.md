@@ -1,6 +1,6 @@
 ---
 name: router-first-architecture
-description: Router-First Architecture
+description: "Enforces routing through domain routers before invoking individual tools, abstracting tool selection into deterministic intent-to-command mappings. Use when: 'set up domain router', 'router-first pattern', 'route before calling tool', 'co-activate with router', 'deterministic skill routing'."
 user-invocable: false
 ---
 

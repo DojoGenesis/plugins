@@ -8,7 +8,7 @@ metadata:
   category: c-level
   domain: decision-memory
   updated: 2026-03-05
-  python-tools: scripts/decision_tracker.py
+  python-tools: none
 ---
 
 # Decision Logger
@@ -20,14 +20,7 @@ decision log, memory, approved decisions, action items, board minutes, /cs:decis
 
 ## Quick Start
 
-```bash
-python scripts/decision_tracker.py --demo             # See sample output
-python scripts/decision_tracker.py --summary          # Overview + overdue
-python scripts/decision_tracker.py --overdue          # Past-deadline actions
-python scripts/decision_tracker.py --conflicts        # Contradiction detection
-python scripts/decision_tracker.py --owner "CTO"      # Filter by owner
-python scripts/decision_tracker.py --search "pricing" # Search decisions
-```
+Use the slash commands below to query and manage decisions. All operations are performed by the agent reading and updating the markdown files directly — no external script is required.
 
 ---
 
@@ -146,4 +139,4 @@ memory/board-meetings/
 
 ## References
 - `templates/decision-entry.md` — single entry template with field rules
-- `scripts/decision_tracker.py` — CLI parser, overdue tracker, conflict detector
+- Note: `scripts/decision_tracker.py` referenced in original skill was absent and not fully specified; dependency removed 2026-06-09. Overdue tracking and conflict detection are performed inline by the agent using the markdown files directly.

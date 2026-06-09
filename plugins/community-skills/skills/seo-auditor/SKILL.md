@@ -1,9 +1,6 @@
 ---
 name: seo-auditor
-description: |
-  Scan and optimize documentation files for SEO. Audits README.md files and docs/ pages for
-  meta tags, headings, keywords, readability, duplicate content, and broken links. Applies
-  fixes, updates sitemap.xml, and generates a report. Usage: /seo-auditor [path]
+description: "Scans and optimizes documentation files (README.md, docs/) for SEO — auditing meta tags, headings, keywords, readability, duplicate content, and broken links, then applying fixes and generating a report. Use when: 'SEO audit', 'optimize docs for SEO', 'fix broken links in docs', 'improve README SEO', '/seo-auditor'."
 ---
 
 # /seo-auditor

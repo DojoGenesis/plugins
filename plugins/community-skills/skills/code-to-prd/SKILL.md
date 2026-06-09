@@ -6,17 +6,7 @@ Dependencies: none
 Author: Alireza Rezvani
 Version: 2.1.2
 name: code-to-prd
-description: |
-  Reverse-engineer any codebase into a complete Product Requirements Document (PRD).
-  Analyzes routes, components, state management, API integrations, and user interactions to produce
-  business-readable documentation detailed enough for engineers or AI agents to fully reconstruct
-  every page and endpoint. Works with frontend frameworks (React, Vue, Angular, Svelte, Next.js, Nuxt),
-  backend frameworks (NestJS, Django, Express, FastAPI), and fullstack applications.
-
-  Trigger when users mention: generate PRD, reverse-engineer requirements, code to documentation,
-  extract product specs from code, document page logic, analyze page fields and interactions,
-  create a functional inventory, write requirements from an existing codebase, document API endpoints,
-  or analyze backend routes.
+description: "Reverse-engineers any codebase into a complete Product Requirements Document (PRD) by analyzing routes, components, state, APIs, and user interactions. Use when: 'generate PRD from code', 'reverse-engineer requirements', 'code to documentation', 'extract product specs', 'document API endpoints', 'write requirements from existing codebase'."
 license: MIT
 metadata:
   updated: 2026-03-17

@@ -1,6 +1,6 @@
 ---
 name: "ci-cd-pipeline-builder"
-description: "CI/CD Pipeline Builder"
+description: "Generates pragmatic CI/CD pipeline configs from detected project stack signals for GitHub Actions, GitLab CI, or similar. Use when: 'set up CI', 'CI/CD pipeline', 'build pipeline', 'add GitHub Actions', 'configure deployment pipeline', 'automate tests in CI'."
 ---
 
 # CI/CD Pipeline Builder

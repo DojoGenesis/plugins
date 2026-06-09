@@ -1,8 +1,6 @@
 ---
 name: "report"
-description: >-
-  Generate test report. Use when user says "test report", "results summary",
-  "test status", "show results", "test dashboard", or "how did tests go".
+description: "Generates test reports that integrate with the user's existing workflow — summarizing pass/fail status, flaky tests, and coverage trends. Use when: 'test report', 'results summary', 'test status', 'show test results', 'test dashboard', 'how did tests go'."
 ---
 
 # Smart Test Reporting

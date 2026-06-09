@@ -1,6 +1,6 @@
 ---
 name: "contract-and-proposal-writer"
-description: "Contract & Proposal Writer"
+description: "Generates professional, jurisdiction-aware business documents — freelance contracts, project proposals, SOWs, NDAs, MSAs — in Markdown with docx conversion instructions. Use when: 'write a contract', 'draft proposal', 'create SOW', 'NDA template', 'MSA', 'freelance agreement', 'project contract'."
 ---
 
 # Contract & Proposal Writer

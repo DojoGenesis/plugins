@@ -1,9 +1,6 @@
 ---
 name: "testrail"
-description: >-
-  Sync tests with TestRail. Use when user mentions "testrail", "test management",
-  "test cases", "test run", "sync test cases", "push results to testrail",
-  or "import from testrail".
+description: "Provides bidirectional sync between Playwright tests and TestRail test management — pushing test cases, syncing results, and importing from TestRail. Use when: 'TestRail', 'sync test cases', 'push results to TestRail', 'import from TestRail', 'test management', 'test run'."
 ---
 
 # TestRail Integration

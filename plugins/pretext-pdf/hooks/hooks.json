@@ -1,14 +1,16 @@
 {
-  "PostToolUse": [
-    {
-      "matcher": "mcp__*",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/log-pdf-export.sh\"",
-          "async": true
-        }
-      ]
-    }
-  ]
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "mcp__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"${CLAUDE_PLUGIN_ROOT}/hooks/log-pdf-export.sh\"",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
 }
