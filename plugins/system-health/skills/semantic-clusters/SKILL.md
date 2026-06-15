@@ -257,3 +257,9 @@ Before delivering your semantic cluster map, confirm:
 ## Anti-Patterns
 - Assigning components to clusters based on directory location rather than behavior — a dashboard in `frontend/components/` that displays traces belongs in OBSERVE, not PRESENT.
 - Creating clusters with vague verbs like MANAGE, PROCESS, or HANDLE — if someone cannot guess the contents from the verb name alone, it's not a good cluster verb.
+
+## Related Skills
+
+- `repo-context-sync` — use first to get a current, keyword-filtered snapshot of the codebase before assigning verbs; clustering stale or incomplete inventory produces misleading maps
+- `status-template` — semantic cluster output feeds directly into Section 4 of the status document; the two skills are designed to be used in sequence
+- `repo-status` — the parent skill that chains repo-context-sync → semantic-clusters → status-template into a single health-audit workflow

@@ -173,3 +173,26 @@ Commit the completed retrospective document to the repository. Share the key fin
 - Producing only a list of complaints without action items — every friction point must map to a concrete next step
 - Conflating "what was hard" with "who was at fault" — retrospectives analyze process, never individuals
 - Skipping the Seeds section when a lesson is particularly reusable — the seeds are how retrospective learning transfers to future sprints
+
+---
+
+## Quality Checklist
+
+Before considering the retrospective complete:
+
+- [ ] A closed sprint, release, or period is the subject (not an open one)
+- [ ] All three core questions are answered with specific observations, not generalities
+- [ ] Every friction point in "What Was Hard" maps to at least one action item in "What Would We Do Differently"
+- [ ] Key Themes & Insights table is populated with at least one row
+- [ ] Each theme has a concrete, assignable action item
+- [ ] At least one Memory Garden Seed is proposed (if any lesson is reusable)
+- [ ] Document is saved to `docs/retrospectives/` with the sprint or release name in the filename
+- [ ] At least one action item is carried into the next sprint's planning
+
+---
+
+## Related Skills
+
+- `debugging` — Use when a retrospective surfaces a recurring bug or error pattern that warrants systematic root-cause investigation
+- `web-research` — Use when a retrospective identifies a knowledge gap that requires external research before the next sprint
+- `seed-extraction` — Use after the retrospective to formally distill reusable insights from the Seeds section into the shared memory garden

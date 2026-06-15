@@ -9,7 +9,7 @@ triggers:
   - "find the decision that answers this"
   - "set up a collaboration repo"
 metadata:
-  version: "1.1"
+  version: "1.2"
   created: "2026-02-02"
   author: "Manus"
   tool_dependencies: ["Read", "Glob", "Grep", "Write"]
@@ -199,3 +199,10 @@ Always add a Related Content block (see `references/workspace-templates.md`) and
 - Copying full document text into another document instead of linking — doubles token cost every time both are loaded
 - Creating `thoughts.md` or `notes.md` with no date or author — untraceable and unarchivable
 - Skipping the README update after adding a significant file — the next agent starts blind
+
+## Related Skills
+
+- **handoff-protocol** (`agent-orchestration`): Structures cross-session and cross-machine handoffs that land in the workspace. workspace-navigation defines where handoff documents go; handoff-protocol defines what they contain.
+- **decision-propagation** (`agent-orchestration`): Produces the Decision Template referenced in Section V. Run after a workspace discussion reaches consensus to produce a properly formatted decision document for `00_Active/decisions/`.
+- **context-ingestion** (`specification-driven-development`): Reads workspace research and specs into working context for an implementation session — the natural downstream consumer of content placed by this skill.
+- **parallel-dispatch** (`agent-orchestration`): When multiple agents write research or spec documents concurrently, workspace-navigation's naming convention and ownership rules prevent collisions across parallel tracks.

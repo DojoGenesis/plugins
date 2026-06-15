@@ -3,7 +3,7 @@ name: orchestration-pattern-selector
 description: Selects the correct multi-agent orchestration pattern for a task using an 11-signal selection matrix. Use when choosing which orchestration pattern fits a multi-agent task.
 model: opus
 category: agent-orchestration
-version: 1.0.0
+version: 1.0.1
 tags: [orchestration, patterns, selection, architecture, agents]
 
 inputs:
@@ -224,3 +224,21 @@ Success criteria:
 - **Generator-Critic without a max iteration limit**: Always set a maximum before dispatch. Without it, the loop runs indefinitely. The critic should have a "good enough" threshold, not just a "perfect" threshold.
 - **Skipping rationale documentation**: Pattern selection without written rationale produces orchestrations that fail silently — you cannot debug what you did not reason about.
 - **Using Swarm when decomposition is actually known**: Swarm's coordination overhead is only justified when you genuinely cannot enumerate the subtasks. If you can list the subtasks, use Map-Reduce or Hierarchical instead.
+
+## Quality Checklist
+
+- [ ] Task characterized (phases vs. units, known vs. unknown decomposition, output ordering, failure tolerance, quality vs. speed)
+- [ ] Selection matrix consulted — at least one signal explicitly named
+- [ ] Rationale paragraph written before any agent is dispatched
+- [ ] Stacked pattern documented when two high-strength signals fired
+- [ ] Agent count, model assignments, file manifests, and timeout all specified
+- [ ] Success criteria are binary and observable — not "agent reports done"
+- [ ] Circuit-Breaker applied as a wrapper around the underlying pattern, not as a standalone pattern
+- [ ] Dispatch plan output format complete (pattern, rationale, failure mode, agents, coordination, success criteria)
+
+## Related Skills
+
+- **parallel-dispatch** (`agent-orchestration`): Executes the dispatch plan this skill produces. Pattern Selector designs the topology; parallel-dispatch runs it.
+- **audit-sweep-dispatch** (`agent-orchestration`): A specialized orchestration consumer — applies pattern selection logic implicitly (always Map-Reduce with wave structure) to health audit findings.
+- **maestro-orchestration** (`agent-orchestration`): Full orchestration harness that incorporates pattern selection as a planning phase. Use when the orchestration requires a persistent coordinator agent.
+- **adversarial-reviewer** (`strategic-thinking`): Implements the Adversarial pattern for design/strategy reviews — concrete use case for one of the 12 patterns in this skill's matrix.

@@ -3,7 +3,7 @@ name: session-lifecycle-automation
 model: opus
 description: Designs and configures all three loops of solo-operator session automation — session bookends, background maintenance agents, and a delegation flywheel. Use when setting up a new workspace, recovering from the 44% zero-artifact session leak, or preparing to scale delegation across multiple concurrent agents.
 category: wisdom-garden
-version: 1.0.0
+version: 1.0.1
 tags: [session, automation, lifecycle, scheduling]
 
 inputs:
@@ -144,3 +144,41 @@ After reviewing a week of sessions, the operator notices 6 of 14 sessions closed
 - **Using a single omnibus maintenance agent** — A single "do all maintenance" agent is slow, fragile, and hard to schedule around. Break maintenance into three independent agents with non-overlapping scopes and dead zones. When one fails, the other two still run.
 - **Relying on the operator to remember to run wrap-up** — The 44% zero-artifact session leak was measured against operators who intended to run wrap-up. Intention without hooks is not automation. The Stop hook must run mechanically or the loop degrades to manual.
 - **Giving background agents write access to source files** — Background maintenance agents read and report. They write only to designated output paths (memory files, commission files, status reports). Granting broader write access to a scheduled agent that runs unsupervised is how silent destructive changes accumulate overnight.
+
+---
+
+## Best Practices
+
+- **Audit before you add**: Run Phase 1 before configuring anything. Adding a second Stop hook on top of an existing one produces duplicate wrap-up invocations and merge conflicts.
+- **Dead zones are real time windows, not vague intentions**: Name the specific day and time (e.g., "Sunday 10am") for each background agent — not "sometime on weekends." Vague scheduling is the same as no scheduling.
+- **Commission files must be cold-start complete**: Write every commission as if the receiving agent has never seen this project. If it requires context not in the file, it is not ready to dispatch.
+- **Keep Sonnet for maintenance, Opus for strategy**: Background maintenance agents parse, reconcile, and report — Sonnet-tier work. Do not burn Opus on scheduled tending tasks.
+- **Non-overlapping windows are mandatory**: Two background agents touching the same memory files at the same time will produce conflicts. Enforce a minimum 30-minute gap between overlapping-scope agents.
+- **Test the Stop hook before relying on it**: Run a short throwaway session and confirm the artifact appears in memory after close. Hook misconfiguration is silent until you notice the leak.
+- **Archive completed commissions immediately**: A commission directory with completed, stale, and active files mixed together is noise. Complete → archive on the same day the definition-of-done is confirmed.
+
+---
+
+## Quality Checklist
+
+Before declaring automation configured, verify:
+
+- [ ] Phase 1 audit completed: existing hooks, scheduled tasks, and commission directory state all documented
+- [ ] Loop 1: Stop hook present in `~/.claude/settings.json` and tested on a real session
+- [ ] Loop 1: Wrap-up output confirmed to land in the correct memory path and be committed
+- [ ] Loop 2: At least one background maintenance agent scheduled with a named day/time dead zone
+- [ ] Loop 2: Each maintenance agent backed by a commission file (no ad hoc prompts)
+- [ ] Loop 2: No two maintenance agents have overlapping windows on overlapping file scopes
+- [ ] Loop 3: Commission directory exists and contains at minimum one template commission
+- [ ] Loop 3: Every commission file has Objective, File manifest, Constraints, Definition of done, and Model specified
+- [ ] Phase 5: Full cycle traced end-to-end (background discovers → writes commission → session bookend deposits → next background reads)
+- [ ] CLAUDE.md updated with "Automation" section describing the three loops and their cadences
+
+---
+
+## Related Skills
+
+- `session-compression` — the wrap-up skill that Loop 1 (session bookends) triggers; configure Loop 1 to point to this skill
+- `compression-ritual` — longer-form session close for exploratory or strategy-heavy sessions; alternate Loop 1 target when appropriate
+- `continuity-ledger` — deposits open items and decisions across sessions; integrates with Loop 1 output
+- `memory-garden` — the memory system that background maintenance agents (Loop 2) tend

@@ -1,6 +1,6 @@
 ---
 name: adr-writer
-version: "1.0.0"
+version: "1.0.1"
 model: sonnet
 description: "Produces a numbered Architecture Decision Record with context analysis, route comparison, decision rationale, consequences, and propagation checklist. Use when: 'write an ADR', 'architectural decision', 'record a decision', 'ADR for'."
 triggers:
@@ -173,7 +173,14 @@ If no `decisions/` directory exists, create it and start at `001`.
 - **ADR inflation.** Not every decision needs an ADR. Save the format for decisions that are hard to reverse or will confuse future contributors.
 - **Superseding without linking.** If a new ADR supersedes an old one, update the old ADR's Status field to "Superseded by ADR-NNN" and add a link. The old ADR should remain — it shows the reasoning that led to the change.
 
-## VI. Output
+## VI. Related Skills
+
+- `scout-writer` (dojo-craft) — Run before the ADR when the decision space is still ambiguous; the scout produces the tension framing, route comparison, and recommendation that become the ADR's raw material
+- `specification-writer` (specification-driven-development) — After the ADR records the decision, use this to translate it into a formal implementation spec
+- `release-specification` (specification-driven-development) — For decisions that gate a release, this skill pairs with the ADR's propagation checklist to produce a ship-ready spec
+- `convergence-checker` (dojo-craft) — Convergence sessions surface DEFER items that often reveal unresolved architectural questions; write an ADR before the next session when a DEFER is architectural
+
+## VII. Output
 
 - ADR markdown file saved to `decisions/NNN-[kebab-case-title].md`
 - Propagation checklist printed to conversation for immediate action tracking

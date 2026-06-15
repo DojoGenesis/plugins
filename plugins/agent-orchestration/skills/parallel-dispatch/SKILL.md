@@ -144,3 +144,21 @@ As of Apr 14, 2026, a PostToolUse hook (`agent-model-enforce.sh`) warns whenever
 - `model: "opus"` — architecture decisions, synthesis of competing constraints, strategic calls (~20% of dispatches)
 
 Inheriting the default is an anti-pattern because the default may change, may differ by environment, and makes cost and quality unpredictable across a large swarm. Explicit model selection is part of the dispatch contract.
+
+## Quality Checklist
+
+- [ ] All tracks defined with explicit objective, file manifest, and success criteria before dispatch
+- [ ] File conflict check performed — no two tracks share a writable file
+- [ ] Each agent prompt includes the file manifest and the build/test command
+- [ ] Model explicitly specified for every agent (`sonnet` or `opus`) — never inherited
+- [ ] Maximum 5 concurrent agents per wave
+- [ ] All tracks verified after completion using `git status`, grep, and build/test — not agent self-reports
+- [ ] Failed tracks diagnosed (output read) before re-dispatch
+- [ ] Verified status table produced listing track, agent status, verification status, and files changed
+
+## Related Skills
+
+- **orchestration-pattern-selector** (`agent-orchestration`): Determines whether parallel dispatch is the right topology for a task. Run it first when the coordination shape is non-obvious.
+- **audit-sweep-dispatch** (`agent-orchestration`): Uses parallel dispatch as the wave execution mechanism for health audit findings. The wave/triage logic sits on top of this skill's dispatch protocol.
+- **maestro-orchestration** (`agent-orchestration`): Full orchestration harness — uses parallel dispatch for the execution phase, adds persistent coordination and inter-agent communication on top.
+- **handoff-protocol** (`agent-orchestration`): Structures the output contract between tracks when one track's output is another track's input across sessions or machines.

@@ -219,6 +219,54 @@ Key findings:
 - {Finding 3}
 ```
 
+## Best Practices
+
+- **Confirm scope before researching.** The Step 1 clarification summary (`Focus: X | Topic: Y | Depth: Z | Output: W`) prevents discovering a mismatch after hours of fetching. Always show it and wait for confirmation.
+- **Match depth to need.** Shallow depth (essentials only) is correct for quick decisions; thorough depth is warranted before committing to an architectural choice or writing a spec.
+- **Prefer official docs over community content for library focus.** GitHub READMEs and official documentation pages are authoritative; blog posts and Stack Overflow answers supplement them, not replace them.
+- **Attribute every claim.** Never write a finding without naming its source. Unattributed synthesis looks authoritative but is unverifiable.
+- **Note gaps explicitly.** If a source is unavailable or a question couldn't be answered, say so in the output. A partial result with honest gaps is more useful than a confident-sounding synthesis with hidden holes.
+- **One handoff per implementation target.** If research feeds multiple agents or tasks, produce one handoff per recipient rather than a single omnibus document — agents need focused context, not everything.
+
+---
+
+## Quality Checklist
+
+Before delivering research output:
+
+- [ ] Scope confirmed with user (focus, topic, depth, output format)
+- [ ] At least 2 sources consulted for shallow depth; 4+ for thorough depth
+- [ ] All claims attributed to specific sources with URLs
+- [ ] Conflicting information across sources surfaced explicitly (not silently resolved)
+- [ ] Unavailable or paywalled sources noted as gaps
+- [ ] Output format matches the requested type (`chat`, `doc`, or `handoff`)
+- [ ] `doc` output written to `research/YYYY-MM-DD-{topic-slug}.md` with valid frontmatter
+- [ ] `handoff` output written as valid YAML with all required fields populated
+- [ ] Status field reflects actual completion (`complete`, `partial`, or `failed`)
+- [ ] Completion summary delivered to user with source count and key findings
+
+---
+
+## Common Pitfalls
+
+- **Skipping the confirmation step** — Diving straight into research without confirming focus/depth/output format often produces the wrong artifact at the wrong detail level
+- **Library focus without fetching official docs** — Relying on web search results for a library question instead of fetching the official documentation page directly; the README and API reference are the ground truth
+- **Treating the first result as authoritative** — The top search result is not necessarily the most accurate or current; cross-reference across at least two independent sources
+- **Writing findings in discovery order** — Organizing output by the order sources were found rather than by theme or concept produces a list, not a synthesis
+- **Omitting the status field** — Leaving `status:` out of the doc or handoff frontmatter makes it impossible for downstream consumers to know if the research is complete or partial
+- **Handoff for a chat-level question** — A YAML implementation handoff for a quick factual question is over-engineering; use `chat` output for questions answerable in a paragraph
+
+---
+
+## Related Skills
+
+- `web-research` — Use for general-purpose web queries using Brave Search; `web-research-external` adds structured output modes (doc/handoff) and library-focused fetching on top of the same base capability
+- `project-exploration` — Use for local codebase exploration; distinct from this skill which is for external sources only
+- `specification-writer` — Natural downstream consumer of a `handoff`-format research output; feed the YAML directly into spec writing
+- `scan-community-repos` — Use when the research target is community skill repositories rather than libraries or general topics
+
+---
+
 ## Output
 
 A research document (`.md`) or implementation handoff (`.yaml`) with:

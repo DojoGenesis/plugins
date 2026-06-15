@@ -19,6 +19,21 @@ outputs:
 
 # Normalize Community Skill
 
+## Philosophy
+
+Community skills contain real knowledge — workflows built by practitioners who solved real problems. The reason they don't load into the Dojo SkillRegistry is structural, not substantive: a missing `tier`, a `description` without trigger phrases, an `agents` field that was never required by the source platform. Normalization is a structural operation, not an editorial one. The markdown body is the intellectual property of the original author and must arrive at the other end byte-for-byte identical. Only the frontmatter changes. Every inferred field must be traceable to specific evidence in the body; anything that can't be grounded in the text stays at its safe default rather than being invented.
+
+## When to Use
+
+- A community SKILL.md fails `SkillRegistry.IsValid()` and needs Dojo-compatible frontmatter
+- You are importing a skill from an external repository that uses a different schema (flat or nested metadata layout)
+- A skill is stuck in "pending" state in the registry and the specific failing check needs to be identified and fixed
+- `scan-community-repos` has classified a skill as "normalizable" (has `name` and `description`, missing Dojo-specific fields)
+
+Do not use when a skill is missing `name` or `description` — those cannot be inferred and the skill should be routed to `skill-creation` for a full rewrite instead.
+
+---
+
 ## I. Workflow
 
 ### Step 1: Read and Parse the Input File

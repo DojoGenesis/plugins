@@ -1,6 +1,6 @@
 ---
 name: scout-writer
-version: "1.0.0"
+version: "1.0.1"
 model: sonnet
 description: "Produces a scout document: identifies a tension, generates 3-5 distinct routes with tradeoffs, synthesizes a recommendation, and proposes a first action. Use when: 'scout this', 'strategic scout', 'explore options for', 'what are the routes'."
 triggers:
@@ -189,7 +189,14 @@ Save the document to `thinking/[topic]-scout.md` or the equivalent docs director
 - **Scout as substitute for decision.** The scout produces clarity, not closure. A scout that ends without a recommendation or a first action is an incomplete artifact.
 - **Retrospective scouting of decided questions.** If the decision is already irreversible, write an ADR instead — not a scout. The scout is for before commitment, not after.
 
-## VI. Output
+## VI. Related Skills
+
+- `adr-writer` (dojo-craft) — The natural next step after a scout: once the recommendation is made, use adr-writer to produce a numbered, numbered decision record with propagation checklist
+- `specification-writer` (specification-driven-development) — When the scout concludes with a selected route, use this to translate the recommendation into a formal implementation spec
+- `release-specification` (specification-driven-development) — For scouts that resolve a release-blocking question, this skill converts the first action into a ship-ready specification
+- `adversarial-reviewer` (strategic-thinking) — After producing a recommendation, invoke this to stress-test the reasoning before committing resources
+
+## VII. Output
 
 - Scout document saved to `thinking/[topic]-scout.md`
 - Recommendation with first action clearly stated

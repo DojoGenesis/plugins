@@ -19,6 +19,10 @@ outputs:
 
 Manage and apply the **10 Dojo Seed Patches** plus **3 field seeds** as reusable thinking modules. The core seeds derive from Dataiku research; the field seeds emerged from direct practice. Make enterprise-grade agent patterns accessible, consistent, and evolvable.
 
+## Philosophy
+
+Seeds codify the hard-won patterns that make agent systems work — patterns that are invisible until you need them and expensive to rediscover. The Seed Library exists so that every session can start with the collective intelligence of all prior sessions, rather than reinventing the wheel. A library without a retrieval mechanism is a graveyard; a library without maintenance is noise. The discipline here is dual: surfacing the right seed at the right moment, and retiring seeds whose context has passed.
+
 ## When to Use This Skill
 
 Trigger this skill when:
@@ -440,3 +444,26 @@ When Dojo is reasoning, it can reference seeds:
 
 - Suggesting a seed without running the suggestion script — keyword matching is essential for relevance; do not rely on recall alone.
 - Applying a seed without reading the full seed content — skimming the trigger and skipping "What It Refuses" leads to misapplication.
+
+---
+
+## Quality Checklist
+
+After a suggest-or-apply cycle, verify:
+
+- [ ] Suggestion run used keyword matching (not recall alone)
+- [ ] Top 3 seeds were presented with relevance scores, not just names
+- [ ] The applied seed was read in full before application (not just the trigger line)
+- [ ] "What It Refuses" / cautions section was reviewed to rule out misapplication
+- [ ] Usage was tracked in `.seed-usage.json`
+- [ ] Application guide was saved to the expected output file
+- [ ] If no seeds matched, the user was prompted for the core problem rather than returning an empty result
+
+---
+
+## Related Skills
+
+- `seed-extraction` — creates new seeds to add to this library from experience; the supply side of the seed lifecycle
+- `seed-to-skill-converter` — promotes a proven seed to a full structured skill when it develops a multi-step workflow
+- `memory-garden` — the broader memory system that seeds feed into and draw context from
+- `build-intelligence-map` — uses seeds as a source of pattern vocabulary when mapping system intelligence

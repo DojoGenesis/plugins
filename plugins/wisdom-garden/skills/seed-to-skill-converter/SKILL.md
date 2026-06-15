@@ -132,3 +132,28 @@ This would likely become a Skill called `mindful-workflow-check`. The workflow w
 
 - Promoting every seed to a skill — most seeds are appropriately lightweight as seeds. Only promote when the pattern has a clear multi-step workflow and is referenced frequently.
 - Writing the skill without verifiable workflow steps — a skill that says "apply good judgment" is not actionable. Every step must be concrete enough to execute without ambiguity.
+
+---
+
+## Quality Checklist
+
+Before declaring a conversion complete, verify:
+
+- [ ] The seed met at least one promotion criterion (frequent reference, multi-step process, or core workflow status)
+- [ ] Core Insight → Philosophy section is present and explains the "why," not just the "what"
+- [ ] Trigger → When to Use section lists concrete, recognizable conditions
+- [ ] Process → Workflow section contains discrete, executable steps (no "apply judgment" steps)
+- [ ] Desired Outcome → Best Practices section addresses how to know the skill was applied well
+- [ ] A Quality Checklist is present in the new skill file (skills must be self-auditable)
+- [ ] The new skill directory and `SKILL.md` file exist at `SKILLS/[skill-name]/`
+- [ ] The original seed file has a note pointing to the promoted skill
+- [ ] The skill was committed to the AROMA repository
+
+---
+
+## Related Skills
+
+- `seed-extraction` — produces the seeds that this skill promotes; run seed-extraction first, seed-to-skill-converter later
+- `seed-library` — the library from which promotion candidates are drawn; check here for frequently-referenced seeds
+- `reflect-and-learn` — retrospective process that surfaces which seeds are ready for promotion
+- `continuity-ledger` — records the promotion event so future sessions know the seed has been elevated

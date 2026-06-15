@@ -184,3 +184,24 @@ During the last cycle, gateway@v3.0.0 was released and deployed to a VPS. Phase 
 - **Tagging a release without running Phase 6** — The milestone-gate.sh hook catches this mechanically at `git tag` time, but if you bypass the hook (CI/CD, manual tag), Phase 6 is the last line of defense. A tag without a full gate pass is not a release — it's a gamble.
 - **Skipping Phase 7 because "the deploy went fine"** — The deploys that "went fine" still had friction: DNS propagation delays, permission fumbles, config copy-paste. If you don't capture it within one convergence cycle, it's gone. Deployment friction has a 20% natural capture rate vs 60% for coding friction — Phase 7 closes the gap.
 - **Running Phase 6 only on the repo you're about to release** — Check ALL repos with unreleased commits, not just the one you intend to tag. Other repos may have accumulated shippable state that should be released in the same cycle rather than drifting further.
+
+## Quality Checklist
+
+Before closing a convergence session, confirm:
+
+- [ ] Phase 1 inventory completed before any changes were made (inventory first, act second)
+- [ ] All dirty repos have either a commit or a documented blocker — no silent uncommitted state remains
+- [ ] Every deferred validation from the Phase 1 list was executed and its result recorded
+- [ ] Open items triage produced a disposition (next / parking lot / kill) for every item — none left in limbo
+- [ ] Strategic assessment written and trajectory question answered (not just "things are fine")
+- [ ] Convergence ledger updated with date, session count reset to 0, and all outcomes logged
+- [ ] No new features implemented during the session (log and defer any discovered fixes)
+- [ ] Phase 6 run for any repo with unreleased commits; release-ready or blocked status recorded
+- [ ] Phase 7 deployment retrospective captured before closing (even if "no deploys this cycle")
+
+## Related Skills
+
+- `build-sweep` — run before convergence when multiple modules are failing; sweep clears build debt so convergence can focus on strategic drift
+- `hooks-reference` — `drift-detector.sh` is a SessionStart hook; consult this skill when the detector misfires or needs updating
+- `health-audit` — deep health assessment that feeds Phase 6 (pre-deployment readiness) with security and sustainability findings
+- `status-template` — produce a `.status.md` snapshot at convergence time to capture the settled state for handoffs

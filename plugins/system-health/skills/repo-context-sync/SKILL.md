@@ -363,3 +363,21 @@ Implementation agents typically have full repo access, so prompts should leverag
 ## Anti-Patterns
 - Running context_mapper without first fetching latest changes — generates context from a stale local clone, which can produce misleading architectural suggestions.
 - Using this skill as a replacement for reading the actual code — context summaries are grounding artifacts, not substitutes for reading critical files directly.
+
+## Quality Checklist
+
+Before delivering a context summary, confirm:
+
+- [ ] `git fetch` (or `smart_clone.sh`) ran successfully before context_mapper was invoked — no stale local state
+- [ ] The directories synced match the task (not a blanket full-repo clone when only 2 dirs are relevant)
+- [ ] `.diff_summary.md` baseline noted explicitly when no prior commit hash was stored
+- [ ] `.context_summary.md` keyword filter is specific enough to keep output focused (not 50+ matching files)
+- [ ] `.repo-sync-state.json` updated with the current commit hash and timestamp after sync
+- [ ] Critical files identified by context_mapper were read directly (not inferred from summaries alone)
+- [ ] Architectural decisions made after this sync are grounded in the actual code state shown — not memory from a prior session
+
+## Related Skills
+
+- `semantic-clusters` — after syncing repo context, use this skill to map the behavioral architecture (what the system *does*) rather than just the directory tree (where files live)
+- `status-template` — repo context sync feeds Sections 3 (Directory Structure) and 10 (Aggregate Statistics) of the status document
+- `repo-status` — the parent skill that uses repo-context-sync as one phase in a broader repository health workflow

@@ -3,7 +3,7 @@ name: audit-sweep-dispatch
 description: Routes health-audit findings to the correct execution path — main thread, foreground fix, or parallel agent waves. Use when health-audit findings need to be sorted by effort and dispatched as agent waves.
 model: sonnet
 category: agent-orchestration
-version: 1.0.0
+version: 1.0.1
 tags: [audit, dispatch, sweep, triage, agents]
 
 inputs:
@@ -160,3 +160,21 @@ Note: Even though Wave 1 was just 1 agent, the wave structure is still correct �
 - **Trusting agent self-reports**: Always verify with `git status` and the build command. Agents report "done" on partial work more often than you expect.
 - **Skipping the triage table**: Dispatching without first categorizing all findings leads to missed items, duplicate coverage, and agents touching overlapping files.
 - **Re-dispatching without reading the failure output**: When an agent fails, read what it actually did before re-dispatching. The fix is often a one-line correction to the instructions, not a full re-run.
+
+## Quality Checklist
+
+- [ ] Triage table produced before any agent is dispatched
+- [ ] All RED findings fixed and build confirmed green before Wave 1 starts
+- [ ] All trivial YELLOW findings handled in the main thread (no agents)
+- [ ] Each wave contains only agents with non-overlapping file manifests
+- [ ] No wave exceeds 3 concurrent agents
+- [ ] Wave N+1 not started until Wave N is independently verified
+- [ ] Verification used `git status` + build/test command — not agent self-reports
+- [ ] Final dispatch report produced listing every item, its routing, status, and verification result
+
+## Related Skills
+
+- **health-audit** (`system-health`): Produces the RED/YELLOW/GREEN findings that this skill routes. The natural upstream trigger for audit-sweep-dispatch.
+- **parallel-dispatch** (`agent-orchestration`): The dispatch mechanism used for Wave 1 and Wave 2 agents — handles file manifests, agent prompts, and per-track verification.
+- **orchestration-pattern-selector** (`agent-orchestration`): Use before this skill when the audit output is large enough that the wave structure itself needs architectural design.
+- **granular-visibility** (`agent-orchestration`): Provides per-agent status tracking during long multi-wave sweeps.

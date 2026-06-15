@@ -93,3 +93,39 @@ The skill produces:
 - **Saving code patterns as memory**: If it's derivable from the code itself, it doesn't belong in memory.
 - **Overly verbose descriptions**: Memory descriptions are used for relevance matching. Keep them specific and under 150 characters.
 - **Forgetting to update Open Items**: Stale open items cause future sessions to chase resolved issues.
+
+---
+
+## Best Practices
+
+- **Compress the why, not the what**: Future sessions can re-read code; they cannot recover the reasoning behind a decision. Always capture the rationale.
+- **Update before creating**: Before writing a new memory file, scan existing files for an entry that covers the same topic. Update in place to keep the memory garden dense, not sprawling.
+- **One decision per file**: Memory files that cover multiple unrelated decisions become hard to match and maintain. When two topics surface in the same session, create two files.
+- **Absolute dates only**: Never save relative references ("last Thursday," "recently"). Convert to `YYYY-MM-DD` at write time.
+- **Keep MEMORY.md under its line limit**: If the index is approaching its size ceiling, consolidate short related entries before adding new links. A bloated index defeats retrieval.
+- **Run on every substantial session**: Compressing a 3-change session takes 2 minutes. Reconstructing 10 uncompressed sessions from scratch takes hours.
+
+---
+
+## Quality Checklist
+
+Before closing compression, verify:
+
+- [ ] `git diff` and `git status` were run across all active repos, not just the primary one
+- [ ] Every key decision has its *why* captured, not just the outcome
+- [ ] Existing memory files were checked before creating new ones (no duplicates)
+- [ ] New or updated files have proper YAML frontmatter (name, description, type)
+- [ ] MEMORY.md index is updated to reflect any added or removed files
+- [ ] Open Items section in MEMORY.md reflects current state (resolved items removed, new items added)
+- [ ] All dates in memory files are absolute (`YYYY-MM-DD`), not relative
+- [ ] The compression report lists: memories updated, memories created, and open items carried forward
+- [ ] MEMORY.md is within its line limit
+
+---
+
+## Related Skills
+
+- `compression-ritual` — the fuller ritual for compressing long conversations into multiple artifact types; use when the session was exploratory or produced philosophical insights in addition to decisions
+- `session-lifecycle-automation` — automates the trigger that calls session-compression at session end
+- `seed-extraction` — if a reusable pattern emerged from the session, run seed-extraction alongside compression
+- `continuity-ledger` — deposits the session's open items into a cross-session tracking ledger

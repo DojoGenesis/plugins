@@ -155,3 +155,26 @@ Commit the new artifacts to the repository with a clear commit message.
 
 - Skipping the compression log — without the log, there is no record of what was released, making the compression irreversible and opaque.
 - Writing raw transcript excerpts into the artifact files — compression means distillation to essence, not copy-paste of conversation turns.
+
+---
+
+## Quality Checklist
+
+Before closing the ritual, verify:
+
+- [ ] Every artifact has been placed in the correct vessel (`thinking/`, `conversations/`, `seeds/`, or `docs/`)
+- [ ] Each artifact is a distillation (shorter than the source; no raw transcript blocks)
+- [ ] The compression log exists for today's date and lists every artifact created
+- [ ] The compression log includes a "Context Released" section naming what was let go
+- [ ] All artifacts are linked to one another where relevant (reflection → conversation, seed → reflection)
+- [ ] The git commit has been made with message `feat(memory): Compress conversation from [Date]`
+- [ ] The resulting context (if continuing) is meaningfully shorter and cleaner than before the ritual
+
+---
+
+## Related Skills
+
+- `session-compression` — applies compression to a structured memory garden; use after compression-ritual when working inside a Dojo memory path
+- `seed-extraction` — extract a reusable pattern from the session; pairs with compression-ritual when a seed candidate is identified during review
+- `session-lifecycle-automation` — automates the session-end trigger so the compression ritual fires without manual invocation
+- `continuity-ledger` — deposits decisions and open items across sessions; complements the compression log

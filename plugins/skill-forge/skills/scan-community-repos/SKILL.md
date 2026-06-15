@@ -19,6 +19,21 @@ outputs:
 
 # Scan Community Repos
 
+## Philosophy
+
+Normalization compute is not free. Running `normalize-community-skill` across every file in a repo before knowing which files are already compatible — or which ones are too broken to normalize — wastes effort and produces noisy output. The scan step exists to front-load the cheap work (parse frontmatter, classify) so the expensive work (invoke a model per file) is spent only on skills that will actually benefit from it. The JSON catalog this skill produces is the contract between the scan phase and the normalization phase: its `source_path` fields tell `batch-normalize-and-package` exactly which files to touch and what each one needs. Treat the catalog as a durable artifact, not a transient output — it enables resumable pipelines and re-runs without re-scanning.
+
+## When to Use
+
+- Before running `batch-normalize-and-package` on any community repository — always scan first
+- Evaluating whether a new external repo is worth importing (percentage breakdown tells you the effort required)
+- Auditing a local plugin directory to confirm no skills have drifted out of registry compliance
+- Generating an inventory report of skills across multiple repos for planning or sharing with teammates
+
+Do not run this skill during an active normalization pipeline — scan first, then normalize; running them interleaved produces inconsistent catalog state.
+
+---
+
 ## I. Workflow
 
 ### Step 1: Accept and Validate Inputs

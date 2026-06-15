@@ -98,3 +98,22 @@ The skill produces:
 - **Fixing unrelated issues**: The sweep fixes build/test failures only. Do not refactor, add features, or clean up code.
 - **Running the full workspace test suite after each individual fix**: Too slow. Verify each module independently, then run one final integration pass.
 - **Force-pushing sweep commits**: Sweep commits are always local. Never push without explicit user confirmation.
+
+## Quality Checklist
+
+Before reporting the sweep complete, confirm:
+
+- [ ] Every `go.mod` under the workspace path was discovered (no modules skipped accidentally)
+- [ ] Each failing module was diagnosed from actual build/test output, not assumed
+- [ ] Every fix was verified by re-running the original failing command — not just by inspection
+- [ ] Modules with `[no test files]` are recorded as SKIP, not FAIL
+- [ ] Cross-module regressions checked in the final integration pass
+- [ ] Each commit staged only the fixed files for that module (no unrelated changes mixed in)
+- [ ] The final summary table reflects independently verified status, not agent self-reports
+- [ ] No force-push issued without explicit user confirmation
+
+## Related Skills
+
+- `convergence-gate` — run after a sweep when accumulated drift (dirty files, deferred validations) needs settling; sweep clears build failures, convergence clears strategic drift
+- `hooks-reference` — use to wire `go-build-check` and `go-test-check` PostToolUse hooks so per-file build gates run automatically between sweeps
+- `observability-dashboard` — aggregate sweep results and hook event data into a health timeline across sessions

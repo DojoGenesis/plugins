@@ -19,6 +19,21 @@ outputs:
 
 # Batch Normalize and Package
 
+## Philosophy
+
+Running `normalize-community-skill` one file at a time is correct for a single import; running it in a loop without orchestration is how pipelines die mid-batch and leave the catalog in an inconsistent state. This skill exists to make the full community-to-Dojo pipeline — acquire, scan, normalize, package, manifest — repeatable, auditable, and recoverable. Every step produces a durable artifact (the scan catalog, the staging directory, the manifest) so a failure at Step 4 can be resumed from Step 3, not from the beginning. Source attribution is preserved end-to-end because provenance is the only thing that makes a batch import trustworthy enough to act on.
+
+## When to Use
+
+- Importing skills from one or more community repositories into the Dojo ecosystem
+- Running the weekly or periodic supply-chain refresh on a set of watched repos
+- Onboarding a new external skill source for the first time
+- Producing a signed distribution manifest for audit or sharing with another operator
+
+Do not use for single-file imports — use `normalize-community-skill` directly for that.
+
+---
+
 ## I. Workflow
 
 This is a 6-step DAG with dependency structure:
@@ -195,3 +210,12 @@ Also generate machine-readable `manifest.json`:
 - **Aborting on a single failure:** One malformed skill file should never stop the pipeline; log, skip, and continue
 - **Omitting source attribution:** Every entry in the manifest must name its source repo — provenance is required for trust and for rollback decisions
 - **Running without a prior scan:** Normalizing all files blindly wastes compute on incompatible files; always let `scan-community-repos` filter the work queue first
+
+---
+
+## IV. Related Skills
+
+- `scan-community-repos` — Run this first to produce the JSON catalog that this skill consumes; batch-normalize-and-package depends on the catalog to know what to normalize vs. skip
+- `normalize-community-skill` — The per-file normalization skill invoked in Step 4 of this pipeline; use it directly for single-file imports
+- `skill-creation` — Use when a community skill is so incomplete it needs a full rewrite rather than normalization; route incompatible skills here after manual review
+- `skill-maintenance` — Use after a batch import to rename or refactor skills that don't follow verb-object naming conventions

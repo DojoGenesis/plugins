@@ -163,3 +163,11 @@ Configure the selected transport:
 - Skipping input validation -- unvalidated inputs produce cryptic API errors that agents cannot recover from
 - Testing by running the server directly in the main process -- MCP servers block on stdin; use the evaluation harness or run in tmux
 - Hardcoding API keys in the scaffold -- use environment variables; never commit credentials
+
+---
+
+## IX. Related Skills
+
+- `hooks-reference` -- after building the server, use this skill to wire PostToolUse hooks that observe or validate MCP tool calls in live sessions
+- `tool-intercept-logger` -- instrument MCP tool calls with OTEL-compatible logging once the server is running in production
+- `build-sweep` -- if the MCP server is part of a Go workspace, use build-sweep to keep it green alongside other modules

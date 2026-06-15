@@ -222,3 +222,10 @@ Before delivering the `.status.md`, confirm:
 ## Anti-Patterns
 - Treating the Current State table as aspirational — the emoji indicators must reflect actual verified state, not what the team wishes were true.
 - Generating statistics from memory or rough estimates — run `find` and `wc -l` to get real numbers; within 10% is accurate enough, but guessing is not.
+
+## Related Skills
+
+- `semantic-clusters` — provides the full methodology for Section 4; invoke it before filling that section for any project with 50+ files
+- `repo-context-sync` — use to sync and map the codebase before filling Sections 3 and 10; prevents stale-inventory errors
+- `health-audit` — deep security and sustainability assessment that feeds Section 6 with concrete findings rather than guesses
+- `convergence-gate` — produce a `.status.md` at the end of each convergence session to capture the settled state as a handoff artifact
