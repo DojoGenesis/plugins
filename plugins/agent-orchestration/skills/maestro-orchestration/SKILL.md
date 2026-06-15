@@ -3,6 +3,8 @@ name: maestro-orchestration
 model: opus
 description: "Conductor agent pattern that decomposes complex tasks, dispatches specialist sub-agents, manages dependencies, and synthesizes results into a unified deliverable. Use when: 'coordinate multiple specialist agents', 'orchestrate a complex multi-phase task', 'run a conductor pattern across agents', 'this task needs live agent coordination', 'decompose and dispatch to sub-agents'."
 category: agent-orchestration
+metadata:
+  version: "1.1"
 
 inputs:
   - name: objective
@@ -22,6 +24,18 @@ outputs:
 # Maestro Orchestration
 
 **Purpose:** Act as a conductor agent that decomposes complex objectives into subtasks, dispatches specialist sub-agents with appropriate isolation and model routing, manages inter-agent dependencies, resolves conflicts between agent outputs, and synthesizes results into a coherent deliverable.
+
+---
+
+## 0. Philosophy
+
+Multi-agent orchestration fails in two ways: dispatching too early (before the task is decomposed) and dispatching too broadly (so many concurrent agents that integration overhead exceeds the parallelism benefit). The Maestro pattern exists because neither of those failure modes is obvious when you're inside a complex task.
+
+The core insight is that **the conductor's job is judgment, not execution.** A conductor that starts implementing is a conductor that has lost the thread. Everything that requires a decision — decomposition, conflict resolution, synthesis — stays in the maestro context. Everything mechanical goes to a sub-agent.
+
+This matters because complex tasks have emergent dependencies that aren't visible at the start. The maestro must hold the full picture while sub-agents hold only their slice. If that judgment is delegated, the integration phase discovers contradictions that no individual agent was positioned to prevent.
+
+**Second principle:** synthesis is not summarization. After agents complete, the maestro integrates outputs into a single coherent deliverable — not a list of summaries. This requires reading all agent outputs, resolving contradictions, and producing something none of the agents could have produced individually.
 
 ---
 
@@ -179,3 +193,40 @@ If `available_agents` is not specified, select from the full roster based on the
 - Launching more than 4 concurrent agents -- diminishing returns from coordination overhead; 3 is the sweet spot
 - Passing synthesis responsibility to a sub-agent -- the conductor (maestro) must own synthesis; sub-agents produce parts, maestro produces the whole
 - Skipping the verification gate after integration -- combined outputs can have conflicts that individual agent verification missed
+
+---
+
+## IX. Quality Checklist
+
+Before dispatch:
+
+- [ ] Objective is decomposed into discrete subtasks with named owners (not "agents" generically)
+- [ ] Dependency graph is mapped — you know which subtasks block others
+- [ ] Pattern selected from Section II with explicit rationale
+- [ ] Every agent prompt has: goal (first line), file scope, verification command, files NOT to touch
+- [ ] Model routing is explicit for each agent (sonnet vs. opus — not inherited)
+- [ ] Concurrent agent count is 4 or fewer
+- [ ] Conflict resolution plan exists for any subtasks that touch shared files
+
+During execution:
+
+- [ ] Blocker agents complete and are verified before parallel tracks launch
+- [ ] Agent outputs are collected as they arrive (not batched at the end)
+- [ ] Contradictions between concurrent outputs are resolved in the maestro context, not delegated
+
+After integration:
+
+- [ ] Combined build / test gate passes on integrated output (not just per-agent output)
+- [ ] Orchestration report documents: decomposition, pattern used, conflicts resolved, final state
+- [ ] Lessons learned captured for future orchestration of similar task shapes
+
+---
+
+## X. Related Skills
+
+- `agent-dispatch-playbook` — decision matrix and prompt templates for the individual dispatch decisions the maestro makes in Step 2; companion reference during orchestration planning
+- `orchestration-pattern-selector` — use before maestro when the right pattern (Hierarchical vs. Pipeline vs. Swarm) is not obvious
+- `audit-sweep-dispatch` — specialized swarm pattern pre-wired for health-check audits across a repo cluster
+- `workflow-router` — upstream entry point that classifies a goal and routes to maestro when coordination is needed
+- `handoff-protocol` — ensures sub-agents write structured handoffs the maestro can consume reliably during synthesis
+- `parallel-dispatch` — lightweight parallel dispatch without the full conductor pattern; use when synthesis is trivial

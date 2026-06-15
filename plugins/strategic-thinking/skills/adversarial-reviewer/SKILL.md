@@ -215,6 +215,23 @@ Structure your review as follows:
 - **CONCERNS** — No criticals but 2+ warnings. Merge at your own risk.
 - **CLEAN** — Only notes. Safe to merge.
 
+## Quality Checklist
+
+Before delivering the review report, verify:
+
+- [ ] All three personas ran and each produced at least one finding — no persona returned empty-handed
+- [ ] Findings reference specific lines, functions, or patterns, not vague categories ("the auth code has issues")
+- [ ] Severity levels are applied consistently: CRITICAL = data loss / breach / outage; WARNING = likely edge-case bug or maintainability debt; NOTE = style or minor improvement
+- [ ] Promotion rule was applied: any finding flagged by 2+ personas was promoted one severity level
+- [ ] The full file was read, not only the changed lines — interactions with existing code were considered
+- [ ] At least one finding from The Saboteur addresses an input-validation or failure-path concern
+- [ ] At least one finding from The New Hire addresses naming, abstraction, or understandability
+- [ ] At least one finding from The Security Auditor checks a trust boundary (user input, API call, data access, or secret handling)
+- [ ] The verdict (BLOCK / CONCERNS / CLEAN) correctly reflects the highest severity finding
+- [ ] The summary section (2-3 sentences) names the single most important fix, not a recap of all findings
+
+---
+
 ## Anti-Patterns
 
 ### What This Skill is NOT

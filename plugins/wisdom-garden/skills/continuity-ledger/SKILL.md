@@ -27,6 +27,14 @@ outputs:
 
 ---
 
+## Philosophy: Signal, Not Summary
+
+Context is not free. Every token loaded at session start is a token not available for actual work. A continuity ledger forces a discipline that compaction cannot: instead of degraded, lossy summaries that silently drop file paths and decisions, the ledger captures exactly what the next session needs — goal, immediate next action, test command, and a structured decision log — and nothing else.
+
+The ledger is not a journal. It is a precision instrument for handing work across a session boundary. The measure of a good ledger is whether a fresh session can reach working state in under 5 minutes without asking a single clarifying question.
+
+---
+
 ## I. When to Use
 
 - Before running `/clear` when context usage is approaching 70%+
@@ -170,7 +178,24 @@ To resume in a new session:
 
 ---
 
-## VIII. Anti-Patterns
+## VIII. Quality Checklist
+
+Before writing the ledger, verify:
+
+- [ ] `goal:` is a single line describing what the session accomplished (not what it set out to do if incomplete)
+- [ ] `now:` is a single line naming the first concrete action for the next session — specific enough to start without reading anything else
+- [ ] `test:` is a runnable command, not a description ("go test ./..." not "run the tests")
+- [ ] `done_this_session` entries each include at least one file reference — no floating task descriptions
+- [ ] `decisions` entries each include a rationale, not just the choice made
+- [ ] `next` steps are ordered by priority and are concrete — not "continue work on X" but "wire the remaining 3 handlers in server/events.go"
+- [ ] `blockers` lists any issue that would prevent the next session from starting cleanly
+- [ ] Outcome was confirmed with the user and recorded in the YAML frontmatter
+- [ ] Ledger size is approximately 400 tokens — if significantly larger, trim `done_this_session` details and point to file paths instead
+- [ ] The file path follows the convention: `thoughts/shared/handoffs/{session-name}/YYYY-MM-DD_HH-MM_description.yaml`
+
+---
+
+## IX. Anti-Patterns
 
 - Writing the ledger after context is already degraded from multiple compactions -- write it early, at 70% context, not after the damage is done
 - Using alternative field names (session_goal, objective, focus, current) -- the statusline parser expects exactly `goal:` and `now:`

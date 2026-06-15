@@ -155,6 +155,17 @@ Produce a comprehensive assessment.
 
 ---
 
+## Best Practices
+
+- **Read before you run:** Complete the README and structural survey before opening any implementation file. First impressions ground every subsequent judgment.
+- **Stay at the right altitude per phase:** Phase 1 is bird's-eye; Phase 2 is architectural; Phase 4 is ground-level. Mixing altitudes within a phase produces a distorted picture.
+- **Make the resonance map concrete:** Vague entries ("both use modularity") are useless. Name the specific pattern in the project and the specific pattern in your existing work.
+- **Rate honestly:** Assign GREEN only when all 5 phases are complete and health signals are positive. A YELLOW that prompts a conversation is more valuable than a false GREEN that wastes two weeks.
+- **Scope entry points by risk, not just interest:** The most interesting area to explore is often the riskiest. Always pair entry points with a risk rating so the next collaborator can sequence work safely.
+- **Time-box the exploration:** An open-ended survey expands indefinitely. Set a target time per phase (e.g., 30 min for Phase 1, 45 min for Phase 2) and ship the brief at the deadline rather than waiting for perfect coverage.
+
+---
+
 ## Quality Criteria
 
 - [ ] First impressions phase completed before architecture deep-dive
@@ -195,3 +206,12 @@ Produce a comprehensive assessment.
 - Assigning GREEN without completing all 5 phases — partial exploration that misses health assessment or resonance mapping produces false confidence
 - Using this skill to evaluate whether to *use* a library as a dependency (use web-research instead) — project-exploration is for collaboration potential, not dependency selection
 - Skipping the Risks section because the project seems good — surfacing low-probability risks during exploration is cheaper than discovering them mid-implementation
+
+---
+
+## Related Skills
+
+- `tldr-code-analysis` — use for token-efficient deep structural analysis after exploration assigns a GREEN or YELLOW rating
+- `research-modes` — use when fit assessment requires external research (competitive context, technology landscape) beyond what the repo itself reveals
+- `research-synthesis` — distill findings from exploration into a reusable synthesis document when onboarding multiple collaborators
+- `web-research` — preferred skill when the goal is dependency evaluation rather than collaboration fit assessment

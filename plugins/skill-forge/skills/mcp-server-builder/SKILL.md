@@ -28,6 +28,12 @@ outputs:
 
 Scaffolds production-ready MCP servers from OpenAPI specs. Treats the API contract as the source of truth and generates tool manifests + starter code with quality gates before publication.
 
+## Philosophy
+
+LLM agents choose tools by reading names and descriptions — not by inspecting code. A poorly named or under-described tool will be ignored or misused no matter how correct the implementation is. This skill treats the OpenAPI spec as authoritative input and imposes quality gates on the generated tool manifest so the output works for agents, not just for humans reading the source.
+
+The discipline here is: validate before you ship. A tool manifest with ambiguous names, missing descriptions, or implicit required fields is technically functional but practically unusable in production agent pipelines.
+
 ## Description
 
 Converts OpenAPI paths/operations into named MCP tool definitions, generates server scaffolds in Python or TypeScript, enforces naming and description quality, validates manifests against common production failures, and applies a versioning strategy for safe evolution. Distinct from `mcp-cloudflare-builder` (Cloudflare-specific deployment) and `mcp-builder` (general MCP concepts) — this skill is spec-driven and language-agnostic.
@@ -166,6 +172,21 @@ Before publishing the manifest, confirm:
 4. Mixing transport errors and domain errors in one opaque message
 5. Exposing secret values in tool contracts
 6. Breaking clients by changing schema keys without versioning
+
+## Best Practices
+
+- **Use `operationId` as the tool name when the spec provides one.** It encodes intent from the API author; deriving names from paths produces machine-readable noise (`get__v1__users___id`).
+- **Lead every description with an action verb and the object.** "Retrieve a user by ID" tells an agent more than "User endpoint."
+- **Mark destructive operations explicitly.** Any tool that deletes, overwrites, or sends external communications must include a confirmation parameter and note the side effect in the description.
+- **Never expose auth tokens in tool schemas.** Credentials belong in environment variables referenced from the server implementation, not in the MCP manifest.
+- **One tool per intent.** Avoid parameter-flag multiplexing (`action: "create" | "update" | "delete"` in one tool) — agents cannot reliably disambiguate.
+- **Changelog-first versioning.** Add a `CHANGELOG.md` entry before renaming or removing a tool; breaking changes require a new tool ID, not an in-place rename.
+
+## Related Skills
+
+- `mcp-cloudflare-builder` — deploys an MCP server to Cloudflare Workers with OAuth (use after scaffolding with this skill)
+- `skill-creation` — for packaging the built MCP server as an installable agent skill
+- `process-extraction` — for capturing the spec-to-tool conversion process as a repeatable workflow
 
 ## Output
 

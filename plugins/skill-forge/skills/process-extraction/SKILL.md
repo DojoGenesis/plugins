@@ -18,6 +18,21 @@ outputs:
 
 # Process-to-Skill Workflow
 
+## Philosophy
+
+Implicit procedural knowledge — the sequence of steps an operator or agent executes to accomplish something reliably — is the most perishable asset in a system. It lives in conversation history, in memory, or nowhere at all. When the context window closes, it is gone.
+
+This skill preserves that knowledge by converting it into an installable, agent-executable SKILL.md. The extraction requires at least two completed runs of the process: the first run establishes the steps, the second distinguishes essential steps from accidental ones. Formalizing after one run encodes noise alongside signal.
+
+## When to Use
+
+- A workflow has been completed at least twice and is likely to be repeated
+- User says: "turn this process into a skill", "standardize this workflow", "make this repeatable", "capture this procedure", "formalize this multi-step task"
+- A retrospective surfaces a recurring manual sequence that could be automated or delegated
+- A process is working but only the person who ran it knows how
+
+Do NOT invoke for half-formed ideas or one-off workflows — redirect to seed capture if the pattern hasn't been validated in practice.
+
 ## I. The Workflow
 
 This is a 4-step workflow for transforming a process into a skill.
@@ -89,8 +104,21 @@ Before delivering the skill, ensure you can answer "yes" to all of the following
 - Process is highly environment-specific (e.g., depends on a particular server's file paths) — generalize paths to parameters during Step 2; if it cannot be generalized, document it as a runbook rather than a skill
 - User wants to capture a half-formed idea, not a completed process — redirect to `seed-extraction` for capturing the insight as a seed; extract to a skill once the pattern has been validated in practice
 
+## Best Practices
+
+- **Capture the "why" at each step, not just the "what".** A steps-only document produces a skill that breaks on any deviation, because there is no basis for adaptation. For each step, note what failure looks like if the step is skipped.
+- **Generalize parameters during Step 2, not Step 1.** Record the specific instance (exact paths, names, tool calls) first, then abstract to parameters when converting to a skill. Premature abstraction loses the concrete anchors that make the skill trustworthy.
+- **Two-run minimum is a hard gate.** One run is a procedure; two runs reveal which steps are essential and which were environmental. Document this explicitly in the process template.
+- **If the process cannot be generalized, write a runbook.** Highly environment-specific workflows (dependent on a particular server's file paths, an org-specific API, etc.) should be documented as runbooks with named constants, not as installable skills.
+
 ## Anti-Patterns
 
 - **Documenting too specifically:** Recording every detail of the specific instance (exact file names, dates, one-off decisions) instead of the generalizable pattern — the resulting skill only works for that exact scenario
 - **Skipping the "why":** A process document that lists steps without explaining why each step matters produces a skill that breaks on any deviation, because the user cannot adapt
 - **Extracting too early:** Formalizing after one use encodes noise alongside signal — the second and third runs reveal which steps are truly essential
+
+## Related Skills
+
+- `skill-creation` — for creating a skill from scratch when no prior process exists to extract
+- `skill-maintenance` — for updating an already-extracted skill when the underlying process changes
+- `batch-normalize-and-package` — for packaging multiple extracted skills for distribution

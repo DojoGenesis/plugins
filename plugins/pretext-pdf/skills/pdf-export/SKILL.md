@@ -26,7 +26,7 @@ outputs:
 
 # PDF Export Skill
 
-**Version:** 0.1.0
+**Version:** 0.1.1
 **Created:** 2026-04-08
 **Author:** Dojo Genesis
 **Purpose:** Convert any file into a beautifully typeset PDF using Pretext's Canvas-based typography engine for precise text measurement and layout.
@@ -97,7 +97,24 @@ The PDF is written to the specified output path. Share it, archive it, or upload
 
 ---
 
-## IV. Reflection Questions
+## IV. Quality Checklist
+
+Before delivering an exported PDF, verify:
+
+- [ ] Source file format was correctly identified (not guessed) — wrong renderer produces broken layout
+- [ ] Typography settings were tuned for the content type (code vs. prose vs. chat), not left at defaults
+- [ ] Output path exists or was created; the file is non-zero bytes
+- [ ] Page breaks fall at logical boundaries, not mid-sentence or mid-function
+- [ ] Code blocks preserve indentation and do not overflow margins
+- [ ] Headers and footers appear on every page consistently
+- [ ] No missing glyphs (tofu rectangles) in the rendered text
+- [ ] Multi-file bundles have a coherent narrative — unrelated files are not mixed into one PDF
+- [ ] Sensitive content was flagged to the user before creating a permanent artifact
+- [ ] File size is within expected range for the content type (prose ~30-80 KB/page, code ~15-40 KB/page)
+
+---
+
+## V. Reflection Questions
 
 - Is the source file format correctly detected, or does it need a format hint?
 - Are the typography defaults appropriate for this content, or should they be tuned?
@@ -106,7 +123,7 @@ The PDF is written to the specified output path. Share it, archive it, or upload
 
 ---
 
-## V. Common Mistakes
+## VI. Common Mistakes
 
 - **Exporting without reading the file first.** Always read the source to understand its structure before choosing renderer settings.
 - **Using default typography for code-heavy files.** Code benefits from a smaller font (9-10pt) and tighter line height (1.3) than prose.
@@ -116,7 +133,7 @@ The PDF is written to the specified output path. Share it, archive it, or upload
 
 ---
 
-## VI. Variations
+## VII. Variations
 
 ### Minimal Export
 Single file, default settings, quick output:
@@ -144,7 +161,7 @@ All skills in a plugin as a reference manual:
 
 ---
 
-## VII. Example
+## VIII. Example
 
 **Scenario:** Export the handoff protocol skill as a distributable PDF for a new team member.
 
@@ -157,7 +174,7 @@ All skills in a plugin as a reference manual:
 
 ---
 
-## VIII. See Also
+## IX. See Also
 
 - `pdf-typography` — Fine-tune Pretext typography settings for specific content types
 - `handoff-protocol` (agent-orchestration) — Export handoff packages as PDFs

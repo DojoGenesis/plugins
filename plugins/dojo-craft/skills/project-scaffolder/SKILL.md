@@ -7,7 +7,7 @@ triggers:
   - "init project structure"
   - "create project dirs"
   - "new project"
-version: "1.0.0"
+version: "1.0.1"
 model: sonnet
 category: dojo-craft
 ---
@@ -15,6 +15,19 @@ category: dojo-craft
 # Project Scaffolder
 
 Bootstraps project directory structures from proven templates. Creates the skeleton — directories, READMEs, initial docs — so projects start with good bones.
+
+## Philosophy
+
+How a project is organized on day one shapes how easy it is to navigate, hand off, and extend on day one hundred. Consistent skeletons mean agents and humans share a mental model without reading a map first — the `decisions/` directory always holds ADRs, `docs/` always holds specs, `internal/` always holds private packages. This skill encodes that consistency rather than letting each project invent its own layout.
+
+## When to Use
+
+- Starting a brand-new project or sub-project from scratch
+- Formalizing a directory that grew organically and now needs structure
+- Onboarding a new repository into an ecosystem that uses a standard layout
+- When the user says "create a new X project" and no directory yet exists
+
+Do NOT use to restructure an existing project with established conventions — this skill is additive only and will skip existing files, but wholesale restructuring is a different task requiring explicit migration planning.
 
 ## Workflow
 
@@ -161,3 +174,37 @@ Output summary:
 - Never commit on behalf of the user — they review first
 - Never overwrite existing files — scaffold is additive only
 - Never add dependencies — the scaffold has zero runtime requirements
+
+## Example
+
+User asks: "scaffold a go-service project called `billing-worker`."
+
+The skill selects the `go-service` template, gathers: name = `billing-worker`, description = provided by user, language = Go (from template). It creates:
+- `cmd/billing-worker/main.go` — stub only (not implemented)
+- `internal/` with a README stub explaining it holds private packages
+- `docs/` with a README stub for specs and runbooks
+- `decisions/000-template.md` — the ADR template filled with `billing-worker` metadata
+- `CLAUDE.md` — project overview, Go conventions, git rules
+- `STATUS.md` — initialized state, version 0.1.0
+- `.gitignore` — Go-appropriate (binaries, vendor, .env)
+
+Report: 7 directories created, 9 files created, 0 skipped. Next steps: "Write your first ADR for the primary design decision. Run `go mod init` to create go.mod."
+
+Git is initialized but no commit is made.
+
+## Quality Checklist
+
+- [ ] Template selected explicitly matches the project type (not defaulted to `minimal` without reason)
+- [ ] Project name and description are populated in CLAUDE.md and STATUS.md — no placeholder text left
+- [ ] `decisions/000-template.md` is written with correct frontmatter (date, status: Proposed)
+- [ ] No source code files generated (only structure + stub docs)
+- [ ] Existing files were not overwritten — any skipped files are listed in the report
+- [ ] `.gitignore` is language-appropriate, not empty or generic
+- [ ] Report includes directory count, file count, skipped count, and next-step guidance
+- [ ] No `git commit` was run — user reviews before first commit
+
+## Related Skills
+
+- `adr-writer` — write the first real ADR after the scaffold is in place
+- `codebase-viewer` — orient to the repo once it has content
+- `community-claude-md-guardian` — validate and maintain the CLAUDE.md written during scaffolding

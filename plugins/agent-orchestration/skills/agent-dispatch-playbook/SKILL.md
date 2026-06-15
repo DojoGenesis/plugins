@@ -7,7 +7,7 @@ triggers:
   - "orchestrate parallel work across repos"
   - "plan agent delegation strategy"
 metadata:
-  version: "1.0"
+  version: "1.1"
   created: "2026-04-07"
   author: "Tres Pies Design"
   tool_dependencies: ["Agent", "Bash", "TodoWrite"]
@@ -262,10 +262,32 @@ The cost-optimal ratio for a solo operator running 200+ Agent calls per session.
 - Agent task definition is ambiguous at dispatch time: do not dispatch; resolve definition in the main thread first, then dispatch with exact file paths and verification command
 - More than 4 parallel agents requested: cap at 3-4 active concurrently; queue remaining tracks to start as earlier agents complete
 
-## Anti-Patterns
+## IX. Quality Checklist
 
-- Launching agents for tasks that are a single `sed` command or one-file edit — main thread is faster
-- Omitting file paths from agent prompts — agent wastes tokens on exploration
-- Using worktree isolation when two tracks both need to touch the same file — guarantees a merge conflict
-- Dispatching background agents for blocking work — if you need the result before proceeding, run foreground
-- Assigning Opus to a fix agent with complete exact instructions — mechanical work belongs on Sonnet
+Before dispatching agents, verify:
+
+- [ ] Each agent prompt states the goal in the first line
+- [ ] Every agent prompt lists exact file paths to modify (no open-ended exploration)
+- [ ] Each agent prompt includes a verification command the agent can run itself
+- [ ] Each agent prompt explicitly names files NOT to touch (prevents overlap with concurrent tracks)
+- [ ] No two parallel worktree agents are assigned the same file
+- [ ] Blocking work is assigned to foreground agents, not background
+- [ ] Model routing is explicit — `model: "sonnet"` or `model: "opus"` is declared per agent, not inherited from parent session
+- [ ] Concurrent agent count is 4 or fewer
+- [ ] A merge/integration step is planned for after all parallel tracks complete
+- [ ] Verification of the combined output is planned (not just per-agent verification)
+
+After agents complete, verify:
+
+- [ ] All agents reported completion (no silent failures)
+- [ ] Combined build/test passes after integrating worktree outputs
+- [ ] Shared-file changes from multiple tracks were applied without conflict
+- [ ] Results were compiled in the main thread, not delegated back to another agent
+
+## X. Related Skills
+
+- `orchestration-pattern-selector` — choose between dispatch patterns when the right pattern isn't obvious; use before this skill when scope is ambiguous
+- `maestro-orchestration` — full conductor pattern with decomposition, specialist agent roster, and synthesis; use when the task requires live inter-agent coordination rather than a static dispatch plan
+- `audit-sweep-dispatch` — specialized Audit Swarm dispatch across a repo cluster; pre-wired for health-check pattern
+- `parallel-dispatch` — lightweight parallel dispatch without the full playbook; use for simpler 2-3 agent parallelism
+- `handoff-protocol` — ensures agents write structured handoffs so the main thread can compile results reliably

@@ -21,7 +21,7 @@ outputs:
 
 # PDF Typography Skill
 
-**Version:** 0.1.0
+**Version:** 0.1.1
 **Created:** 2026-04-08
 **Author:** Dojo Genesis
 **Purpose:** Fine-tune the Pretext typography engine for optimal PDF output across different content types, audiences, and aesthetic goals.
@@ -117,7 +117,24 @@ After configuration, export a test page and verify:
 
 ---
 
-## IV. Reflection Questions
+## IV. Quality Checklist
+
+Before handing a typography configuration to `pdf-export`, verify:
+
+- [ ] Content type was identified (prose / code / chat / mixed) and the matching profile was used as the starting point — not the generic default
+- [ ] Body text line length will fall in the 45-75 character range at the chosen font size and margin
+- [ ] Code blocks use Recursive with `MONO=1` and minimum `1.3` line height
+- [ ] Heading optical size (`opsz`) matches the intended render size, not the body default
+- [ ] No `system-ui` in any `fontDescriptor` — explicit family names only (`Inter`, `Recursive`, `Fraunces`)
+- [ ] Measurement units are consistent: pt/px conversion is handled by the bridge exactly once
+- [ ] Orphan/widow rule is respected: minimum 2 lines before or after a page break
+- [ ] Two-column layouts were checked for tall code blocks that cannot be split across columns
+- [ ] For DojoChat exports: `dispositionToTypography` was called per agent, not a single shared config applied to all bubbles
+- [ ] A test page was rendered and inspected before committing to the full export
+
+---
+
+## V. Reflection Questions
 
 - Is the content primarily prose, code, or mixed? Each has different optimal settings.
 - Who is the audience? Technical readers tolerate denser typography; general audiences need more whitespace.
@@ -126,7 +143,7 @@ After configuration, export a test page and verify:
 
 ---
 
-## V. Common Mistakes
+## VI. Common Mistakes
 
 - **Using system-ui in Canvas context.** Canvas and DOM resolve `system-ui` differently on macOS. Always specify exact font family names.
 - **Ignoring optical sizing.** Inter and Fraunces have `opsz` axes — using body optical size for headings produces thin, fragile letterforms.
@@ -135,7 +152,7 @@ After configuration, export a test page and verify:
 
 ---
 
-## VI. Variations
+## VII. Variations
 
 ### Disposition-Driven Typography (DojoChat)
 
@@ -167,7 +184,7 @@ For dense reference material (API docs, skill catalogs):
 
 ---
 
-## VII. Example
+## VIII. Example
 
 **Scenario:** Configure typography for exporting a Go backend specification as a client-facing PDF.
 
@@ -180,7 +197,7 @@ For dense reference material (API docs, skill catalogs):
 
 ---
 
-## VIII. See Also
+## IX. See Also
 
 - `pdf-export` — Main export workflow that consumes typography configuration
 - Pretext source: `@chenglou/pretext` — Canvas-based typography engine

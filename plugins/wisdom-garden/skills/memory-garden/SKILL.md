@@ -22,7 +22,7 @@ outputs:
 
 # Memory Garden Writer Skill
 
-**Version:** 1.0  
+**Version:** 1.0.1  
 **Created:** 2026-02-02  
 **Author:** Manus  
 **Purpose:** Write structured, semantically rich memory entries for efficient context management
@@ -34,6 +34,16 @@ outputs:
 This skill encodes the pattern for writing memory entries that follow the **4-Tier Context Iceberg** and **Hierarchical Memory** principles. Use this skill to create memory entries that are easy to search, retrieve, and compress.
 
 **Philosophy:** Memory should be a garden, not a landfill. Cultivate what matters, compost what doesn't.
+
+---
+
+## Philosophy: A Garden, Not a Landfill
+
+Most memory systems fail the same way: they accumulate. Every session adds more entries, and the total context load grows until retrieval is slower than re-discovery. A garden metaphor is not decorative — it is structural. Gardens require pruning. Information that served its purpose gets composted into archives. What remains is cultivated: trimmed to its essential form, tagged for retrieval, and placed where it will be found when needed.
+
+The three-tier hierarchy enforces this discipline mechanically. Tier A is raw soil — capture everything, fast, without curation. Tier B is the garden proper — distilled, durable, maintained. Tier C is compost — historical record, rarely accessed, never the primary source of truth. Movement between tiers is always a compression step, never an expansion.
+
+The 3-month rule is the pruning criterion: if an entry would not matter in 3 months, it belongs in Tier C or nowhere. Apply it without sentiment.
 
 ---
 

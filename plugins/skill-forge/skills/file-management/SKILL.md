@@ -21,6 +21,30 @@ outputs:
 
 # File Management & Organization Skill
 
+## Philosophy
+
+Directory structure is architecture. A well-organized repository communicates intent at a glance — a new contributor or an agent reading the tree can predict where to find things before opening a single file. Poor structure forces everyone who touches the codebase to hold the entire layout in memory, increasing cognitive load and error rates.
+
+This skill applies when structure is unclear, inconsistent, or growing organically without a plan. It does not impose a single "right" layout — it selects the pattern that fits the project's dominant access pattern, then applies consistent naming so the structure is self-documenting.
+
+## When to Use
+
+- "Organize this project structure" / "plan a file layout" / "design a directory hierarchy"
+- "Improve folder organization" / "create a project structure"
+- A new repository is being initialized and needs a coherent layout from the start
+- An existing project has grown organically and navigation is becoming painful
+- A monorepo or multi-service system needs a consistent cross-service pattern
+
+Do NOT apply unprompted to a working project where the user asked for a feature — reorganizing without invitation adds risk and context-switch cost.
+
+## Best Practices
+
+- **Match the pattern to the project, not the reverse.** If none of the three core patterns fits, ask one clarifying question about the dominant access pattern ("read by humans or code?") before adapting.
+- **Scope changes to what hurts.** For existing projects with inconsistent but functional structure, target the 1–2 most disruptive inconsistencies rather than a full rewrite.
+- **Apply one naming convention end-to-end.** Mixing kebab-case directories with snake_case files within the same layer signals inconsistency to both developers and agents.
+- **Temporal prefixes belong on dated artifacts only.** Do not apply `YYYY-MM-DD_` to files that are evergreen; it obscures them in listings without adding value.
+- **Pointer READMEs are navigation, not documentation.** A root README in a deep directory tree should name each subdirectory in one line — nothing more. Full documentation belongs in dedicated docs/.
+
 ## I. Recommended Patterns
 
 These are flexible patterns that can be adapted to different environments.
@@ -179,3 +203,20 @@ phases/
 -   **Imposing structure before understanding the project:** Recommending a layout without first knowing the tech stack and team size produces a structure that fits the pattern, not the project.
 -   **Nesting by file type instead of feature:** Grouping all controllers in one directory and all models in another couples unrelated features and makes feature-level changes harder to scope.
 -   **Reorganizing a working project unprompted:** If the user asked for a new feature, not a file audit, applying this skill without invitation adds risk and context-switch cost.
+
+## Quality Checklist
+
+Before delivering a directory plan, confirm:
+
+- [ ] The dominant access pattern (human navigation vs. code import) was identified before choosing a layout
+- [ ] One naming convention is applied consistently — no mixing within a layer
+- [ ] Every top-level directory has a one-line purpose comment in the tree diagram
+- [ ] Temporal prefixes are applied only to genuinely dated artifacts
+- [ ] A pointer README is recommended for any directory with 5+ subdirectories
+- [ ] For existing projects: only the highest-friction inconsistencies are targeted, not a full rewrite
+
+## Related Skills
+
+- `skill-maintenance` — for renaming and reconciling an existing skills directory structure
+- `process-extraction` — for capturing and formalizing the layout decision itself as a repeatable workflow
+- `skill-creation` — includes canonical skill directory structure (`SKILL.md`, `scripts/`, `references/`, `templates/`)

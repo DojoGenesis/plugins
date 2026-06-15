@@ -22,7 +22,7 @@ outputs:
 
 # Specification Writer Skill
 
-**Version:** 1.1
+**Version:** 1.1.1
 **Created:** 2026-02-02
 **Updated:** 2026-02-16
 **Author:** Manus
@@ -35,6 +35,14 @@ outputs:
 This skill encodes the pattern for writing comprehensive, technically rigorous specifications that match the quality of Dojo Genesis v0.0.17-v0.0.23. Use this skill when creating specifications for new features, releases, or system components.
 
 **Quality Standard:** 111/100 (A+)
+
+---
+
+## Why This Matters: Specifications as Contracts
+
+A specification is not documentation written after the fact — it is a contract written before the first line of code. When an implementation agent (human or AI) receives a vague brief, it fills gaps with assumptions. Those assumptions compound. A week of well-specified work outperforms a month of re-work caused by misaligned assumptions.
+
+The corollary is that over-specification wastes as much as under-specification does. A heavyweight Full spec handed to an agent executing a well-scoped 200-line feature burns tokens and delays the work. The discipline of this skill is calibration: matching document weight to scope and audience so the specification serves the work rather than substituting for it.
 
 ---
 

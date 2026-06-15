@@ -24,6 +24,12 @@ outputs:
 
 Scaffolds and deploys production-ready Model Context Protocol servers on Cloudflare Workers.
 
+## Philosophy
+
+Most MCP servers start as stdio processes tied to a single machine. Remote MCP — hosted on Cloudflare Workers — changes the unit of deployment: a tool server becomes a durable, network-accessible endpoint that any authorized client can reach over HTTPS. This matters because it decouples tooling from the machines running agents, enables OAuth-protected sharing across teams, and makes the server's uptime and auth someone else's operational concern (Cloudflare's).
+
+This skill exists because the gap between "I have a tool idea" and "the tool is deployed and connected" is all infrastructure. The scaffold here eliminates that gap.
+
 ## Description
 
 Creates remote MCP servers using the `McpAgent` Durable Object pattern on Cloudflare Workers. Covers tool definition with Zod validation, public vs. OAuth-protected modes, local testing with MCP Inspector, Wrangler deployment, and client connection. Distinct from `mcp-builder` (which covers general MCP server concepts) and `mcp-server-builder` (which scaffolds from OpenAPI specs) — this skill is Cloudflare-specific and deployment-complete.
@@ -219,6 +225,34 @@ Callback URL must match OAuth app config exactly. For local dev: `http://localho
 | "Tool not found" | Name mismatch | Verify exact case; ensure `init()` registers before connections |
 | Connection fails | Wrong path | Confirm endpoint is `/mcp`; check CORS for browser clients |
 | OAuth redirect error | Callback URL mismatch | Match OAuth app config; check secrets are set |
+
+## Best Practices
+
+- **Zod-validate every input.** Never trust raw tool parameters — use `.email()`, `.min()`, `.enum()` constraints to catch malformed input before it reaches your business logic or external APIs.
+- **One tool, one intent.** A tool that does two different things based on a flag is two tools. Split them — agents choose tools by reading descriptions, not by inspecting parameter combinations.
+- **Access Cloudflare bindings via `this.env`, not global scope.** D1, KV, and R2 are injected per-request; referencing them outside `McpAgent` loses the request context.
+- **Set secrets with `wrangler secret put`, never in `wrangler.toml`.** Committed secrets in toml are a deployment risk even in private repos.
+- **Match the OAuth callback URL exactly.** A trailing slash difference between the OAuth app config and the Worker route causes silent redirect failures that are hard to diagnose.
+- **Test with MCP Inspector before deploying.** Local iteration via `npm start` + Inspector catches tool-registration errors before they reach production clients.
+
+## Quality Checklist
+
+Before calling the deployment complete:
+
+- [ ] All tools are registered in `McpAgent.init()` before any client connects
+- [ ] Every tool input uses Zod validation with explicit constraints
+- [ ] Secrets are stored via `wrangler secret put`, not hardcoded
+- [ ] The Worker entry point routes `/mcp` to `McpAgent.serveSSE("/mcp")`
+- [ ] `wrangler.toml` includes the Durable Object binding and migration tag
+- [ ] `npm start` + MCP Inspector successfully lists and calls each tool locally
+- [ ] Claude Desktop (or target client) config points to the deployed `*.workers.dev/mcp` URL
+- [ ] OAuth callback URL matches the OAuth app config exactly (if auth mode is `oauth`)
+
+## Related Skills
+
+- `mcp-server-builder` — spec-driven MCP scaffold from an OpenAPI contract (language-agnostic, not Cloudflare-specific)
+- `skill-creation` — for wrapping a built MCP server into a reusable agent skill
+- `process-extraction` — for capturing the deployment workflow as a repeatable runbook
 
 ## Output
 

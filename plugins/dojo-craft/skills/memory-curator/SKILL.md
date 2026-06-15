@@ -7,7 +7,7 @@ triggers:
   - "prune memories"
   - "memory health"
   - "organize memories"
-version: "1.0.0"
+version: "1.0.1"
 model: sonnet
 category: dojo-craft
 ---
@@ -15,6 +15,21 @@ category: dojo-craft
 # Memory Curator
 
 Manages the persistent memory system — writes, updates, prunes, and deduplicates memories while keeping the MEMORY.md index lean and navigable.
+
+## Philosophy
+
+Memory degrades in two directions: it grows bloated with stale or duplicate entries until the index is unnavigable, or it gets pruned too aggressively and the agent forgets corrections that cost real sessions to learn. This skill walks the middle path — surgically removing what's derivable from code or superseded by later facts, while protecting user preferences, feedback corrections, and hard-won patterns. A healthy memory store is a compressed model of the project, not a transcript of every session.
+
+## When to Use
+
+- MEMORY.md index is approaching or exceeding 200 lines
+- Convergence check flags GROWING or CRITICAL memory health
+- After a major project milestone where many "in progress" entries are now done
+- Session-end ritual when the session harvested new memories and the index needs updating
+- Before a long absence where stale memories could mislead the next session
+- Any time the agent or user notices duplicate facts or contradictory memories
+
+Do NOT run aggressively after a single session without a convergence signal — premature pruning removes memories before they've proven their value.
 
 ## Workflow
 
@@ -73,3 +88,29 @@ Output summary:
 - Never rewrite memory content for style — preserve the user's original voice
 - Never merge memories across fundamentally different domains
 - Never delete feedback memories without explicit user confirmation
+
+## Example
+
+Index is at 187 lines (GROWING). Running the curator:
+- SCAN finds 3 orphaned files (referenced in index but missing from disk) and 2 broken links
+- DEDUP identifies a project state entry from 3 months ago and a newer entry covering the same project — the older one says "in progress," the newer says "shipped"
+- STALE finds a memory pointing to `src/legacy/payments.js` which no longer exists in the repo
+- MERGE collapses the two project state entries into the newer one, preserving the shipped date
+- PRUNE removes the broken file reference and the superseded project state
+- INDEX is rebuilt at 171 lines — GROWING, but improved
+- REPORT: 2 merged, 3 removed, index 171/200 (GROWING)
+
+## Quality Checklist
+
+- [ ] SCAN step ran before any mutation — total count and line count confirmed
+- [ ] No memory was deleted without first appearing in DEDUP or STALE output
+- [ ] Feedback memories and user preference memories were NOT pruned without explicit user confirmation
+- [ ] Original wording of kept memories is preserved verbatim (no style rewrites)
+- [ ] Merged memories preserve the most specific content from each source
+- [ ] Final MEMORY.md index line count is reported
+- [ ] Health status label (HEALTHY / GROWING / CRITICAL) is explicit in output
+
+## Related Skills
+
+- `convergence-checker` — triggers memory-curator runs based on session count and index size thresholds
+- `seed-curator` — manages the seed library, which lives alongside the memory system; coordinate when the boundary between seeds and memories is blurry

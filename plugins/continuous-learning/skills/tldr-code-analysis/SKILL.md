@@ -26,6 +26,16 @@ outputs:
 
 ---
 
+## Philosophy
+
+Reading raw source files to understand a codebase is the wrong tool for the job. A 200-file repo can exceed 23,000 tokens of raw content — well beyond what can be held in useful context. But the signal-to-noise ratio of raw files is low: most tokens are implementation details irrelevant to the structural question being asked.
+
+The 5-layer TLDR stack inverts this. It starts with structure (AST), builds up to behavior (call graph), then zooms into complexity and data movement only where necessary. Each layer costs roughly 100–500 tokens and answers a specific class of questions. You read raw code only for the 2-4 files the stack identifies as actually relevant.
+
+This is not a shortcut — it is the correct order of operations for code understanding: shape first, then substance.
+
+---
+
 ## I. When to Use
 
 - Onboarding to an unfamiliar codebase and need structural understanding fast
@@ -147,6 +157,17 @@ tldr dead [repo_path]    # Dead/unreachable code
 
 ---
 
+## Best Practices
+
+- **Choose depth mode before starting:** Picking the wrong depth wastes tokens and time. Use the decision table: overview for "what does this repo do?", deep for refactor/bug work, full only when you need program slicing for surgical changes.
+- **L2 (call graph) is never optional:** Even in overview mode, understanding what calls what is more valuable than structural outlines alone. If time is constrained, drop L3-L5 before dropping L2.
+- **Navigate with TLDR, read with your eyes:** The analysis output tells you which files matter. Reserve raw file reads for those specific files, not the whole repo.
+- **Annotate findings as you go:** Record architectural observations, hot paths, and risk areas during each layer rather than waiting for the synthesis step. Layer outputs are dense and the signal degrades quickly without notes.
+- **Re-run after major refactors:** TLDR outputs are point-in-time snapshots. If the codebase changes significantly between analysis and implementation, re-run the relevant layers before writing code.
+- **Note language limitations explicitly:** For Java and C/C++ (L1-L2 only), state the analysis boundary in the report header so consumers know which layers are absent and why.
+
+---
+
 ## V. Output
 
 - A structured analysis report saved to the project directory
@@ -180,3 +201,28 @@ tldr dead [repo_path]    # Dead/unreachable code
 - Running full depth on every file -- use overview to find the interesting files, then deep/full on those specific files
 - Treating TLDR output as the final answer for bug fixes -- TLDR navigates to the right code, but you still need to read the actual implementation to write the fix
 - Skipping the call graph (L2) and jumping to CFG/DFG -- without knowing what calls what, flow analysis on individual functions misses cross-file interactions
+
+---
+
+## IX. Quality Checklist
+
+Before delivering an analysis report, verify:
+
+- [ ] Depth mode was selected before starting (overview / deep / full)
+- [ ] L1 AST scan completed: file tree, function signatures, imports
+- [ ] L2 call graph built: cross-file edges identified, entry points named
+- [ ] L3-L5 layers applied only at the depth mode requested
+- [ ] Architecture overview section present: entry points, layers, circular dependencies
+- [ ] Hot paths identified: most-called functions, highest-complexity functions
+- [ ] Risk areas flagged: dead code, high cyclomatic complexity, deep nesting
+- [ ] Language support limitations noted where applicable (Java, C/C++)
+- [ ] Report includes actionable recommendations, not just structural observations
+
+---
+
+## X. Related Skills
+
+- `project-exploration` — use first when assessing collaboration fit; TLDR code analysis follows a GREEN/YELLOW rating for deeper structural understanding
+- `codebase-cartography` — complementary skill for producing visual maps and navigation aids from structural analysis
+- `debugging` — use after TLDR has identified the relevant files and functions for a bug trace
+- `research-synthesis` — use to distill TLDR findings into a reusable reference document for a team

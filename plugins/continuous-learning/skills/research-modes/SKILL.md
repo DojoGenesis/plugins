@@ -221,6 +221,17 @@ Output templates for all phases are in `references/research-output-templates.md`
 
 ---
 
+## Best Practices
+
+- **Pick the mode before you start:** Switching from Wide to Deep mid-session wastes effort — the source collection strategies and note-taking structures are different. Spend 5 minutes on Phase 1 scope definition before touching any source.
+- **Set a time limit per phase:** Without time-boxing, Source Discovery and Deep Reading expand indefinitely. A Research Brief produced at a deadline is more useful than a perfect synthesis that never ships.
+- **Record disagreements, not just agreements:** Sources that contradict each other are the most informative signal. If all your sources agree, you may have sampled from a single school of thought.
+- **Separate collection from synthesis:** Do not write conclusions while reading sources. Complete note-taking first, then move to synthesis as a distinct phase. Blending them produces summaries masquerading as analysis.
+- **Validate against the original question:** Before finalizing, re-read the research question from Phase 1 and confirm the synthesis actually answers it. Scope creep commonly produces thorough research on the wrong question.
+- **Label confidence levels:** Distinguish between well-supported findings (multiple independent sources), moderately supported (single authoritative source), and inferred (your interpretation of ambiguous evidence). Unlabeled research papers overconfidence to downstream consumers.
+
+---
+
 ## Research Quality Checklist
 
 Before finalizing research, verify:

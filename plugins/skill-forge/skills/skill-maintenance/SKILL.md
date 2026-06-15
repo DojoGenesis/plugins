@@ -17,6 +17,22 @@ outputs:
 
 # Skill Maintenance Ritual
 
+## Philosophy
+
+A skills directory is a living codebase. Names drift, terminology evolves, cross-references rot, and skills that were once clearly scoped start overlapping. Left unaddressed, these inconsistencies accumulate into a directory where an agent — or a human — cannot reliably find what they need or trust that what they find is current.
+
+Maintenance is the practice of making that drift visible and reversible. The key discipline is: read before refactoring, catalog before replacing, and document the audit trail in the commit message so future maintainers can understand not just what changed but why.
+
+## When to Use
+
+- User requests skill renames, refactors, or deprecations
+- New skills are added that create naming conflicts or overlap with existing ones
+- Terminology changes in the broader ecosystem (tool names, platform names, industry standards) make existing skill names confusing
+- A periodic audit reveals stale cross-references or inconsistent naming
+- A skill needs to be deprecated and replaced by a successor
+
+Do NOT apply to in-flight work or to historical documents (retrospectives, plans) outside the skills directory unless the user explicitly expands scope.
+
 ## I. The Workflow
 
 This is a 9-step workflow for maintaining the skills directory.
@@ -275,9 +291,37 @@ Kept <term> only when:
 - A skill has no cross-references in the rest of the directory — rename is safe; note this in the commit message
 - User wants to "clean up" a skill without changing its name — treat as in-place refactoring: read, propose specific changes, get confirmation, then edit
 
+## Best Practices
+
+- **Read the skill body, not just the directory name.** A directory named `seed-converter` might implement a workflow more accurately described as `process-extraction`. Names should reflect what the skill does, and you can only know that by reading it.
+- **Catalog before replacing.** Run a grep across the directory before executing any rename or terminology change. The count and distribution of references tells you the true scope and prevents missed instances.
+- **Preserve contextually appropriate references.** When a skill names specific tools for routing decisions (e.g., "use Zenflow for X, Claude Code for Y"), that reference should survive a terminology refactor even if the generic term changes elsewhere.
+- **Verb-object naming for skills.** Prefer `release-specification` over `release-spec-generator`; `process-extraction` over `process-to-skill`. The verb signals what the skill does, the object signals what it operates on.
+- **Deprecation is a first-class operation.** A deprecated skill should carry a `deprecated: true` frontmatter field and a top-of-body notice pointing to the replacement. Do not delete without a forwarding reference.
+- **Commit messages are the audit trail.** Per-file replacement counts and rationale for what was preserved belong in the commit message body. Future maintainers will not have this conversation's context.
+
+## Quality Checklist
+
+Before closing a maintenance session:
+
+- [ ] Every renamed skill has both its directory name and `name` frontmatter field updated to match
+- [ ] Every renamed skill's H1 heading matches the new name
+- [ ] `grep` confirms zero remaining stale references in the skills directory
+- [ ] Historical documents outside the skills directory were cataloged but left unchanged (unless user expanded scope)
+- [ ] Deprecated skills have `deprecated: true` in frontmatter and a top-of-body notice pointing to the replacement
+- [ ] Git commit message includes: summary, per-file change counts, what was preserved and why
+- [ ] User confirmed proposed changes before execution (no silent refactors)
+
 ## Anti-Patterns
 
 - **Over-refactoring:** Changing references that are contextually appropriate (e.g., tool-specific mentions in routing docs) because they happen to match the search term — always read the surrounding context before replacing
 - **Proposing without reading:** Suggesting renames based on the directory name alone without reading what the skill actually does — names should reflect reality, not assumptions
 - **Relying on memory for references:** Skipping grep and trusting recall to find all instances — always catalog systematically before refactoring
 - **Vague commit messages:** Writing "updated skills" without a per-file breakdown — commit messages are the only audit trail for future maintainers
+
+## Related Skills
+
+- `skill-creation` — for creating new skills that will enter the directory being maintained
+- `process-extraction` — for formalizing the maintenance workflow itself into a repeatable skill
+- `batch-normalize-and-package` — for bulk normalization of community-sourced skills before adding them to the directory
+- `normalize-community-skill` — for normalizing a single community skill to house standards before placement
