@@ -5,8 +5,8 @@
     "email": "cruz@trespiesdesign.com"
   },
   "metadata": {
-    "description": "A practice space for building better software through patient cultivation. 44 skills organized into 7 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.1.0",
+    "description": "A practice space for building better software through patient cultivation. 97 skills organized into 9 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
+    "version": "1.2.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
