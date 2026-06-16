@@ -20,6 +20,11 @@ DESCRIPTION_MAX_CHARS = 1024
 DESCRIPTION_MIN_CHARS = 30  # shorter = WARN (weak trigger surface)
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
+# Plugin dirs present on disk but intentionally NOT published in marketplace.json
+# (imported third-party content kept local). Still scanned for skill integrity,
+# but exempt from the marketplace-registration requirement.
+IMPORTED_NOT_PUBLISHED = {"community-skills"}
+
 # Valid Claude Code hook event names (2026-06-09 shape-check)
 VALID_HOOK_EVENTS = {
     "PreToolUse",
@@ -304,6 +309,8 @@ def check_marketplace_consistency(marketplace_path: Path, plugins_dir: Path,
     disk_plugins = set()
     for p in plugins_dir.iterdir():
         if p.is_dir() and (p / ".claude-plugin" / "plugin.json").exists():
+            if p.name in IMPORTED_NOT_PUBLISHED:
+                continue
             disk_plugins.add(p.name)
 
     for name in sorted(disk_plugins - listed_names):

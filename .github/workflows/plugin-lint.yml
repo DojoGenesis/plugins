@@ -15,4 +15,13 @@ jobs:
           python-version: "3.12"
 
       - name: Run plugin-lint
-        run: python scripts/plugin-lint.py
+        # plugin-lint.py exit codes: 0=clean, 1=warnings-only, 2=failures.
+        # Warnings (e.g. intentionally quarantined hooks.json.unsupported files)
+        # are non-blocking by design — only true failures (exit 2) fail CI.
+        run: |
+          set +e
+          python scripts/plugin-lint.py
+          code=$?
+          set -e
+          echo "plugin-lint exit code: $code (0=clean, 1=warnings-ok, 2=failures-block)"
+          [ "$code" -le 1 ]

@@ -44,6 +44,16 @@
       "name": "skill-forge",
       "source": "./plugins/skill-forge",
       "description": "The meta-layer — skills about making skills. Create, maintain, and evolve the reusable patterns that power every other plugin. Good governance of the forge multiplies the velocity of everything built in it."
+    },
+    {
+      "name": "dojo-craft",
+      "source": "./plugins/dojo-craft",
+      "description": "The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. DojoCraft turns scattered orchestration patterns into repeatable craft."
+    },
+    {
+      "name": "pretext-pdf",
+      "source": "./plugins/pretext-pdf",
+      "description": "Pretext-powered PDF export connector. Converts code, Markdown, HTML, chat conversations, and structured Dojo ecosystem files into beautifully typeset PDFs using @chenglou/pretext for precise Canvas-based typography measurement and layout."
     }
   ]
 }
