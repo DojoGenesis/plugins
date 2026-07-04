@@ -1,6 +1,6 @@
 # DojoGenesis Plugins
 
-**92 first-party methodology skills across 9 behavioral plugins for Claude Code and the Dojo platform.**
+**99 first-party methodology skills across 10 behavioral plugins for Claude Code and the Dojo platform.**
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline. These plugins encode the discipline: battle-tested workflows from actually shipping software with autonomous agents.
 
@@ -59,6 +59,7 @@ Or via the Dojo MCP tools: `dojo.list_skills`, `dojo.search_skills`, `dojo.invok
 | [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 13 | Compress session context into lasting memory: compression ritual, memory garden, seed extraction, system prompt archaeology, session continuity ledger. |
 | [pretext-pdf](plugins/pretext-pdf/) | PUBLISH | 2 | Export structured documents to print-quality PDF using the Pretext layout engine. Zero-reflow typography, adaptive pagination, auto table of contents. |
 | [dojo-craft](plugins/dojo-craft/) | CRAFT | 8 | The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. |
+| [bring-loop](plugins/bring-loop/) | BRING | 2 | Gate your outward loop like your build loop: one send/decision/close a day, staged by the agent, executed by you, measured in honest separate streams. The BringItCruz! effect, generalized. |
 
 ---
 
@@ -113,6 +114,7 @@ plugins/
 │   ├── pdf-export/SKILL.md
 │   └── pdf-typography/SKILL.md
 ├── dojo-craft/skills/
+├── bring-loop/skills/
 │   ├── adr-writer/               ├── scout-writer/
 │   ├── claude-md-guardian/       ├── convergence-checker/
 │   ├── memory-curator/           ├── seed-curator/

@@ -5,8 +5,8 @@
     "email": "cruz@trespiesdesign.com"
   },
   "metadata": {
-    "description": "A practice space for building better software through patient cultivation. 97 skills organized into 9 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.2.0",
+    "description": "A practice space for building better software through patient cultivation. 99 skills organized into 10 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
+    "version": "1.3.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -54,6 +54,11 @@
       "name": "pretext-pdf",
       "source": "./plugins/pretext-pdf",
       "description": "Pretext-powered PDF export connector. Converts code, Markdown, HTML, chat conversations, and structured Dojo ecosystem files into beautifully typeset PDFs using @chenglou/pretext for precise Canvas-based typography measurement and layout."
+    },
+    {
+      "name": "bring-loop",
+      "source": "./plugins/bring-loop",
+      "description": "Your agents made building easy; the outward step stayed ungated. Surface ONE send/decision/close a day, stage it, execute it yourself, measure honest separate streams — a logged skip is a valid rep. The BringItCruz! effect, generalized. Canonical source: github.com/DojoGenesis/bring-loop."
     }
   ]
 }

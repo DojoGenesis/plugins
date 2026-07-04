@@ -1,0 +1,10 @@
+{
+  "name": "bring-loop",
+  "version": "0.1.0",
+  "description": "Gate your outward loop like your build loop: one send/decision/close a day, surfaced at session start, staged by the agent, executed by you, measured in honest separate streams. The BringItCruz! effect, generalized.",
+  "author": {
+    "name": "Cruz Romero Morales (TresPies / DojoGenesis)"
+  },
+  "homepage": "https://github.com/DojoGenesis/bring-loop",
+  "license": "MIT"
+}

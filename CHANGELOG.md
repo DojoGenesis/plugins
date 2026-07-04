@@ -1,5 +1,17 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-04 — bring-loop joins the marketplace
+
+### What happened
+
+Added **bring-loop** — the BringItCruz! effect, generalized: gate your outward loop (sends, decisions, closes, ships) the way your build loop is already gated. One action a day, surface + stage only (the human executes), a logged skip is a valid rep, streams measured separately, dual human/agent faces with a parity gate.
+
+### Changes
+
+- **`plugins/bring-loop/` added** (2 skills: `bring`, `bring-setup`; SessionStart injector + Stop nudge hooks; stdlib core `scripts/bring_core.py`; pattern spec `SPEC.md`). Distribution copy — canonical source is [github.com/DojoGenesis/bring-loop](https://github.com/DojoGenesis/bring-loop) (`plugin/`), sync from there.
+- **marketplace.json**: 9 → 10 plugins, version 1.3.0, skill count corrected to the disk-true 99.
+- **Count drift repaired across surfaces**: README header said 92/9, llms.txt said 84/8 (and was missing dojo-craft), marketplace said 97/9 — disk truth was 97 first-party skills pre-add. All three now read 99/10.
+
 ## 2026-02-12 — Naming Consolidation + Root Merge
 
 ### What happened

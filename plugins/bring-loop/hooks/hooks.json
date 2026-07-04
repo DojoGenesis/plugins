@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/bring-injector.py\"",
+            "timeout": 10,
+            "statusMessage": "Loading today's bring"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python \"${CLAUDE_PLUGIN_ROOT}/hooks/bring-stop-nudge.py\"",
+            "timeout": 10,
+            "statusMessage": "Bring nudge"
+          }
+        ]
+      }
+    ]
+  }
+}

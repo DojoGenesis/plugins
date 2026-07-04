@@ -1,12 +1,12 @@
 # DojoGenesis Plugins
 
-> 84 first-party methodology skills across 8 behavioral plugins — strategic thinking, spec-driven development, system health, wisdom garden, and more.
+> 99 first-party methodology skills across 10 behavioral plugins — strategic thinking, spec-driven development, system health, wisdom garden, and more.
 
 ## What this is
 
-The canonical first-party skill collection for the Dojo Genesis platform. Each plugin is a directory containing skills in SKILL.md format with YAML frontmatter that defines metadata, trigger conditions, and usage guidance. Skills are active cognitive scaffolds — structured methodologies that guide AI agents through complex decisions, not passive documentation. All 84 skills are rated A+ quality and designed to work with the Dojo MCP Server and Claude Code.
+The canonical first-party skill collection for the Dojo Genesis platform. Each plugin is a directory containing skills in SKILL.md format with YAML frontmatter that defines metadata, trigger conditions, and usage guidance. Skills are active cognitive scaffolds — structured methodologies that guide AI agents through complex decisions, not passive documentation. The collection is quality-gated and designed to work with the Dojo MCP Server and Claude Code.
 
-## Plugins (8)
+## Plugins (10)
 
 - **agent-orchestration** — Multi-agent coordination patterns, parallel dispatch, delegation playbooks
 - **continuous-learning** — Research modes, project exploration, synthesis, retrospectives, era architecture
@@ -16,6 +16,8 @@ The canonical first-party skill collection for the Dojo Genesis platform. Each p
 - **system-health** — Documentation audit, health audit, observability dashboard, repo status, budget guard
 - **wisdom-garden** — Memory garden, compression ritual, seed extraction, system prompt archaeology
 - **pretext-pdf** — PDF export, typography configuration for AI-generated documents
+- **dojo-craft** — Practitioner's workbench: strategic thinking, codebase intelligence, memory curation, project governance
+- **bring-loop** — Gate the outward loop: one send/decision/close a day, agent stages, human executes, honest separate streams (the BringItCruz! effect; canonical: github.com/DojoGenesis/bring-loop)
 
 ## Skill format
 
