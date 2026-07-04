@@ -4,7 +4,7 @@
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline. These plugins encode the discipline: battle-tested workflows from actually shipping software with autonomous agents.
 
-**92 skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
+**99 skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
 
 ---
 
@@ -225,7 +225,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.3.0** — 92 first-party skills, all rated A+.
+**1.3.0** — 99 first-party skills, all rated A+.
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

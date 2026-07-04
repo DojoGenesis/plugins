@@ -25,3 +25,9 @@ jobs:
           set -e
           echo "plugin-lint exit code: $code (0=clean, 1=warnings-ok, 2=failures-block)"
           [ "$code" -le 1 ]
+
+      - name: Run face-parity gate
+        # Dual-navigability gate: README.md / llms.txt / marketplace.json count
+        # claims must match disk truth (plugins + skills). Exit 1 blocks — a
+        # face that lies about the corpus is a true failure, not a warning.
+        run: python scripts/face-parity.py
