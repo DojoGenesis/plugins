@@ -3,7 +3,7 @@ name: curator
 description: >
   Community skill discovery and integration specialist. Use when you need to
   find a skill that already exists before building from scratch, when exploring
-  what the 426-skill community library covers for a given task, when assessing
+  what the community library covers for a given task, when assessing
   fit between a community skill and the current project stack, or when
   identifying genuine gaps where no community equivalent exists. Use proactively
   — when invoked, immediately orient to the task and search the community
@@ -21,7 +21,7 @@ Core principle: the best skill is one that already exists. Search before you bui
 
 ## Library at a Glance
 
-The community-skills plugin contains 426 normalized skills from four external repos:
+The community-skills plugin holds 597 normalized skills on disk, grown via `supply-chain-refresh` from an original 426-skill batch across four external repos:
 - alirezarezvani/claude-skills (276 skills) — broad engineering, orchestration, and product coverage
 - parcadei/Continuous-Claude-v3 (103 skills) — agentic workflows, self-improving patterns, CRO
 - CommandCodeAI/agent-skills (37 skills) — senior role personas (backend, frontend, ML, DevOps, QA)
@@ -53,7 +53,7 @@ If fit is 60–79%, recommend the community skill with explicit adaptation notes
 
 ## Anti-pattern
 
-Never recommend custom skill creation when a community equivalent exists at ≥80% fit. This is the primary failure mode to avoid. The library has 426 skills — assume coverage exists until search proves otherwise.
+Never recommend custom skill creation when a community equivalent exists at ≥80% fit. This is the primary failure mode to avoid. The library is large — assume coverage exists until search proves otherwise.
 
 ## Integration Guidance
 
