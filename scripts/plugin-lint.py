@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-plugin-lint.py — CoworkPluginsByDojoGenesis integrity linter
+plugin-lint.py — dojo-genesis integrity linter
 stdlib only, Python 3.8+
 
 Exit codes:

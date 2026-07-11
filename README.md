@@ -16,20 +16,14 @@ AI agents are powerful but chaotic. They hallucinate requirements, forget contex
 dojo plugin install DojoGenesis/plugins
 ```
 
-### Install via Claude Code Marketplace
+### Install via Claude Code Marketplace (native)
 
-Search for **"DojoGenesis Plugins"** in the Claude Code plugin marketplace, or add to your `.mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "dojo": {
-      "command": "dojo",
-      "args": ["mcp", "--skills-path", "/path/to/plugins"]
-    }
-  }
-}
 ```
+/plugin marketplace add DojoGenesis/plugins
+/plugin install wisdom-garden@dojo-genesis
+```
+
+The marketplace id is `dojo-genesis`; the source repo is `DojoGenesis/plugins`. Install any plugin as `<plugin>@dojo-genesis` (e.g. `strategic-thinking@dojo-genesis`, `system-health@dojo-genesis`).
 
 ### Invoke a skill
 
@@ -74,7 +68,7 @@ Plugins are how skills ship; **clusters are how they behave.** 12 clusters
 cross-cut the 10 plugins — skills grouped by what they *do*, not which
 directory holds them. Every registered skill's `category:` frontmatter is
 one of these 12 ids (enforced by `scripts/plugin-lint.py`); see the full
-`plugin:skill` roster with DUP/MISFILED/X flags in [llms.txt](llms.txt#clusters).
+`plugin:skill` roster with DUP/MISFILED/X flags in [llms.txt](llms.txt).
 
 A cluster is a *lens*, not a filing system: membership lives in a skill's
 `category:` metadata, and skills are **never** physically moved between plugins
@@ -177,12 +171,12 @@ plugins/
 └── community-skills/             ← community-contributed SKILL.md files, dormant-by-design
 ```
 
-Each plugin is self-contained with:
+Each plugin is a directory under `plugins/`. Only `skills/` is guaranteed; the rest are present where relevant:
+- `skills/` — Full workflow definitions (SKILL.md files) — **always present**
 - `README.md` — Overview, philosophy, skill table, trigger phrases
 - `CONNECTORS.md` — External service integrations (MCPs, APIs, data sources)
 - `agents/` — Agent persona definitions for specialized work
 - `commands/` — Claude Code slash command definitions
-- `skills/` — Full workflow definitions (SKILL.md files)
 
 ---
 
@@ -284,7 +278,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.4.3** — 99 first-party skills organized into 12 semantic clusters. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
+**1.4.4** — 99 first-party skills organized into 12 semantic clusters, published as the `dojo-genesis` marketplace. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

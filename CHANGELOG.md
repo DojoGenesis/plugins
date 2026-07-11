@@ -1,4 +1,25 @@
-# Changelog — CoworkPluginsByDojoGenesis
+# Changelog — dojo-genesis
+
+## 2026-07-11 — Marketplace renamed to `dojo-genesis` + publish-polish (v1.4.4)
+
+### What happened
+
+Renamed the marketplace **id** from `CoworkPluginsByDojoGenesis` to **`dojo-genesis`** before the public listing — the old id collided with Anthropic's Cowork product and didn't match the repo (`DojoGenesis/plugins`) or title. Installs are now `<plugin>@dojo-genesis`. Done now because renaming a marketplace id *after* it's listed breaks everyone's installs.
+
+Scope note: only the marketplace **identity** changed (marketplace.json `name`, the CHANGELOG/STATUS/PORTABILITY titles, the lint-tool banner). The **local directory** `CoworkPluginsByDojoGenesis/` and the **GitHub repo** `DojoGenesis/plugins` are unchanged, so all script/hook references to the directory path stay as-is, and historical CHANGELOG entries keep their original wording.
+
+### Changes
+
+- **`.claude-plugin/marketplace.json`** `name`: `CoworkPluginsByDojoGenesis` → `dojo-genesis`.
+- **README Quick Start**: replaced the stale "search + `.mcp.json`" block with the native flow — `/plugin marketplace add DojoGenesis/plugins` then `/plugin install <plugin>@dojo-genesis` — the exact path the `claude-plugins-community` audience uses.
+- **README** "Each plugin is self-contained with…" corrected — only `skills/` is guaranteed (pretext-pdf has no plugin README; dojo-craft/bring-loop lack CONNECTORS/commands). Dead `llms.txt#clusters` fragment anchor dropped (doesn't resolve on GitHub plaintext).
+- Identity references updated in STATUS.md, PORTABILITY.md, and the plugin-lint banner.
+- **marketplace.json + README version**: 1.4.3 → 1.4.4.
+
+### Deferred (non-blocking)
+
+- `figma-to-code` / `design-system-selector` sit in `understand-codebase` with a flag that reads backwards; no cluster fits them cleanly, so left for a later taxonomy pass.
+- `plugins/system-health/README.md` lists ~10 of its 20 skills (drift one level below the gated root faces).
 
 ## 2026-07-11 — Pre-publish review fixes (v1.4.3)
 

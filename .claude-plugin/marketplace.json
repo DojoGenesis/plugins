@@ -1,12 +1,12 @@
 {
-  "name": "CoworkPluginsByDojoGenesis",
+  "name": "dojo-genesis",
   "owner": {
     "name": "Dojo Genesis",
     "email": "cruz@trespiesdesign.com"
   },
   "metadata": {
     "description": "A practice space for building better software through patient cultivation. 99 skills organized into 10 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.4.3",
+    "version": "1.4.4",
     "pluginRoot": "./plugins"
   },
   "plugins": [

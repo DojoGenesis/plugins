@@ -1,4 +1,4 @@
-# Portability Summary: CoworkPluginsByDojoGenesis → AgenticGateway
+# Portability Summary: dojo-genesis → AgenticGateway
 
 **Audit Date:** 2026-02-12
 **Status:** ✅ High Portability Confirmed
@@ -8,7 +8,7 @@
 
 ## Executive Summary
 
-The CoworkPluginsByDojoGenesis ecosystem (44 skills, 7 plugins, 7 agents) is **91% portable** to the AgenticGateway runtime with existing or minimal tooling.
+The dojo-genesis ecosystem (44 skills, 7 plugins, 7 agents) is **91% portable** to the AgenticGateway runtime with existing or minimal tooling.
 
 ### Portability by Tier
 

@@ -1,4 +1,4 @@
-# STATUS — CoworkPluginsByDojoGenesis Repository
+# STATUS — dojo-genesis (DojoGenesis Plugins)
 
 This file is a pointer, not a snapshot. A hand-carried count is a liability
 the moment a skill is added — it keeps looking authoritative long after it
