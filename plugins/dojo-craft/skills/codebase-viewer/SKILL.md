@@ -1,6 +1,6 @@
 ---
 name: codebase-viewer
-description: "Structured codebase intelligence: directory tree with roles, entry points, dependency graph, test coverage map, and annotated 'here be dragons' warnings."
+description: "Structured codebase intelligence: directory tree with roles, entry points, dependency graph, test coverage map, and annotated 'here be dragons' warnings. Lean single-file variant — full version (adds a defined reading-order output): `continuous-learning:codebase-cartography`."
 triggers:
   - "view codebase"
   - "map the code"

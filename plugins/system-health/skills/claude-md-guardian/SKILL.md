@@ -1,7 +1,7 @@
 ---
 name: claude-md-guardian
 model: sonnet
-description: Produces a CLAUDE.md health report listing conflicts, redundancies, and stale rules across the global, project, and subdirectory hierarchy — and optionally installs a PreToolUse hook to block unauthorized modifications. Use when: "agent behavior is inconsistent", "just merged branches that touched CLAUDE.md", "onboarding a new agent", "after applying learnings", "weekly maintenance".
+description: Produces a CLAUDE.md health report listing conflicts, redundancies, and stale rules across the global, project, and subdirectory hierarchy — and optionally installs a PreToolUse hook to block unauthorized modifications going forward (the enforcement mechanism the audit-only `dojo-craft:community-claude-md-guardian` variant lacks). Use when: "agent behavior is inconsistent", "just merged branches that touched CLAUDE.md", "onboarding a new agent", "after applying learnings", "weekly maintenance".
 license: proprietary
 category: repo-docs-health
 

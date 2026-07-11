@@ -1,7 +1,7 @@
 ---
 name: status-template
 model: sonnet
-description: Produces a comprehensive `.status.md` file using a 10-section schema that bridges heartbeat (current state), anatomy (directory structure), and checkup (health assessment) perspectives into one document. Use when: "write a status report", "give me the lay of the land", "where are we right now", "prepare a handoff document", "document the current codebase state".
+description: Produces a comprehensive `.status.md` file using a 10-section schema that bridges heartbeat (current state), anatomy (directory structure), and checkup (health assessment) perspectives into one document. The formal 10-section schema itself. For a first exploration-heavy snapshot of an unfamiliar repo, use `repo-status`; for routinely updating an existing STATUS.md, use `status-writing`. Use when: "write a status report", "give me the lay of the land", "where are we right now", "prepare a handoff document", "document the current codebase state".
 category: repo-docs-health
 
 inputs:

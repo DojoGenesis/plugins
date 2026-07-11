@@ -1,7 +1,7 @@
 ---
 name: maestro-orchestration
 model: opus
-description: "Conductor agent pattern that decomposes complex tasks, dispatches specialist sub-agents, manages dependencies, and synthesizes results into a unified deliverable. Use when: 'coordinate multiple specialist agents', 'orchestrate a complex multi-phase task', 'run a conductor pattern across agents', 'this task needs live agent coordination', 'decompose and dispatch to sub-agents'."
+description: "Conductor agent pattern that decomposes complex tasks, dispatches specialist sub-agents, manages dependencies, and synthesizes results into a unified deliverable. One specific orchestration pattern — a single conductor coordinating specialists. Use directly when that shape already fits; use `orchestration-pattern-selector` first if unsure, or `agent-dispatch-playbook` to plan a general parallel dispatch's mechanics. Use when: 'coordinate multiple specialist agents', 'orchestrate a complex multi-phase task', 'run a conductor pattern across agents', 'this task needs live agent coordination', 'decompose and dispatch to sub-agents'."
 category: dispatch-coordinate
 metadata:
   version: "1.1"

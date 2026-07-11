@@ -275,7 +275,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.4.0** — 99 first-party skills, all rated A+, organized into 12 semantic clusters.
+**1.4.1** — 99 first-party skills, all rated A+, organized into 12 semantic clusters.
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

@@ -1,7 +1,7 @@
 ---
 name: seed-extraction
 model: opus
-description: Produces a seed file — a YAML-fronted markdown document capturing a reusable pattern with trigger, evidence, and application steps — from a conversation or project experience. Use when: "extract the learnings", "turn this into a seed", "what can we learn from this", "capture this insight", "document this pattern".
+description: Produces a seed file — a YAML-fronted markdown document capturing a reusable pattern with trigger, evidence, and application steps — from a conversation or project experience. For the fuller lifecycle (plant, harvest, search, elevate to skill) in one lean skill, use `dojo-craft:seed-curator`. Use when: "extract the learnings", "turn this into a seed", "what can we learn from this", "capture this insight", "document this pattern".
 category: seed-lifecycle
 
 inputs:

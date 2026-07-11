@@ -2,7 +2,7 @@
 name: convergence-checker
 version: "1.0.0"
 model: sonnet
-description: "Runs a convergence gate: counts dirty files, sessions since last convergence, open items, and produces a triage report with RED/YELLOW/GREEN status. Use when: 'converge', 'convergence check', 'drift check', 'am I drifting'."
+description: "Runs a quick RED/YELLOW/GREEN triage: counts dirty files, sessions since last convergence, and open items — diagnosis only, not the remediation session. For the full structured 7-phase convergence session, use full version `system-health:convergence-gate`. Use when: 'converge', 'convergence check', 'drift check', 'am I drifting'."
 triggers:
   - "converge"
   - "convergence check"

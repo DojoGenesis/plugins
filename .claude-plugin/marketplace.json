@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "A practice space for building better software through patient cultivation. 99 skills organized into 10 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.4.0",
+    "version": "1.4.1",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -48,7 +48,7 @@
     {
       "name": "dojo-craft",
       "source": "./plugins/dojo-craft",
-      "description": "The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. DojoCraft turns scattered orchestration patterns into repeatable craft."
+      "description": "The lean workbench — single-file variants of six flagship skills (scout-writer, convergence-checker, community-claude-md-guardian, codebase-viewer, memory-curator, seed-curator) for when you want the output fast and self-contained, plus two skills unique to DojoCraft: adr-writer and project-scaffolder."
     },
     {
       "name": "pretext-pdf",

@@ -1,7 +1,7 @@
 ---
 name: convergence-gate
 model: opus
-description: Runs a structured 7-phase convergence session to arrest strategic drift after 3-4 Sonnet feature sessions. Use when the drift-detector fires YELLOW or RED, or when you notice accumulating uncommitted state, deferred validations, and growing open-items lists.
+description: Runs a structured 7-phase convergence session to arrest strategic drift after 3-4 Sonnet feature sessions — the full remediation, not just a status check (for a quick RED/YELLOW/GREEN triage first, use `dojo-craft:convergence-checker`). Use when the drift-detector fires YELLOW or RED, or when you notice accumulating uncommitted state, deferred validations, and growing open-items lists.
 category: repo-docs-health
 version: 1.1.0
 tags: [convergence, drift, hygiene, governance]

@@ -1,7 +1,7 @@
 ---
 name: codebase-cartography
 model: sonnet
-description: Produces a structured codebase map — directory roles, entry points, dependency graph, architectural patterns, and dragon locations — for any unfamiliar repository. Use when: 'map this codebase for me', 'I need to understand this repo before I start', 'give me a reading order for this project', 'where are the dragons in this code'.
+description: Produces a structured codebase map — directory roles, entry points, dependency graph, architectural patterns, and dragon locations — for any unfamiliar repository. Canonical version (adds a defined reading-order output); `dojo-craft:codebase-viewer` is the single-file lean variant with the same core output. Use when: 'map this codebase for me', 'I need to understand this repo before I start', 'give me a reading order for this project', 'where are the dragons in this code'.
 license: proprietary
 category: understand-codebase
 

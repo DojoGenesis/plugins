@@ -1,7 +1,7 @@
 ---
 name: compression-ritual
 model: sonnet
-description: Produces markdown memory artifacts (conversation summaries, seed files, philosophical reflections, doc updates) and a dated compression log by distilling a long conversation into its essential decisions and learnings. Use when: "compress this context", "distill this conversation", "create a memory artifact", "condense this history", "extract key wisdom before handoff".
+description: Produces markdown memory artifacts (conversation summaries, seed files, philosophical reflections, doc updates) and a dated compression log by distilling a long conversation into its essential decisions and learnings. For the lighter, routine end-of-session wrap-up, use `session-compression` instead — this skill is for a long conversation that needs the fuller multi-artifact treatment. Use when: "compress this context", "distill this conversation", "create a memory artifact", "condense this history", "extract key wisdom before handoff".
 category: remember-continue
 
 inputs:

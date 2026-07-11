@@ -1,7 +1,7 @@
 ---
 name: status-writing
 model: sonnet
-description: Produces an updated STATUS.md file as a single source of truth for project health — covering current state, active workstreams, blockers, and next steps. Use when: "create a status file", "update the project status", "document where we are", "what's the current state", "create a status dashboard".
+description: Produces an updated STATUS.md file as a single source of truth for project health — covering current state, active workstreams, blockers, and next steps. Routine update of an existing STATUS.md. For a first exploration-heavy snapshot of an unfamiliar repo, use `repo-status`; for the formal 10-section schema, use `status-template`. Use when: "create a status file", "update the project status", "document where we are", "what's the current state", "create a status dashboard".
 category: repo-docs-health
 
 inputs:

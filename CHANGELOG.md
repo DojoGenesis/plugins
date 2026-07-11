@@ -1,5 +1,40 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — Wave 3: dedupe-in-place (v1.4.1)
+
+### What happened
+
+No renames, no moves — descriptions and pointers only. dojo-craft is
+repositioned as the lean workbench (six single-file variants of flagship
+skills elsewhere, plus two skills unique to it) rather than an undifferentiated
+"practitioner's workbench," and every genuine near-duplicate pair surfaced by
+the Wave 2 clustering pass now states its own boundary in its frontmatter
+`description:` — the actual trigger surface skill dispatch reads, not just
+the README table.
+
+### Changes
+
+- **`.claude-plugin/marketplace.json`**: dojo-craft's description rewritten
+  to the lean-workbench framing, naming all six flagship pointers and the
+  two unique skills.
+- **`plugins/dojo-craft/README.md`**: rewritten — the skill table was
+  showing only 4 of 8 skills and mis-named `community-claude-md-guardian` as
+  `claude-md-guardian`; now lists all 8 with a "Full version" pointer column,
+  and the "When to use" section covers all 8 instead of 4.
+- **24 SKILL.md descriptions sharpened** with their twin's boundary + a
+  "Full version: `plugin:skill`" pointer where applicable — the 6
+  dojo-craft/flagship pairs (scout-writer/strategic-scout,
+  convergence-checker/convergence-gate,
+  community-claude-md-guardian/claude-md-guardian,
+  codebase-viewer/codebase-cartography, memory-curator/memory-garden,
+  seed-curator/seed-extraction), compression-ritual/session-compression,
+  parallel-tracks/parallel-dispatch, web-research/web-research-external, the
+  status trio (repo-status/status-template/status-writing), and the
+  dispatch-shape trio (agent-dispatch-playbook/orchestration-pattern-selector/
+  maestro-orchestration). All description edits verified single-line,
+  under the 1024-char lint cap, no unrelated content touched.
+- **marketplace.json + README version**: 1.4.0 → 1.4.1.
+
 ## 2026-07-11 — Wave 2: semantic cluster navigation layer (v1.4.0)
 
 ### What happened

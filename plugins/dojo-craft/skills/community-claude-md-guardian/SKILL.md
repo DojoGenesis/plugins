@@ -2,7 +2,7 @@
 name: community-claude-md-guardian
 version: "1.0.0"
 model: sonnet
-description: "Audits CLAUDE.md files for conflicts, stale rules, missing sections, and cross-file coherence. Produces a health report with auto-fix suggestions. Use when: 'check claude.md', 'audit CLAUDE.md', 'fix claude.md', 'claude md health'."
+description: "Audits CLAUDE.md files for conflicts, stale rules, missing sections, and cross-file coherence. Produces a health report with auto-fix suggestions — audit only, no enforcement mechanism. Full version (adds a PreToolUse hook to enforce the ruleset going forward): `system-health:claude-md-guardian`. Use when: 'check claude.md', 'audit CLAUDE.md', 'fix claude.md', 'claude md health'."
 triggers:
   - "check claude.md"
   - "audit CLAUDE.md"

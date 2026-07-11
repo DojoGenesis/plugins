@@ -1,7 +1,7 @@
 ---
 name: parallel-tracks
 model: sonnet
-description: Produces a parallel-tracks execution plan with phased structure, self-contained track specifications, integration contracts, and a mandatory wiring gate. Use when 'split into parallel tracks', 'organize these tracks into phases', or 'plan parallel development for this release'.
+description: Produces a parallel-tracks execution plan with phased structure, self-contained track specifications, integration contracts, and a mandatory wiring gate. Plans the split before any agent runs — the spec-side artifact. To actually dispatch and verify the agents once tracks are planned, use `agent-orchestration:parallel-dispatch`. Use when 'split into parallel tracks', 'organize these tracks into phases', or 'plan parallel development for this release'.
 category: specify-commission
 
 inputs:

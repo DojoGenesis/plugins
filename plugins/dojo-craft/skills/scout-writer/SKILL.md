@@ -2,7 +2,7 @@
 name: scout-writer
 version: "1.0.1"
 model: sonnet
-description: "Produces a scout document: identifies a tension, generates 3-5 distinct routes with tradeoffs, synthesizes a recommendation, and proposes a first action. Use when: 'scout this', 'strategic scout', 'explore options for', 'what are the routes'."
+description: "Produces a scout document: identifies a tension, generates 3-5 distinct routes with tradeoffs, synthesizes a recommendation, and proposes a first action. Lean single-file variant with no scout-to-spec pipeline scaffolding — full version: `strategic-thinking:strategic-scout`. Use when: 'scout this', 'strategic scout', 'explore options for', 'what are the routes'."
 triggers:
   - "scout this"
   - "strategic scout"

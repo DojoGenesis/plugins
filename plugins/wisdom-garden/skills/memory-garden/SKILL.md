@@ -1,7 +1,7 @@
 ---
 name: memory-garden
 model: sonnet
-description: Writes a structured memory entry to the garden — daily note (Tier A), curated wisdom update (Tier B), or monthly compressed archive (Tier C) — based on conversation insights. Use when: "remember this pattern", "save this insight", "add to memory garden", "write a memory entry", "record this learning".
+description: Writes a structured memory entry to the garden — daily note (Tier A), curated wisdom update (Tier B), or monthly compressed archive (Tier C) — based on conversation insights. Plants new entries; for pruning, deduplicating, or maintaining the existing MEMORY.md index, use `dojo-craft:memory-curator`. Use when: "remember this pattern", "save this insight", "add to memory garden", "write a memory entry", "record this learning".
 category: remember-continue
 
 inputs:

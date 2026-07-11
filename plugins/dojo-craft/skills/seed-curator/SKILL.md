@@ -1,6 +1,6 @@
 ---
 name: seed-curator
-description: "Seed lifecycle management: plant new seeds from experiences, harvest insights from sessions, search the seed library, and elevate proven seeds to skills."
+description: "Seed lifecycle management: plant new seeds from experiences, harvest insights from sessions, search the seed library, and elevate proven seeds to skills — the fuller lifecycle in one lean skill. For producing a single seed file only, use full version `wisdom-garden:seed-extraction`."
 triggers:
   - "manage seeds"
   - "curate seeds"
