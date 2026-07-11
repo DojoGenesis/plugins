@@ -29,6 +29,14 @@ table for the boundary between them), **MISFILED** = the skill's function
 belongs to this cluster even though its plugin doesn't, **X** = the skill's
 function legitimately spans plugins.
 
+**These flags are descriptive, not a to-do list.** A MISFILED or DUP skill is
+grouped by its `category:` metadata and these tables — it is deliberately NOT
+physically relocated. Moving a skill to "fix" its cluster changes its invoke
+name (`plugin:skill`) and breaks every caller, so cluster membership is carried
+by metadata, never by directory location. (This was tried once — moving
+`mcp-builder` and `supply-chain-refresh` into `skill-forge` — and reverted for
+exactly this reason; they stay in `system-health`.)
+
 - **scout-position** — strategic-thinking:strategic-scout, strategic-thinking:iterative-scouting, strategic-thinking:product-positioning, strategic-thinking:multi-surface-strategy, strategic-thinking:strategic-to-tactical-workflow, dojo-craft:scout-writer (DUP of strategic-thinking:strategic-scout)
 - **specify-commission** — specification-driven-development:specification-writer, specification-driven-development:release-specification, specification-driven-development:frontend-from-backend, specification-driven-development:codebase-audit-grounding, specification-driven-development:context-ingestion, specification-driven-development:planning-with-files, specification-driven-development:pre-implementation-checklist, specification-driven-development:pre-commission-alignment, specification-driven-development:implementation-prompt, specification-driven-development:zenflow-prompt-writer, specification-driven-development:spec-constellation-to-prompt-suite, specification-driven-development:parallel-tracks, specification-driven-development:gap-audit-then-fix, continuous-learning:era-architecture (MISFILED)
 - **dispatch-coordinate** — agent-orchestration:agent-dispatch-playbook, agent-orchestration:parallel-dispatch, agent-orchestration:async-agent-dispatch, agent-orchestration:audit-sweep-dispatch, agent-orchestration:maestro-orchestration, agent-orchestration:orchestration-pattern-selector, agent-orchestration:workflow-router, agent-orchestration:handoff-protocol, agent-orchestration:agent-teaching, agent-orchestration:workspace-navigation, agent-orchestration:granular-visibility, agent-orchestration:decision-propagation

@@ -1,5 +1,34 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — Cluster membership is metadata-only, never a physical move (v1.4.2)
+
+### What happened
+
+A Wave 4 was briefly implemented — physically moving `mcp-builder` and
+`supply-chain-refresh` from `system-health` into `skill-forge` to match their
+`forge` cluster — and then **reverted before it left this machine**, because
+it is a breaking change: it renames `system-health:mcp-builder` →
+`skill-forge:mcp-builder` (and the same for `supply-chain-refresh`), which
+breaks every caller of the old invoke name. The forge-cluster grouping those
+skills need is already fully carried by their `category: forge` metadata and
+the cluster tables (added in Wave 2), so the move bought zero semantic value
+at the cost of a real break. The two skills stay in `system-health`.
+
+### The rule (now documented so it isn't re-attempted)
+
+Cluster membership is a **lens**, expressed only through `category:` metadata
+and the navigation tables — a `MISFILED` or `DUP` flag is descriptive, never a
+to-do. Skills are never relocated between plugins to "fix" a cluster, because
+the directory *is* the invoke name (`plugin:skill`). Recorded at the point of
+temptation in `llms.txt` (`## Clusters` legend) and `README.md` (the cluster
+section intro).
+
+### Changes
+
+- **`llms.txt`** + **`README.md`**: added the metadata-only / no-physical-move
+  policy note beside the cluster flag legend.
+- **marketplace.json + README version**: 1.4.1 → 1.4.2.
+
 ## 2026-07-11 — Wave 3: dedupe-in-place (v1.4.1)
 
 ### What happened

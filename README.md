@@ -76,6 +76,11 @@ directory holds them. Every registered skill's `category:` frontmatter is
 one of these 12 ids (enforced by `scripts/plugin-lint.py`); see the full
 `plugin:skill` roster with DUP/MISFILED/X flags in [llms.txt](llms.txt#clusters).
 
+A cluster is a *lens*, not a filing system: membership lives in a skill's
+`category:` metadata, and skills are **never** physically moved between plugins
+to match a cluster — that would change the `plugin:skill` invoke name and break
+callers. The `misfiled`/`dup` notes below are descriptive, not a to-do list.
+
 | Cluster | Use when you need to... | Home plugin(s) |
 |---|---|---|
 | **scout-position** | map a decision landscape before committing | strategic-thinking (+1 dojo-craft dup) |
@@ -275,7 +280,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.4.1** — 99 first-party skills, all rated A+, organized into 12 semantic clusters.
+**1.4.2** — 99 first-party skills, all rated A+, organized into 12 semantic clusters. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications
