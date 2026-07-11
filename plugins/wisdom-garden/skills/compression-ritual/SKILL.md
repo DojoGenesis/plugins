@@ -18,10 +18,11 @@ outputs:
 
 # Context Compression Ritual Skill
 
-**Version:** 1.0  
+**Version:** 1.1  
 **Created:** 2026-02-04  
+**Updated:** 2026-07-11 — added Step 7: Close Out the Session (handoff / next-step options / clean close)  
 **Author:** Manus AI  
-**Purpose:** To provide a mindful, repeatable ritual for compressing long conversation histories into smaller, more potent memory artifacts, thus preserving wisdom while preventing context window overload.
+**Purpose:** To provide a mindful, repeatable ritual for compressing long conversation histories into smaller, more potent memory artifacts — and to close the session cleanly, so that wisdom is preserved, context overload is prevented, and no carry-forward work is silently lost.
 
 ---
 
@@ -89,6 +90,35 @@ Commit the new artifacts to the repository with a clear commit message.
 **Commit Message Convention:**
 `feat(memory): Compress conversation from [Date]`
 
+### Step 7: Close Out the Session
+
+Compression preserves what *happened*; close-out decides what happens *next*. The ritual is not finished until every open thread has a disposition. Before ending, resolve the session into one of three — and never leave it dangling with unstated carry-forward.
+
+| Disposition | Choose when | Produce |
+| :--- | :--- | :--- |
+| **Hand off** | Work remains for a later session, the *other* machine, or the operator | `handoffs/YYYY-MM-DD_slug.md` (+ a Linear issue if operator-owned) |
+| **Next-step options** | Natural pause; clear continuations exist but nothing needs a formal handoff | A 2–4 item menu, one line each, for the operator to pick |
+| **Clean close** | The thread is complete and nothing is pending | A one-line recap + an explicit "nothing left dangling" + an honest sign-off |
+
+These are **not exclusive** — a session may write a handoff *and* offer next steps. Choose every disposition that applies, then end.
+
+**7a. Carry-forward work → write a handoff.**
+If work remains that another session, the other machine (Mac ↔ Windows), or the operator must pick up, write a handoff so it is not silently lost. Match the workspace's real mechanism — do not invent a format:
+
+-   **File:** `handoffs/YYYY-MM-DD_short-slug.md` (the filename stem must equal the frontmatter `id`).
+-   **Frontmatter** (one `key: value` per line; `scope` is inline JSON on one line): `id`, `title`, `created`, `created-by` (`mac`|`windows`), `target-machine` (`mac`|`windows`|`any`), `type`, `priority`, `accept-policy`, `scope`. Full contract: `handoffs/README.md` + `handoffs/DESIGN.md`.
+-   **`accept-policy`** picks the trust level: `notify` (needs human judgment — decisions, reviews), `chip` (most real work — queued for the next session to spin up), `auto` (pre-approved idempotent installers only). Default to `notify` when unsure.
+-   **Body:** `## Why` · `## Do this` · `## Verify` · `## Rollback`.
+-   **Mac caveat (important):** authoring `handoffs/*.md` with the Write/Edit tool is blocked by a PreToolUse guard — the harness would mangle the frontmatter (nest `scope` under `metadata:`, destroy the inline JSON). On Mac, write the file with a shell heredoc instead, then run `python3 scripts/handoff-register.py --on-write handoffs/<id>.md`, then commit (the auto-push hook sends it). Windows is unaffected.
+-   For a richer package (objective, required-context file list, definition-of-done, constraints), invoke the `handoff-protocol` skill and land its output as the handoff body.
+-   Mirror anything operator-owned into **Linear** (the task system of record): create or update the issue, label `BringItCruz!` (operator-only) or `agent` (Claude can do it).
+
+**7b. No handoff, but clear continuations → offer next-step options.**
+When the thread is at a natural pause with obvious next moves but nothing that must be *formally* handed off, present a short menu — 2 to 4 concrete options, one line each, each a real action the operator could pick — and stop. Let them choose the direction rather than assuming it.
+
+**7c. Nothing pending → close cleanly.**
+When the thread is genuinely complete and nothing is carried forward, close **neatly, politely, and honestly**: name what was accomplished in a sentence, confirm explicitly that nothing is left dangling, and sign off. Honesty is the rule of the close — do not manufacture next steps, invent urgency, or pad the ending to seem busy. If it is done, say it is done. A clean, quiet close is the natural completion of the Art of Letting Go.
+
 ---
 
 ## IV. Compression Log Template
@@ -139,6 +169,7 @@ Commit the new artifacts to the repository with a clear commit message.
 - One or more markdown files written to their appropriate locations (`thinking/`, `conversations/`, `seeds/`, or `docs/`)
 - A compression log at `thinking/YYYY-MM-DD_compression_log.md` documenting what was compressed, what was retained, and what was released
 - A git commit with message `feat(memory): Compress conversation from [Date]`
+- **A session disposition (Step 7):** a handoff at `handoffs/YYYY-MM-DD_slug.md` for carry-forward work, a short next-step options menu, and/or a clean honest sign-off — whichever apply
 
 ## Examples
 
@@ -146,15 +177,25 @@ Commit the new artifacts to the repository with a clear commit message.
 
 **Scenario 2:** User says "extract key wisdom before we hand this off" → ritual reads the conversation, writes a `conversations/handoff-summary.md` with key decisions and unresolved questions, and one new seed file, then commits.
 
+**Scenario 3 (close-out — hand off):** Session ends with a migration half-finished that the Windows machine must complete → ritual compresses as usual, then in Step 7 writes `handoffs/2026-07-11_finish-migration.md` (`target-machine: windows`, `accept-policy: chip`) with `Why`/`Do this`/`Verify`/`Rollback`, opens a Linear issue labeled `agent`, and closes by naming the handoff.
+
+**Scenario 4 (close-out — next steps):** Session reaches a natural pause; nothing must be formally handed off → ritual compresses, then offers a 2–4 item menu ("(a) wire the new endpoint into the gateway, (b) write tests for the parser, (c) draft the ADR") and stops for the operator to choose.
+
+**Scenario 5 (close-out — clean close):** A short, fully-resolved session → ritual notes compression is optional, and closes neatly and honestly: one-line recap, an explicit "nothing is left dangling," and a brief sign-off. No invented next steps.
+
 ## Edge Cases
 
 - If the conversation is fewer than 20 turns, note that compression is optional and ask whether the user wants to proceed anyway.
 - If a compression log already exists for today's date, append to it rather than creating a duplicate.
+- If it is unclear whether work should be handed off, default to **writing the handoff** — an unclaimed thread is cheaper to close later than a dropped one is to recover. When genuinely nothing carries forward, prefer the clean close over inventing a handoff.
+- On the Mac, never author `handoffs/*.md` with the Write/Edit tool (a PreToolUse guard blocks it and would corrupt the frontmatter) — use a shell heredoc + `python3 scripts/handoff-register.py --on-write`, then commit.
 
 ## Anti-Patterns
 
 - Skipping the compression log — without the log, there is no record of what was released, making the compression irreversible and opaque.
 - Writing raw transcript excerpts into the artifact files — compression means distillation to essence, not copy-paste of conversation turns.
+- Ending the session with no disposition — leaving carry-forward work unstated so it is silently lost is the failure Step 7 exists to prevent.
+- Manufacturing next steps or fake urgency at the close — if the thread is done, an honest clean close is correct; padding it to seem busy is dishonest and adds noise.
 
 ---
 
@@ -169,6 +210,8 @@ Before closing the ritual, verify:
 - [ ] All artifacts are linked to one another where relevant (reflection → conversation, seed → reflection)
 - [ ] The git commit has been made with message `feat(memory): Compress conversation from [Date]`
 - [ ] The resulting context (if continuing) is meaningfully shorter and cleaner than before the ritual
+- [ ] **Step 7 disposition is set:** carry-forward work has a handoff (correct frontmatter + `accept-policy`; Linear issue if operator-owned), or next-step options were offered, or the session was closed cleanly — and no open thread was left dangling
+- [ ] Any close-out that claims "done" is honest — no invented next steps, no manufactured urgency
 
 ---
 

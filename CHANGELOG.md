@@ -1,5 +1,16 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — compression-ritual gains a session close-out (Step 7)
+
+### What happened
+
+The `wisdom-garden` `compression-ritual` skill now closes the session, not just the context. After compressing, **Step 7: Close Out the Session** resolves every open thread into one of three dispositions — **hand off** (write a `handoffs/YYYY-MM-DD_slug.md` wired to this workspace's real handoff contract + Linear), **offer next-step options** (a 2–4 item menu for the operator to pick), or **clean close** (an honest one-line recap + explicit "nothing left dangling"). The rule of the close is honesty: no manufactured next steps, no fake urgency.
+
+### Changes
+
+- **`plugins/wisdom-garden/skills/compression-ritual/SKILL.md`**: added Step 7 (disposition table + 7a handoff / 7b next-steps / 7c clean-close), extended Output / Examples (scenarios 3–5) / Edge Cases / Anti-Patterns / Quality Checklist; internal doc version 1.0 → 1.1.
+- **`plugins/wisdom-garden/.claude-plugin/plugin.json`**: version 1.0.3 → 1.1.0.
+
 ## 2026-07-04 — bring-loop joins the marketplace
 
 ### What happened
