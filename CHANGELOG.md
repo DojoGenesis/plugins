@@ -1,5 +1,35 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — Wave 1: reconcile faces to disk truth (v1.3.1)
+
+### What happened
+
+The root README's per-plugin skill-count table had drifted from disk truth
+without tripping `face-parity.py`, because that gate's corpus-scale sweep
+exempts any number at or below the largest single plugin's count — exactly
+the range a per-plugin table lives in. Four rows were stale (agent-orchestration
+10→12, specification-driven-development 12→13, system-health 19→20,
+wisdom-garden 13→14; table summed to ~94 against a correct 99 headline). The
+Directory Structure diagram was worse: dojo-craft's 8 skills were mis-nested
+under the `bring-loop/skills/` heading, one referenced a nonexistent
+`claude-md-guardian` directory (actual: `community-claude-md-guardian`), and
+most plugins' skill lists were partial (e.g. system-health showed 6 of 20).
+STATUS.md was five months stale, still claiming 7 plugins / 44 skills / v1.1.0.
+
+### Changes
+
+- **`README.md`**: per-plugin table reconciled to disk truth (99 across 10
+  plugins, verified per-row); Directory Structure diagram rewritten to list
+  every plugin's actual skill set with correct nesting; version line → 1.3.1.
+- **`STATUS.md`**: body replaced with a pointer stub (README.md +
+  CHANGELOG.md + the two gate scripts) that carries no hardcoded counts of
+  its own, so it cannot drift the way the previous dashboard did.
+- **`scripts/face-parity.py`**: new check — README's per-plugin table rows
+  are now validated against disk-computed per-plugin skill counts directly,
+  closing the exemption gap that let this drift survive undetected. Stale
+  `~599` comment corrected to the verified `597`. Checks renumbered 1–6.
+- **`.claude-plugin/marketplace.json`**: version 1.3.0 → 1.3.1.
+
 ## 2026-07-11 — compression-ritual gains a session close-out (Step 7)
 
 ### What happened

@@ -50,13 +50,13 @@ Or via the Dojo MCP tools: `dojo.list_skills`, `dojo.search_skills`, `dojo.invok
 
 | Plugin | Verb | Skills | What it does |
 |--------|------|--------|--------------|
-| [agent-orchestration](plugins/agent-orchestration/) | ORCHESTRATE | 10 | Multi-agent coordination: parallel dispatch, delegation playbooks, handoff protocols, decision propagation. Handoffs are sacred relays, not tosses over the wall. |
+| [agent-orchestration](plugins/agent-orchestration/) | ORCHESTRATE | 12 | Multi-agent coordination: parallel dispatch, delegation playbooks, handoff protocols, decision propagation. Handoffs are sacred relays, not tosses over the wall. |
 | [continuous-learning](plugins/continuous-learning/) | LEARN | 13 | Research modes (deep/wide/web), project exploration, synthesis, retrospectives, era architecture, codebase cartography, TLDR code analysis. |
 | [skill-forge](plugins/skill-forge/) | BUILD | 9 | The meta-layer — skills about making skills. Create, maintain, audit, batch-normalize community skills, build MCP servers. |
-| [specification-driven-development](plugins/specification-driven-development/) | SPECIFY | 12 | Spec writing grounded in codebase reality: release specs, parallel tracks, frontend-from-backend, implementation prompts, pre-commission alignment. |
+| [specification-driven-development](plugins/specification-driven-development/) | SPECIFY | 13 | Spec writing grounded in codebase reality: release specs, parallel tracks, frontend-from-backend, implementation prompts, pre-commission alignment. |
 | [strategic-thinking](plugins/strategic-thinking/) | STRATEGIZE | 6 | Scout tensions before committing: product positioning, iterative scouting, multi-surface strategy, adversarial review, strategic-to-tactical workflow. |
-| [system-health](plugins/system-health/) | OBSERVE | 19 | Audit ecosystem health: documentation audit, health audit, observability dashboard, repo status, semantic clusters, supply chain refresh, budget guard. |
-| [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 13 | Compress session context into lasting memory: compression ritual, memory garden, seed extraction, system prompt archaeology, session continuity ledger. |
+| [system-health](plugins/system-health/) | OBSERVE | 20 | Audit ecosystem health: documentation audit, health audit, observability dashboard, repo status, semantic clusters, supply chain refresh, budget guard. |
+| [wisdom-garden](plugins/wisdom-garden/) | REMEMBER | 14 | Compress session context into lasting memory: compression ritual, memory garden, seed extraction, system prompt archaeology, session continuity ledger. |
 | [pretext-pdf](plugins/pretext-pdf/) | PUBLISH | 2 | Export structured documents to print-quality PDF using the Pretext layout engine. Zero-reflow typography, adaptive pagination, auto table of contents. |
 | [dojo-craft](plugins/dojo-craft/) | CRAFT | 8 | The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. |
 | [bring-loop](plugins/bring-loop/) | BRING | 2 | Gate your outward loop like your build loop: one send/decision/close a day, staged by the agent, executed by you, measured in honest separate streams. The BringItCruz! effect, generalized. |
@@ -73,53 +73,54 @@ plugins/
 │   ├── agents/
 │   ├── commands/
 │   ├── hooks/
-│   └── skills/
+│   └── skills/                   (12)
 │       ├── agent-dispatch-playbook/SKILL.md
 │       ├── agent-teaching/SKILL.md
 │       ├── async-agent-dispatch/SKILL.md
+│       ├── audit-sweep-dispatch/SKILL.md
 │       ├── decision-propagation/SKILL.md
 │       ├── granular-visibility/SKILL.md
 │       ├── handoff-protocol/SKILL.md
 │       ├── maestro-orchestration/SKILL.md
+│       ├── orchestration-pattern-selector/SKILL.md
 │       ├── parallel-dispatch/SKILL.md
 │       ├── workflow-router/SKILL.md
 │       └── workspace-navigation/SKILL.md
-├── continuous-learning/skills/
-│   ├── codebase-cartography/    ├── debugging/
-│   ├── era-architecture/        ├── project-exploration/
-│   ├── research-modes/          ├── research-synthesis/
-│   ├── retrospective/           └── tldr-code-analysis/
-├── skill-forge/skills/
-│   ├── batch-normalize-and-package/  ├── mcp-server-builder/
-│   ├── normalize-community-skill/    ├── scan-community-repos/
-│   ├── skill-creation/               └── skill-maintenance/
-├── specification-driven-development/skills/
-│   ├── context-ingestion/            ├── frontend-from-backend/
-│   ├── implementation-prompt/        ├── parallel-tracks/
-│   ├── pre-commission-alignment/     ├── pre-implementation-checklist/
-│   ├── release-specification/        └── specification-writer/
-├── strategic-thinking/skills/
-│   ├── adversarial-reviewer/     ├── iterative-scouting/
-│   ├── multi-surface-strategy/   ├── product-positioning/
-│   └── strategic-scout/
-├── system-health/skills/
-│   ├── documentation-audit/      ├── health-audit/
-│   ├── observability-dashboard/  ├── repo-status/
-│   ├── semantic-clusters/        └── supply-chain-refresh/
-├── wisdom-garden/skills/
-│   ├── compression-ritual/       ├── memory-garden/
-│   ├── seed-extraction/          ├── seed-to-skill-converter/
-│   └── system-prompt-archaeology/
-├── pretext-pdf/skills/
+├── continuous-learning/skills/   (13) — codebase-cartography, debugging, design-system-selector,
+│                                      era-architecture, figma-to-code, patient-learning-protocol,
+│                                      project-exploration, research-modes, research-synthesis,
+│                                      retrospective, tldr-code-analysis, web-research, web-research-external
+├── skill-forge/skills/           (9)  — batch-normalize-and-package, file-management, mcp-cloudflare-builder,
+│                                      mcp-server-builder, normalize-community-skill, process-extraction,
+│                                      scan-community-repos, skill-creation, skill-maintenance
+├── specification-driven-development/skills/  (13) — codebase-audit-grounding, context-ingestion,
+│                                      frontend-from-backend, gap-audit-then-fix, implementation-prompt,
+│                                      parallel-tracks, planning-with-files, pre-commission-alignment,
+│                                      pre-implementation-checklist, release-specification,
+│                                      spec-constellation-to-prompt-suite, specification-writer, zenflow-prompt-writer
+├── strategic-thinking/skills/    (6)  — adversarial-reviewer, iterative-scouting, multi-surface-strategy,
+│                                      product-positioning, strategic-scout, strategic-to-tactical-workflow
+├── system-health/skills/         (20) — agent-performance-report, budget-guard, build-sweep, claude-md-guardian,
+│                                      convergence-gate, documentation-audit, health-audit, hooks-reference,
+│                                      mcp-builder, observability-dashboard, observability-dashboard-spec,
+│                                      pointer-directories, repo-context-sync, repo-status, semantic-clusters,
+│                                      skill-audit-upgrade, status-template, status-writing, supply-chain-refresh,
+│                                      tool-intercept-logger
+├── wisdom-garden/skills/         (14) — analyze-agent-behavior, build-intelligence-map, compression-ritual,
+│                                      continuity-ledger, ingest-system-prompt, memory-garden, reflect-and-learn,
+│                                      seed-extraction, seed-library, seed-to-skill-converter, session-compression,
+│                                      session-lifecycle-automation, system-prompt-archaeology, voice-before-structure
+├── pretext-pdf/skills/           (2)
 │   ├── pdf-export/SKILL.md
 │   └── pdf-typography/SKILL.md
-├── dojo-craft/skills/
-├── bring-loop/skills/
-│   ├── adr-writer/               ├── scout-writer/
-│   ├── claude-md-guardian/       ├── convergence-checker/
-│   ├── memory-curator/           ├── seed-curator/
-│   ├── codebase-viewer/          └── project-scaffolder/
-└── community-skills/             ← Community-contributed skills
+├── dojo-craft/skills/            (8)  — the lean workbench: single-file variants of six flagship skills
+│                                      (scout-writer, convergence-checker, community-claude-md-guardian,
+│                                      codebase-viewer, memory-curator, seed-curator) plus two unique skills
+│                                      (adr-writer, project-scaffolder)
+├── bring-loop/skills/            (2)
+│   ├── bring/SKILL.md
+│   └── bring-setup/SKILL.md
+└── community-skills/             ← community-contributed SKILL.md files, dormant-by-design
 ```
 
 Each plugin is self-contained with:
@@ -225,7 +226,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.3.0** — 99 first-party skills, all rated A+.
+**1.3.1** — 99 first-party skills, all rated A+.
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

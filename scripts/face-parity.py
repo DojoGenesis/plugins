@@ -22,9 +22,14 @@ Checks
      in marketplace.json or consciously allowlisted as unregistered
   3  count claims: every "N ... skills" / "N ... plugins" number in the three
      faces matches computed disk truth (numbers at per-plugin scale exempt)
-  4  llms.txt "## Plugins (N)" header + its bullet list match the registered
+  4  README's per-plugin table: each row's own skill count matches that
+     plugin's disk-computed count — closes the gap check 3 leaves open,
+     since per-plugin-scale numbers are exempt there by design (this is
+     exactly the drift vector that survived a 92-summed-to-94 table while
+     the corpus-scale headline read 99, undetected until a hand audit)
+  5  llms.txt "## Plugins (N)" header + its bullet list match the registered
      set exactly
-  5  README's version line matches marketplace.json metadata.version
+  6  README's version line matches marketplace.json metadata.version
 
 Exit 0 = CONTRACT PASS, 1 = CONTRACT FAIL. Stdlib only, by design — same
 posture as trespies-dev/scripts/validate_facet.py and the dag-essentials
@@ -43,7 +48,7 @@ LLMS = ROOT / "llms.txt"
 README = ROOT / "README.md"
 
 # Plugin dirs that hold a plugin.json but are deliberately NOT registered in
-# marketplace.json. community-skills: ~599 harvested skills, dormant by design
+# marketplace.json. community-skills: 597 harvested skills, dormant by design
 # (wholesale registration floods context budgets and fails plugin-lint; skills
 # are promoted individually into the registered plugins instead).
 ALLOWLIST_UNREGISTERED = {"community-skills"}
@@ -125,6 +130,36 @@ def main() -> int:
                 if n != total_plugins:
                     fail(f"{rel}:{lineno} plugins claim says {n}, registered count is {total_plugins}")
     ok(f"count claims: {claims_checked} corpus-scale claims swept across the three faces")
+
+    # ---- README per-plugin table parity -----------------------------------
+    # Check 3 exempts numbers <= per_plugin_max as "plausibly a per-plugin
+    # count" — that exemption is exactly where per-plugin drift survived
+    # undetected before. This check targets the table directly: every row's
+    # own claimed count must match that plugin's disk-computed skill count.
+    row_re = re.compile(
+        r"^\|\s*\[([a-z0-9-]+)\]\(plugins/[a-z0-9-]+/?\)\s*\|[^|]*\|\s*(\d+)\s*\|"
+    )
+    readme_text = README.read_text(encoding="utf-8")
+    found_rows: dict[str, int] = {}
+    for lineno, line in enumerate(readme_text.splitlines(), 1):
+        m = row_re.match(line)
+        if not m:
+            continue
+        name, claimed = m.group(1), int(m.group(2))
+        found_rows[name] = lineno
+        if name not in skills_per_plugin:
+            continue
+        actual = skills_per_plugin[name]
+        if claimed != actual:
+            fail(f"README.md:{lineno} per-plugin table says '{name}' has {claimed} skills, disk truth is {actual}")
+
+    missing_rows = set(registered) - set(found_rows)
+    if missing_rows:
+        fail(f"README.md per-plugin table missing row(s) for: {sorted(missing_rows)}")
+    elif found_rows:
+        ok(f"README.md per-plugin table: {len(found_rows)} rows match disk-computed per-plugin counts")
+    else:
+        fail("README.md: no per-plugin table rows found — table format may have changed")
 
     # ---- llms.txt plugin list parity -------------------------------------
     llms_text = LLMS.read_text(encoding="utf-8")
