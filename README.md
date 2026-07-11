@@ -4,7 +4,7 @@
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline. These plugins encode the discipline: battle-tested workflows from actually shipping software with autonomous agents.
 
-**99 skills. 40-50% timeline reduction. 77 hours saved through pre-flight verification alone.**
+**99 first-party methodology skills across 10 behavioral plugins — structured scaffolds for strategy, specs, orchestration, review, and memory.**
 
 ---
 
@@ -89,11 +89,11 @@ callers. The `misfiled`/`dup` notes below are descriptive, not a to-do list.
 | **remember-continue** | capture an insight or wrap up a session into memory | wisdom-garden (+1 dojo-craft dup) |
 | **seed-lifecycle** | extract, catalog, or elevate a reusable pattern | wisdom-garden (+1 dojo-craft dup) |
 | **system-prompt-intel** | ingest or reverse-engineer another agent's system prompt | wisdom-garden |
-| **repo-docs-health** | audit a repo's health, docs, or CLAUDE.md hierarchy | system-health (+3 dojo-craft dups, +1 misfiled) |
+| **repo-docs-health** | audit a repo's health, docs, or CLAUDE.md hierarchy | system-health (+2 dojo-craft dups, +1 misfiled) |
 | **agent-telemetry** | watch agent cost, behavior, or tool-call traces | system-health |
 | **learn-research** | research a question or retro a sprint | continuous-learning |
 | **understand-codebase** | get oriented in an unfamiliar codebase | continuous-learning (+1 dojo-craft dup) |
-| **forge** | build, maintain, or normalize a skill or MCP server | skill-forge (+3 misfiled, +1 spans) |
+| **forge** | build, maintain, or normalize a skill or MCP server | skill-forge (+2 misfiled, +2 span from other plugins) |
 | **govern-publish** | record a decision, scaffold a project, export a PDF, gate an outward send | dojo-craft, pretext-pdf, bring-loop |
 
 ### Twin Skills — Which One Do I Want?
@@ -193,15 +193,19 @@ Each skill is a `SKILL.md` file with YAML frontmatter:
 ```yaml
 ---
 name: release-specification
-plugin: specification-driven-development
-version: 2.1.0
-quality: A+
-description: Write release specs grounded in codebase reality
-model: sonnet          # sonnet for parsing/bulk, opus for architecture
-triggers:
-  - "write a spec for"
-  - "release specification"
-  - "before commissioning agents"
+model: opus            # sonnet for parsing/bulk, opus for architecture
+description: Produces a release specification grounded in codebase reality. Use when "write a release spec" or "create a specification for vX.X.X".
+category: specify-commission   # one of 12 cluster ids (enforced by scripts/plugin-lint.py)
+inputs:
+  - name: release_context
+    type: string
+    description: What the release should accomplish (version, goals, scope)
+    required: true
+outputs:
+  - name: release_spec
+    type: ref
+    format: cas-ref
+    description: The release specification document
 ---
 
 # Release Specification
@@ -280,7 +284,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.4.2** — 99 first-party skills, all rated A+, organized into 12 semantic clusters. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
+**1.4.3** — 99 first-party skills organized into 12 semantic clusters. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

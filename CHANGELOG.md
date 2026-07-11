@@ -1,5 +1,34 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — Pre-publish review fixes (v1.4.3)
+
+### What happened
+
+An independent pre-publish review (different model) flagged three things that
+would embarrass a public launch. All fixed; text-only, no structural change.
+
+### Changes
+
+- **`compression-ritual` Step 7 genericized** — the close-out step had hardcoded
+  one private workspace's handoff mechanism (dead `handoffs/README.md` /
+  `scripts/handoff-register.py` references, a `BringItCruz!` Linear label, a
+  Mac↔Windows topology) into a skill anyone installs. Reworked 7a, the
+  disposition table, scenario 3, an edge case, and the quality checklist to
+  "use your workspace's own handoff/task mechanism" — the three-disposition
+  design (hand off / next-step options / clean close) is unchanged.
+- **Cluster-flag counts reconciled** — `README.md` `repo-docs-health` said
+  "+3 dojo-craft dups" (truth: 2), `forge` said "+3 misfiled, +1 spans"
+  (truth: 2 misfiled + 2 span); the Wave 2 CHANGELOG entry said "two MISFILED"
+  then listed six. These are hand-carried annotations `face-parity` can't check.
+- **Unverifiable claims removed, frontmatter example corrected** — dropped
+  "all rated A+" (no skill carries a `quality:` field) and the unsourced
+  "40-50% timeline reduction / 77 hours saved" tagline; rewrote the "How Skills
+  Work" example and the llms.txt "Skill format" list to the real schema
+  (`name` / `model` / `description` / `category` / `inputs` / `outputs`) — the
+  old example showed `plugin` / `version` / `quality` / `triggers` fields that
+  do not exist and omitted `category`, the field this release made lint-enforced.
+- **marketplace.json + README version**: 1.4.2 → 1.4.3.
+
 ## 2026-07-11 — Cluster membership is metadata-only, never a physical move (v1.4.2)
 
 ### What happened
@@ -74,7 +103,7 @@ Skills are grouped by what they *do* (scout-position, specify-commission,
 dispatch-coordinate, remember-continue, seed-lifecycle, system-prompt-intel,
 repo-docs-health, agent-telemetry, learn-research, understand-codebase,
 forge, govern-publish), not just which plugin directory holds them —
-surfacing dojo-craft's DUPs, two MISFILED skills (era-architecture,
+surfacing dojo-craft's DUPs, six MISFILED skills (era-architecture,
 adversarial-reviewer, figma-to-code, design-system-selector, mcp-builder,
 supply-chain-refresh), and 3 skills whose function legitimately spans
 plugins (skill-audit-upgrade, hooks-reference, voice-before-structure).

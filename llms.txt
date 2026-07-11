@@ -53,9 +53,10 @@ exactly this reason; they stay in `system-health`.)
 ## Skill format
 
 Each skill lives at `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` with YAML frontmatter containing:
-- `name`, `description`, `version`, `quality` fields
-- `triggers` — when the skill should be invoked
+- `name`, `description` — what the skill is and when to use it
+- `category` — one of the 12 cluster ids (enforced by `scripts/plugin-lint.py`)
 - `model` — recommended Claude model (sonnet/opus split)
+- `inputs` / `outputs` — the skill's typed input/output contract
 - Full workflow steps as markdown
 
 ## How to use with LLMs

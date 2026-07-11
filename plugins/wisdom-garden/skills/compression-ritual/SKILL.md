@@ -96,22 +96,19 @@ Compression preserves what *happened*; close-out decides what happens *next*. Th
 
 | Disposition | Choose when | Produce |
 | :--- | :--- | :--- |
-| **Hand off** | Work remains for a later session, the *other* machine, or the operator | `handoffs/YYYY-MM-DD_slug.md` (+ a Linear issue if operator-owned) |
+| **Hand off** | Work remains for a later session, a different machine, or another person | a handoff note (+ a tracked task/issue if a person must act) |
 | **Next-step options** | Natural pause; clear continuations exist but nothing needs a formal handoff | A 2–4 item menu, one line each, for the operator to pick |
 | **Clean close** | The thread is complete and nothing is pending | A one-line recap + an explicit "nothing left dangling" + an honest sign-off |
 
 These are **not exclusive** — a session may write a handoff *and* offer next steps. Choose every disposition that applies, then end.
 
 **7a. Carry-forward work → write a handoff.**
-If work remains that another session, the other machine (Mac ↔ Windows), or the operator must pick up, write a handoff so it is not silently lost. Match the workspace's real mechanism — do not invent a format:
+If work remains that a later session, a different machine, or another person must pick up, write a handoff so it is not silently lost — using whatever handoff or task mechanism your workspace already has. Follow the workspace's convention; do not invent a competing format.
 
--   **File:** `handoffs/YYYY-MM-DD_short-slug.md` (the filename stem must equal the frontmatter `id`).
--   **Frontmatter** (one `key: value` per line; `scope` is inline JSON on one line): `id`, `title`, `created`, `created-by` (`mac`|`windows`), `target-machine` (`mac`|`windows`|`any`), `type`, `priority`, `accept-policy`, `scope`. Full contract: `handoffs/README.md` + `handoffs/DESIGN.md`.
--   **`accept-policy`** picks the trust level: `notify` (needs human judgment — decisions, reviews), `chip` (most real work — queued for the next session to spin up), `auto` (pre-approved idempotent installers only). Default to `notify` when unsure.
--   **Body:** `## Why` · `## Do this` · `## Verify` · `## Rollback`.
--   **Mac caveat (important):** authoring `handoffs/*.md` with the Write/Edit tool is blocked by a PreToolUse guard — the harness would mangle the frontmatter (nest `scope` under `metadata:`, destroy the inline JSON). On Mac, write the file with a shell heredoc instead, then run `python3 scripts/handoff-register.py --on-write handoffs/<id>.md`, then commit (the auto-push hook sends it). Windows is unaffected.
+-   **If your workspace defines a handoff format or registry, use it** (a `handoffs/` directory, an issue tracker, a ticket queue — check the project's conventions).
+-   **Otherwise, write a dated note** (e.g. `handoffs/YYYY-MM-DD_short-slug.md`) with a clear body: `## Why` · `## Do this` · `## Verify` · `## Rollback`. Name who or what picks it up next, and how urgent it is.
 -   For a richer package (objective, required-context file list, definition-of-done, constraints), invoke the `handoff-protocol` skill and land its output as the handoff body.
--   Mirror anything operator-owned into **Linear** (the task system of record): create or update the issue, label `BringItCruz!` (operator-only) or `agent` (Claude can do it).
+-   Mirror anything a person must act on into your task tracker (create or update the issue), so it stays visible outside this session.
 
 **7b. No handoff, but clear continuations → offer next-step options.**
 When the thread is at a natural pause with obvious next moves but nothing that must be *formally* handed off, present a short menu — 2 to 4 concrete options, one line each, each a real action the operator could pick — and stop. Let them choose the direction rather than assuming it.
@@ -177,7 +174,7 @@ When the thread is genuinely complete and nothing is carried forward, close **ne
 
 **Scenario 2:** User says "extract key wisdom before we hand this off" → ritual reads the conversation, writes a `conversations/handoff-summary.md` with key decisions and unresolved questions, and one new seed file, then commits.
 
-**Scenario 3 (close-out — hand off):** Session ends with a migration half-finished that the Windows machine must complete → ritual compresses as usual, then in Step 7 writes `handoffs/2026-07-11_finish-migration.md` (`target-machine: windows`, `accept-policy: chip`) with `Why`/`Do this`/`Verify`/`Rollback`, opens a Linear issue labeled `agent`, and closes by naming the handoff.
+**Scenario 3 (close-out — hand off):** Session ends with a migration half-finished that a later session must complete → ritual compresses as usual, then in Step 7 writes a dated `handoffs/…` note with `Why`/`Do this`/`Verify`/`Rollback`, opens a tracked issue for it, and closes by naming the handoff.
 
 **Scenario 4 (close-out — next steps):** Session reaches a natural pause; nothing must be formally handed off → ritual compresses, then offers a 2–4 item menu ("(a) wire the new endpoint into the gateway, (b) write tests for the parser, (c) draft the ADR") and stops for the operator to choose.
 
@@ -188,7 +185,7 @@ When the thread is genuinely complete and nothing is carried forward, close **ne
 - If the conversation is fewer than 20 turns, note that compression is optional and ask whether the user wants to proceed anyway.
 - If a compression log already exists for today's date, append to it rather than creating a duplicate.
 - If it is unclear whether work should be handed off, default to **writing the handoff** — an unclaimed thread is cheaper to close later than a dropped one is to recover. When genuinely nothing carries forward, prefer the clean close over inventing a handoff.
-- On the Mac, never author `handoffs/*.md` with the Write/Edit tool (a PreToolUse guard blocks it and would corrupt the frontmatter) — use a shell heredoc + `python3 scripts/handoff-register.py --on-write`, then commit.
+- If your workspace enforces a specific handoff-authoring path (a write guard, a registration script, a required tool), follow it rather than writing the file directly — check the project's conventions before authoring the handoff.
 
 ## Anti-Patterns
 
@@ -210,7 +207,7 @@ Before closing the ritual, verify:
 - [ ] All artifacts are linked to one another where relevant (reflection → conversation, seed → reflection)
 - [ ] The git commit has been made with message `feat(memory): Compress conversation from [Date]`
 - [ ] The resulting context (if continuing) is meaningfully shorter and cleaner than before the ritual
-- [ ] **Step 7 disposition is set:** carry-forward work has a handoff (correct frontmatter + `accept-policy`; Linear issue if operator-owned), or next-step options were offered, or the session was closed cleanly — and no open thread was left dangling
+- [ ] **Step 7 disposition is set:** carry-forward work has a handoff (in your workspace's format, with a tracked task if a person must act), or next-step options were offered, or the session was closed cleanly — and no open thread was left dangling
 - [ ] Any close-out that claims "done" is honest — no invented next steps, no manufactured urgency
 
 ---
