@@ -2,7 +2,7 @@
 name: convergence-gate
 model: opus
 description: Runs a structured 7-phase convergence session to arrest strategic drift after 3-4 Sonnet feature sessions. Use when the drift-detector fires YELLOW or RED, or when you notice accumulating uncommitted state, deferred validations, and growing open-items lists.
-category: system-health
+category: repo-docs-health
 version: 1.1.0
 tags: [convergence, drift, hygiene, governance]
 

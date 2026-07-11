@@ -3,7 +3,7 @@ name: hooks-reference
 model: sonnet
 description: Produces a hook script scaffold and settings.json registration block by looking up the correct lifecycle event, exit code pattern, and configuration for a Claude Code hook. Use when: "write a new hook", "hook is not firing", "block a tool call mechanically", "configure sub-agent coordination", "implement a security block pattern".
 license: proprietary
-category: system-health
+category: forge
 
 inputs:
   - name: hook_requirement

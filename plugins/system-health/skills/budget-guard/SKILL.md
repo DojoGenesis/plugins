@@ -3,7 +3,7 @@ name: budget-guard
 model: sonnet
 description: Produces a structured APPROVE / WARN / BLOCK decision by checking remaining token budget across query, session, and monthly tiers before an expensive operation runs. Use when: "is this operation within budget", "pre-flight check before web search", "budget alert fired", "before a multi-step pipeline", "session above 70% utilization".
 license: proprietary
-category: system-health
+category: agent-telemetry
 
 inputs:
   - name: operation_description

@@ -8,7 +8,7 @@ triggers:
   - "strategic scout"
   - "explore options for"
   - "what are the routes"
-category: dojo-craft
+category: scout-position
 
 inputs:
   - name: situation

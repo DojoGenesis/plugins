@@ -2,7 +2,7 @@
 name: patient-learning-protocol
 model: sonnet
 description: Breaks a learning goal into chunked sessions with comprehension gates before advancing. Use when: 'help me learn X step by step', 'I want to understand this deeply not quickly', 'teach me this properly', 'I keep forgetting what I just read', 'I feel overwhelmed by how much there is to learn'.
-category: continuous-learning
+category: learn-research
 
 inputs:
   - name: learning_goal

@@ -2,7 +2,7 @@
 name: system-prompt-archaeology
 model: sonnet
 description: Produces a named ADA disposition preset (YAML) and a layered behavioral analysis (structural decomposition + evidence-cited classifications) from a system prompt. Use when: "analyze this system prompt", "extract disposition from prompt", "reverse-engineer agent behavior", "what patterns does this prompt use", "build a preset from this prompt".
-category: wisdom-garden
+category: system-prompt-intel
 
 inputs:
   - name: system_prompt

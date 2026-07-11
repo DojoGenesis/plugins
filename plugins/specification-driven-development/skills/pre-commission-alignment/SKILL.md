@@ -2,7 +2,7 @@
 name: pre-commission-alignment
 model: sonnet
 description: "Produces a gap inventory and Track 0 remediation commit that closes mismatches between implementation prompts and actual codebase state, ensuring parallel tracks start from a clean, type-safe foundation. Use when: 'commission these tracks', 'run Track 0 before handing off', 'check for spec-to-code drift', 'align before we build'."
-category: specification-driven-development
+category: specify-commission
 
 inputs:
   - name: implementation_prompts

@@ -61,6 +61,55 @@ Or via the Dojo MCP tools: `dojo.list_skills`, `dojo.search_skills`, `dojo.invok
 | [dojo-craft](plugins/dojo-craft/) | CRAFT | 8 | The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. |
 | [bring-loop](plugins/bring-loop/) | BRING | 2 | Gate your outward loop like your build loop: one send/decision/close a day, staged by the agent, executed by you, measured in honest separate streams. The BringItCruz! effect, generalized. |
 
+**Not in the table above:** [`plugins/community-skills/`](plugins/community-skills/)
+holds 597 harvested SKILL.md files. Dormant-by-design: not a
+marketplace-registered plugin, a supply — promoted individually into the
+plugins above once proven, never installed wholesale.
+
+---
+
+## Find the Right Skill in 30 Seconds
+
+Plugins are how skills ship; **clusters are how they behave.** 12 clusters
+cross-cut the 10 plugins — skills grouped by what they *do*, not which
+directory holds them. Every registered skill's `category:` frontmatter is
+one of these 12 ids (enforced by `scripts/plugin-lint.py`); see the full
+`plugin:skill` roster with DUP/MISFILED/X flags in [llms.txt](llms.txt#clusters).
+
+| Cluster | Use when you need to... | Home plugin(s) |
+|---|---|---|
+| **scout-position** | map a decision landscape before committing | strategic-thinking (+1 dojo-craft dup) |
+| **specify-commission** | turn a decision into a spec and agent-ready prompts | specification-driven-development (+1 misfiled) |
+| **dispatch-coordinate** | plan or run multi-agent parallel work, hand off cleanly | agent-orchestration |
+| **remember-continue** | capture an insight or wrap up a session into memory | wisdom-garden (+1 dojo-craft dup) |
+| **seed-lifecycle** | extract, catalog, or elevate a reusable pattern | wisdom-garden (+1 dojo-craft dup) |
+| **system-prompt-intel** | ingest or reverse-engineer another agent's system prompt | wisdom-garden |
+| **repo-docs-health** | audit a repo's health, docs, or CLAUDE.md hierarchy | system-health (+3 dojo-craft dups, +1 misfiled) |
+| **agent-telemetry** | watch agent cost, behavior, or tool-call traces | system-health |
+| **learn-research** | research a question or retro a sprint | continuous-learning |
+| **understand-codebase** | get oriented in an unfamiliar codebase | continuous-learning (+1 dojo-craft dup) |
+| **forge** | build, maintain, or normalize a skill or MCP server | skill-forge (+3 misfiled, +1 spans) |
+| **govern-publish** | record a decision, scaffold a project, export a PDF, gate an outward send | dojo-craft, pretext-pdf, bring-loop |
+
+### Twin Skills — Which One Do I Want?
+
+The clustering pass surfaced genuine near-duplicates. Same intent, different
+weight or angle — here's the boundary for each:
+
+| Pair | Boundary |
+|---|---|
+| `strategic-thinking:strategic-scout` vs `dojo-craft:scout-writer` | Same output shape (tension → routes → recommendation). strategic-scout is the flagship, wired into the full scout→spec→prompts→commission pipeline; scout-writer is the single-file lean variant for a fast, self-contained scout with no pipeline scaffolding. |
+| `system-health:convergence-gate` vs `dojo-craft:convergence-checker` | convergence-checker is a quick RED/YELLOW/GREEN triage (dirty files, sessions, open items). convergence-gate is the full structured 7-phase remediation *session* you run once the checker (or the drift detector) fires. Checker diagnoses; gate treats. |
+| `system-health:claude-md-guardian` vs `dojo-craft:community-claude-md-guardian` | Both audit CLAUDE.md for conflicts and staleness. claude-md-guardian can additionally install a PreToolUse hook to *enforce* the ruleset going forward; community-claude-md-guardian is the audit-report-only lean variant with no enforcement mechanism. |
+| `continuous-learning:codebase-cartography` vs `dojo-craft:codebase-viewer` | Near-identical output (directory roles, entry points, dependency graph, "here be dragons"). codebase-cartography is canonical (adds a defined reading-order output); codebase-viewer is the lean single-file variant for use inside dojo-craft's self-contained workbench. |
+| `wisdom-garden:memory-garden` vs `dojo-craft:memory-curator` | memory-garden *writes* one new structured entry (daily/curated/archive tier) from a conversation insight. memory-curator *maintains* the existing index — prune, dedupe, search, keep MEMORY.md under 200 lines. Garden plants; curator tends. |
+| `wisdom-garden:seed-extraction` vs `dojo-craft:seed-curator` | seed-extraction produces one seed file (trigger + evidence + application) from an experience. seed-curator bundles the fuller lifecycle — plant, harvest, search, elevate to skill — in dojo-craft's single-file style. |
+| `wisdom-garden:compression-ritual` vs `wisdom-garden:session-compression` | session-compression is the routine end-of-session wrap-up (decisions, changes, context into the memory garden). compression-ritual is the heavier treatment for a long conversation — multiple artifact types plus a dated compression log. |
+| `specification-driven-development:parallel-tracks` vs `agent-orchestration:parallel-dispatch` | parallel-tracks *plans* the split — phased structure, track specs, integration contracts, wiring gate — before any agent runs. parallel-dispatch *executes* it — actually dispatches the agents with file manifests and independent verification. Spec-side vs execution-side of the same split. |
+| `continuous-learning:web-research` vs `continuous-learning:web-research-external` | web-research is general fact-finding/verification via Brave Search + web_fetch, output as a Research Summary. web-research-external is scoped to library/API/framework lookups, output as an implementation-ready handoff. |
+| `system-health:repo-status` vs `status-template` vs `status-writing` | repo-status is the first full snapshot of an unfamiliar repo (exploration-heavy: filesystem + clusters + importance ranking). status-template is the formal 10-section schema itself, when you want that exact structure. status-writing is the routine "update our STATUS.md" once the document already exists. |
+| `agent-orchestration:agent-dispatch-playbook` vs `orchestration-pattern-selector` vs `maestro-orchestration` | orchestration-pattern-selector decides *which* orchestration pattern fits, via an 11-signal matrix — use it first when unsure. agent-dispatch-playbook plans the mechanics (isolation, count, sequencing, models) once you know you're doing a parallel dispatch. maestro-orchestration *is* one specific pattern — a single conductor decomposing and dispatching to specialists — invoke it directly when that shape is already the right fit. |
+
 ---
 
 ## Directory Structure
@@ -226,7 +275,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.3.1** — 99 first-party skills, all rated A+.
+**1.4.0** — 99 first-party skills, all rated A+, organized into 12 semantic clusters.
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

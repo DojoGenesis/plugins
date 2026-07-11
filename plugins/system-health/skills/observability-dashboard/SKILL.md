@@ -3,7 +3,7 @@ name: observability-dashboard
 model: sonnet
 description: Produces a running multi-agent observability dashboard by deploying the hook capture pipeline, SQLite WAL store, and WebSocket-streaming Vue client — then validates it with a live test session. Use when: "set up monitoring for multi-agent workflows", "debug parallel agent coordination", "audit tool call history across a session", "build visibility for a demo or review".
 license: proprietary
-category: system-health
+category: agent-telemetry
 
 inputs:
   - name: spec_path

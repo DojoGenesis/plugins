@@ -2,7 +2,7 @@
 name: pointer-directories
 model: sonnet
 description: Produces a provenance determination — pointer or gap — for empty or apparently incomplete directories, with a documented rationale and recommended action. Use when: "this directory is empty", "missing SKILL.md", "coverage metric shows a gap", "why is this directory here with nothing in it", "before creating content to fill an apparent void".
-category: system-health
+category: repo-docs-health
 
 inputs:
   - name: directory_path

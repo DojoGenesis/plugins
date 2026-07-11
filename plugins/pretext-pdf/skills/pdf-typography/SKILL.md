@@ -2,7 +2,7 @@
 name: pdf-typography
 description: Configure Pretext typography settings for PDF export — font stacks, sizing, line height, page geometry, and disposition-driven typography mapping. Use when defaults need tuning for specific content types or audiences.
 model: sonnet
-category: pdf
+category: govern-publish
 
 inputs:
   - name: content_type

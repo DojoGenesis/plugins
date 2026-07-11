@@ -2,7 +2,7 @@
 name: iterative-scouting
 model: opus
 description: Produces a follow-up scout document that reframes the original question based on what feedback revealed (a reframe = a new strategic lens that changes which problem is worth solving). Use when: 'scout this again with fresh eyes', 'the first scout raised deeper questions', 'what is the real question here', 'iterate the scout'
-category: strategic-thinking
+category: scout-position
 
 inputs:
   - name: original_scout

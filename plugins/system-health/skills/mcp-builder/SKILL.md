@@ -2,7 +2,7 @@
 name: mcp-builder
 model: sonnet
 description: "Scaffolds new MCP servers with tool definitions, transport wiring, handler structure, and test harness for Python (FastMCP) or TypeScript (MCP SDK). Use when: 'build a new MCP server', 'scaffold an MCP integration', 'create tools for an external API', 'set up MCP transport and handlers'."
-category: system-health
+category: forge
 
 inputs:
   - name: server_name

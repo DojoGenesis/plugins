@@ -2,7 +2,7 @@
 name: bring-setup
 description: Initialize the bring loop in the current project — scaffold bring/actions.md + ledger, seed the first real outward actions from conversation, and explain the daily contract. Use when the user says "set up bring-loop", "install the bring loop", "start gating my sends", or asks how to get the BringItCruz effect in their system.
 model: inherit
-category: productivity
+category: govern-publish
 ---
 
 # Bring-setup — initialize the loop in this project

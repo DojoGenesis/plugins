@@ -3,7 +3,7 @@ name: analyze-agent-behavior
 model: opus
 description: Map an external AI tool's behavioral patterns to Dojo ADA disposition fields by analyzing its ingested system prompt. Produces a disposition YAML approximation and similarity score against Dojo defaults. Use when understanding how other agents think or when designing new disposition presets. Trigger phrases: "analyze this agent's behavior", "map prompt to disposition", "compare agent behavior", "what disposition does this tool use", "reverse-engineer agent personality".
 license: Complete terms in LICENSE.txt
-category: wisdom-garden
+category: system-prompt-intel
 
 inputs:
   - name: system_prompt

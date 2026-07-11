@@ -38,6 +38,26 @@ VALID_HOOK_EVENTS = {
     "Notification",
 }
 
+# The 12 semantic-cluster ids (2026-07-11 clustering makeover). Every
+# registered skill's `category:` frontmatter must be one of these — see the
+# `## Clusters` section in llms.txt for the full plugin:skill membership map.
+# community-skills (IMPORTED_NOT_PUBLISHED) predates this taxonomy and has no
+# category: field at all, so it is exempt — see check_skill_frontmatter.
+VALID_CATEGORIES = {
+    "scout-position",
+    "specify-commission",
+    "dispatch-coordinate",
+    "remember-continue",
+    "seed-lifecycle",
+    "system-prompt-intel",
+    "repo-docs-health",
+    "agent-telemetry",
+    "learn-research",
+    "understand-codebase",
+    "forge",
+    "govern-publish",
+}
+
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -258,6 +278,20 @@ def check_skill_frontmatter(plugin_dir: Path, skill_dir: Path, skill_md: Path,
             f"{rel} — description exceeds {DESCRIPTION_MAX_CHARS} chars "
             f"(got {len(desc_val)})"
         )
+
+    # category vocabulary check — registered plugins only. community-skills
+    # predates the cluster taxonomy and carries no category: field at all;
+    # enforcing this there would fail all ~597 dormant-by-design skills.
+    if plugin_name not in IMPORTED_NOT_PUBLISHED:
+        cat_val = extract_frontmatter_field(fm, "category")
+        if not cat_val:
+            result.fail(plugin_name, skill_name, f"{rel} — frontmatter 'category' missing or empty")
+        elif cat_val not in VALID_CATEGORIES:
+            result.fail(
+                plugin_name, skill_name,
+                f"{rel} — category '{cat_val}' is not one of the 12 cluster ids "
+                f"({', '.join(sorted(VALID_CATEGORIES))})"
+            )
 
     # Reference-path check (warn only)
     for ref_path in extract_relative_paths(fm):

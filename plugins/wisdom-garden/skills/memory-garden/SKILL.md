@@ -2,7 +2,7 @@
 name: memory-garden
 model: sonnet
 description: Writes a structured memory entry to the garden — daily note (Tier A), curated wisdom update (Tier B), or monthly compressed archive (Tier C) — based on conversation insights. Use when: "remember this pattern", "save this insight", "add to memory garden", "write a memory entry", "record this learning".
-category: wisdom-garden
+category: remember-continue
 
 inputs:
   - name: insight

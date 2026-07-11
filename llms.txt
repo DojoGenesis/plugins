@@ -19,6 +19,29 @@ The canonical first-party skill collection for the Dojo Genesis platform. Each p
 - **dojo-craft** — Practitioner's workbench: strategic thinking, codebase intelligence, memory curation, project governance
 - **bring-loop** — Gate the outward loop: one send/decision/close a day, agent stages, human executes, honest separate streams (the BringItCruz! effect; canonical: github.com/DojoGenesis/bring-loop)
 
+## Clusters
+
+12 behavioral clusters cross-cut the 10 plugins — skills grouped by what they
+*do*, not just which plugin ships them. Every registered skill's `category:`
+frontmatter is one of these 12 ids (enforced by `scripts/plugin-lint.py`).
+Flags: **DUP** = near-duplicate of another member (see README's twin-skill
+table for the boundary between them), **MISFILED** = the skill's function
+belongs to this cluster even though its plugin doesn't, **X** = the skill's
+function legitimately spans plugins.
+
+- **scout-position** — strategic-thinking:strategic-scout, strategic-thinking:iterative-scouting, strategic-thinking:product-positioning, strategic-thinking:multi-surface-strategy, strategic-thinking:strategic-to-tactical-workflow, dojo-craft:scout-writer (DUP of strategic-thinking:strategic-scout)
+- **specify-commission** — specification-driven-development:specification-writer, specification-driven-development:release-specification, specification-driven-development:frontend-from-backend, specification-driven-development:codebase-audit-grounding, specification-driven-development:context-ingestion, specification-driven-development:planning-with-files, specification-driven-development:pre-implementation-checklist, specification-driven-development:pre-commission-alignment, specification-driven-development:implementation-prompt, specification-driven-development:zenflow-prompt-writer, specification-driven-development:spec-constellation-to-prompt-suite, specification-driven-development:parallel-tracks, specification-driven-development:gap-audit-then-fix, continuous-learning:era-architecture (MISFILED)
+- **dispatch-coordinate** — agent-orchestration:agent-dispatch-playbook, agent-orchestration:parallel-dispatch, agent-orchestration:async-agent-dispatch, agent-orchestration:audit-sweep-dispatch, agent-orchestration:maestro-orchestration, agent-orchestration:orchestration-pattern-selector, agent-orchestration:workflow-router, agent-orchestration:handoff-protocol, agent-orchestration:agent-teaching, agent-orchestration:workspace-navigation, agent-orchestration:granular-visibility, agent-orchestration:decision-propagation
+- **remember-continue** — wisdom-garden:memory-garden, wisdom-garden:compression-ritual, wisdom-garden:session-compression, wisdom-garden:continuity-ledger, wisdom-garden:reflect-and-learn, wisdom-garden:session-lifecycle-automation, dojo-craft:memory-curator (DUP of wisdom-garden:memory-garden)
+- **seed-lifecycle** — wisdom-garden:seed-extraction, wisdom-garden:seed-library, wisdom-garden:seed-to-skill-converter, dojo-craft:seed-curator (DUP of wisdom-garden:seed-extraction)
+- **system-prompt-intel** — wisdom-garden:ingest-system-prompt, wisdom-garden:system-prompt-archaeology, wisdom-garden:analyze-agent-behavior, wisdom-garden:build-intelligence-map
+- **repo-docs-health** — system-health:health-audit, system-health:documentation-audit, system-health:build-sweep, system-health:convergence-gate, system-health:claude-md-guardian, system-health:pointer-directories, system-health:repo-context-sync, system-health:semantic-clusters, system-health:repo-status, system-health:status-template, system-health:status-writing, system-health:skill-audit-upgrade (X), dojo-craft:convergence-checker (DUP of system-health:convergence-gate), dojo-craft:community-claude-md-guardian (DUP of system-health:claude-md-guardian), strategic-thinking:adversarial-reviewer (MISFILED)
+- **agent-telemetry** — system-health:observability-dashboard, system-health:observability-dashboard-spec, system-health:tool-intercept-logger, system-health:agent-performance-report, system-health:budget-guard
+- **learn-research** — continuous-learning:research-modes, continuous-learning:research-synthesis, continuous-learning:web-research, continuous-learning:web-research-external, continuous-learning:patient-learning-protocol, continuous-learning:retrospective, continuous-learning:debugging
+- **understand-codebase** — continuous-learning:codebase-cartography, continuous-learning:tldr-code-analysis, continuous-learning:project-exploration, continuous-learning:figma-to-code (MISFILED), continuous-learning:design-system-selector (MISFILED), dojo-craft:codebase-viewer (DUP of continuous-learning:codebase-cartography — placed here, not in repo-docs-health, to match its DUP target's cluster)
+- **forge** — skill-forge:skill-creation, skill-forge:process-extraction, skill-forge:skill-maintenance, skill-forge:normalize-community-skill, skill-forge:scan-community-repos, skill-forge:batch-normalize-and-package, skill-forge:file-management, skill-forge:mcp-server-builder, skill-forge:mcp-cloudflare-builder, system-health:mcp-builder (MISFILED), system-health:supply-chain-refresh (MISFILED), system-health:hooks-reference (X), wisdom-garden:voice-before-structure (X)
+- **govern-publish** — dojo-craft:adr-writer, dojo-craft:project-scaffolder, pretext-pdf:pdf-export, pretext-pdf:pdf-typography, bring-loop:bring, bring-loop:bring-setup
+
 ## Skill format
 
 Each skill lives at `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` with YAML frontmatter containing:
@@ -29,7 +52,11 @@ Each skill lives at `plugins/{plugin-name}/skills/{skill-name}/SKILL.md` with YA
 
 ## How to use with LLMs
 
-Install via the Dojo MCP Server (`DOJO_SKILLS_PATH` pointing to this repo). Use `dojo.list_skills` to browse by plugin, `dojo.search_skills` to find by keyword, and `dojo.invoke_skill` to load any skill. For Claude Code directly, install the plugins package and reference skills via `.mcp.json` configuration. Community skills live in `plugins/community-skills/`.
+Install via the Dojo MCP Server (`DOJO_SKILLS_PATH` pointing to this repo). Use `dojo.list_skills` to browse by plugin, `dojo.search_skills` to find by keyword, and `dojo.invoke_skill` to load any skill. For Claude Code directly, install the plugins package and reference skills via `.mcp.json` configuration.
+
+Community skills live in `plugins/community-skills/` — 597 harvested
+SKILL.md files, dormant-by-design: not a registered marketplace plugin, a
+supply promoted individually into the plugins above once proven.
 
 ## Links
 

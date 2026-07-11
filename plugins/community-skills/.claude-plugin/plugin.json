@@ -1,7 +1,7 @@
 {
   "name": "community-skills",
   "version": "1.0.0",
-  "description": "Community-sourced skills normalized from alirezarezvani/claude-skills (276), parcadei/Continuous-Claude-v3 (103), CommandCodeAI/agent-skills (37), and slavingia/skills (10). All 426 skills passed security audit (Apr 6, 2026). Covers engineering, marketing, product, design, security, orchestration, and operations domains.",
+  "description": "Community-sourced skills normalized from alirezarezvani/claude-skills, parcadei/Continuous-Claude-v3, CommandCodeAI/agent-skills, and slavingia/skills, grown since via supply-chain-refresh. 597 skills on disk; the original 426-skill batch (276/103/37/10 per source) passed security audit Apr 6, 2026. Covers engineering, marketing, product, design, security, orchestration, and operations domains. Dormant-by-design: harvested, not published as a marketplace plugin — promoted individually into the registered plugins instead.",
   "author": {
     "name": "Community (normalized by Dojo Genesis)"
   },

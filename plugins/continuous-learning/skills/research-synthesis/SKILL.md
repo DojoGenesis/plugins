@@ -2,7 +2,7 @@
 name: research-synthesis
 model: sonnet
 description: Produces a unified Synthesis Document organized by themes with cross-source evidence, contradictions surfaced, and concrete recommendations. Use when: 'synthesize these research files', 'find patterns across these sources', 'consolidate my notes into insights', 'create a literature review', 'what do these sources agree and disagree on'.
-category: continuous-learning
+category: learn-research
 
 inputs:
   - name: research_files

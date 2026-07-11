@@ -2,7 +2,7 @@
 name: session-compression
 model: sonnet
 description: Produces updated memory artifacts by compressing a session's key decisions, changes, and context into the structured memory garden. Use when: "compress this session", "save context", "end of session", "update memory", "wrap up".
-category: wisdom-garden
+category: remember-continue
 
 inputs:
   - name: memory_path

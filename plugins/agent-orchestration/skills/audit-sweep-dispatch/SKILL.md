@@ -2,7 +2,7 @@
 name: audit-sweep-dispatch
 description: Routes health-audit findings to the correct execution path — main thread, foreground fix, or parallel agent waves. Use when health-audit findings need to be sorted by effort and dispatched as agent waves.
 model: sonnet
-category: agent-orchestration
+category: dispatch-coordinate
 version: 1.0.1
 tags: [audit, dispatch, sweep, triage, agents]
 

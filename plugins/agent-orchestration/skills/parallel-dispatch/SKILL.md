@@ -2,7 +2,7 @@
 name: parallel-dispatch
 model: opus
 description: Produces a verified multi-track execution by dispatching parallel agents with file manifests, independent verification, and status tracking. Use when: "dispatch agents", "parallel tracks", "multi-track work", "fan out", "divide and conquer".
-category: agent-orchestration
+category: dispatch-coordinate
 
 inputs:
   - name: tracks

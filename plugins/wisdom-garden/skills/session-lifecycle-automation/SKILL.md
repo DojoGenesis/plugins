@@ -2,7 +2,7 @@
 name: session-lifecycle-automation
 model: opus
 description: Designs and configures all three loops of solo-operator session automation — session bookends, background maintenance agents, and a delegation flywheel. Use when setting up a new workspace, recovering from the 44% zero-artifact session leak, or preparing to scale delegation across multiple concurrent agents.
-category: wisdom-garden
+category: remember-continue
 version: 1.0.1
 tags: [session, automation, lifecycle, scheduling]
 

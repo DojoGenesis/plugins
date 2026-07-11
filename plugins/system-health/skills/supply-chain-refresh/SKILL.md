@@ -3,7 +3,7 @@ name: supply-chain-refresh
 model: sonnet
 description: Produces a Supply Chain Refresh Report and updated manifest.json by pulling the latest from all watched repos, scanning for new or changed skills, normalizing, and packaging them into CAS. Use when: "refresh the supply chain", "update community skills", "weekly skill library maintenance", "a community repo announced a new release".
 license: Complete terms in LICENSE.txt
-category: system-health
+category: forge
 
 inputs:
   - name: watched_repos

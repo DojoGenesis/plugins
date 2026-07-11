@@ -3,7 +3,7 @@ name: build-intelligence-map
 model: opus
 description: Produces a cross-tool disposition matrix, behavioral cluster analysis, and a set of named YAML disposition presets by synthesizing analyses from 3+ ingested AI system prompts. Use when: "build an intelligence map", "compare all agent behaviors", "generate disposition presets from external tools", "what can we learn from other tools", "synthesize agent analyses".
 license: Complete terms in LICENSE.txt
-category: wisdom-garden
+category: system-prompt-intel
 
 inputs:
   - name: agent_analyses

@@ -8,7 +8,7 @@ triggers:
   - "architectural decision"
   - "record a decision"
   - "ADR for"
-category: dojo-craft
+category: govern-publish
 
 inputs:
   - name: decision_topic

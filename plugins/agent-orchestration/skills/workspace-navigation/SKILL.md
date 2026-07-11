@@ -16,7 +16,7 @@ metadata:
   portable: true
   tier: 2
   agents: ["agent-orchestration"]
-category: agent-orchestration
+category: dispatch-coordinate
 
 inputs:
   - name: artifact

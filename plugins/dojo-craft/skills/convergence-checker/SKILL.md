@@ -8,7 +8,7 @@ triggers:
   - "convergence check"
   - "drift check"
   - "am I drifting"
-category: dojo-craft
+category: repo-docs-health
 
 inputs:
   - name: trigger_reason

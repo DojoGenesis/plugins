@@ -14,7 +14,7 @@ metadata:
   portable: true
   tier: 1
   agents: ["agent-orchestration"]
-category: agent-orchestration
+category: dispatch-coordinate
 
 inputs:
   - name: work_description

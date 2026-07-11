@@ -2,7 +2,7 @@
 name: planning-with-files
 model: sonnet
 description: "Produces a routing decision and delegated output by analyzing uploaded files and user intent, then dispatching to the correct specialized skill (context-ingestion, research-synthesis, or release-specification). Use when: 'create a plan from these files', 'synthesize these papers', 'what should I do with these uploads', 'not sure which skill to use but I have files'."
-category: specification-driven-development
+category: specify-commission
 
 inputs:
   - name: uploaded_files

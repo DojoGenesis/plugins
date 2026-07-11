@@ -8,7 +8,7 @@ triggers:
   - "audit CLAUDE.md"
   - "fix claude.md"
   - "claude md health"
-category: dojo-craft
+category: repo-docs-health
 
 inputs:
   - name: context

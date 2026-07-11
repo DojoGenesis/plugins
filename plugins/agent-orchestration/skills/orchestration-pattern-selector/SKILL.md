@@ -2,7 +2,7 @@
 name: orchestration-pattern-selector
 description: Selects the correct multi-agent orchestration pattern for a task using an 11-signal selection matrix. Use when choosing which orchestration pattern fits a multi-agent task.
 model: opus
-category: agent-orchestration
+category: dispatch-coordinate
 version: 1.0.1
 tags: [orchestration, patterns, selection, architecture, agents]
 

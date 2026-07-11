@@ -27,8 +27,8 @@ Checks
      since per-plugin-scale numbers are exempt there by design (this is
      exactly the drift vector that survived a 92-summed-to-94 table while
      the corpus-scale headline read 99, undetected until a hand audit)
-  5  llms.txt "## Plugins (N)" header + its bullet list match the registered
-     set exactly
+  5  llms.txt "## Plugins (N)" header + its bullet list (scoped to that
+     section body, not the whole file) match the registered set exactly
   6  README's version line matches marketplace.json metadata.version
 
 Exit 0 = CONTRACT PASS, 1 = CONTRACT FAIL. Stdlib only, by design — same
@@ -162,19 +162,27 @@ def main() -> int:
         fail("README.md: no per-plugin table rows found — table format may have changed")
 
     # ---- llms.txt plugin list parity -------------------------------------
+    # Bullet extraction is scoped to the "## Plugins (N)" section body only
+    # (up to the next "## " header), not the whole file — llms.txt legitimately
+    # has other "- **bold**" bullets elsewhere (e.g. the "## Clusters" section's
+    # cluster-id bullets), which must not be mistaken for plugin-list entries.
     llms_text = LLMS.read_text(encoding="utf-8")
     header = re.search(r"^##\s+Plugins\s+\((\d+)\)\s*$", llms_text, re.MULTILINE)
     if not header:
         fail("llms.txt: no '## Plugins (N)' header found")
-    elif int(header.group(1)) != total_plugins:
-        fail(f"llms.txt: '## Plugins ({header.group(1)})' header != registered count {total_plugins}")
-    listed = set(re.findall(r"^-\s+\*\*([a-z0-9-]+)\*\*", llms_text, re.MULTILINE))
-    if listed != set(registered):
-        missing = set(registered) - listed
-        extra = listed - set(registered)
-        fail(f"llms.txt plugin list != registered set (missing: {sorted(missing) or 'none'}, extra: {sorted(extra) or 'none'})")
     else:
-        ok(f"llms.txt: header count + bullet list match the {total_plugins} registered plugins")
+        if int(header.group(1)) != total_plugins:
+            fail(f"llms.txt: '## Plugins ({header.group(1)})' header != registered count {total_plugins}")
+        next_header = re.search(r"^##\s+", llms_text[header.end():], re.MULTILINE)
+        section_end = header.end() + next_header.start() if next_header else len(llms_text)
+        plugins_section = llms_text[header.end():section_end]
+        listed = set(re.findall(r"^-\s+\*\*([a-z0-9-]+)\*\*", plugins_section, re.MULTILINE))
+        if listed != set(registered):
+            missing = set(registered) - listed
+            extra = listed - set(registered)
+            fail(f"llms.txt plugin list != registered set (missing: {sorted(missing) or 'none'}, extra: {sorted(extra) or 'none'})")
+        else:
+            ok(f"llms.txt: header count + bullet list match the {total_plugins} registered plugins")
 
     # ---- README version line ---------------------------------------------
     ver_line = re.search(r"^\*\*(\d+\.\d+\.\d+)\*\*\s+—", README.read_text(encoding="utf-8"), re.MULTILINE)

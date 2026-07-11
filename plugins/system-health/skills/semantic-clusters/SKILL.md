@@ -2,7 +2,7 @@
 name: semantic-clusters
 model: opus
 description: Produces a behavioral architecture map grouping components by action-verb clusters (CONVERSE, REASON, REMEMBER, etc.) that reveals capabilities, gaps, and cross-cutting concerns invisible to directory trees. Use when: "what does this app actually do", "walk me through the features", "plan a refactor", "audit feature coverage", "explain this system to someone new".
-category: system-health
+category: repo-docs-health
 
 inputs:
   - name: repo_path

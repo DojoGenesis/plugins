@@ -3,7 +3,7 @@ name: figma-to-code
 model: sonnet
 description: Extracts design tokens, component structure, and layout from a Figma file and produces framework-specific code (HTML, Svelte, React, or Vue) that preserves design intent rather than pixel-copying. Use when: 'implement this Figma design', 'convert this Figma file to code', 'extract tokens from Figma', 'build this component from the design'.
 license: Adapted from nafiurrahmanniloy/figma-skill (MIT)
-category: continuous-learning
+category: understand-codebase
 
 inputs:
   - name: figma_url

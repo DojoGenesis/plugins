@@ -2,7 +2,7 @@
 name: health-audit
 model: opus
 description: Produces engineering commissions — structured implementation prompts stored in `docs/audits/` and `prompts/` — by auditing repositories for critical issues, security gaps, and sustainability risks. Use when: "audit this repo", "what are the blockers", "run a full health check", "identify technical debt before a sprint", "onboarding to a new codebase".
-category: system-health
+category: repo-docs-health
 
 inputs:
   - name: repo_path

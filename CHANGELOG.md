@@ -1,5 +1,53 @@
 # Changelog — CoworkPluginsByDojoGenesis
 
+## 2026-07-11 — Wave 2: semantic cluster navigation layer (v1.4.0)
+
+### What happened
+
+Exposed 12 behavioral clusters that cross-cut the 10 plugins — a navigation
++ metadata layer on top of the existing plugin structure. No files moved.
+Skills are grouped by what they *do* (scout-position, specify-commission,
+dispatch-coordinate, remember-continue, seed-lifecycle, system-prompt-intel,
+repo-docs-health, agent-telemetry, learn-research, understand-codebase,
+forge, govern-publish), not just which plugin directory holds them —
+surfacing dojo-craft's DUPs, two MISFILED skills (era-architecture,
+adversarial-reviewer, figma-to-code, design-system-selector, mcp-builder,
+supply-chain-refresh), and 3 skills whose function legitimately spans
+plugins (skill-audit-upgrade, hooks-reference, voice-before-structure).
+
+### Changes
+
+- **`llms.txt`**: new `## Clusters` section — all 12 clusters with full
+  `plugin:skill` membership, DUP/MISFILED/X flags. Community-skills note
+  expanded (597 files, dormant-by-design).
+- **`README.md`**: new "Find the Right Skill in 30 Seconds" cluster table +
+  a twin-skill disambiguation table for the 11 genuine near-duplicate pairs
+  (6 dojo-craft full-vs-lean pairs, compression-ritual/session-compression,
+  parallel-tracks/parallel-dispatch, web-research/web-research-external, the
+  status trio, the dispatch-shape trio). Community-skills dormant-by-design
+  note added below the plugin table.
+- **`category:` frontmatter rewrite (99 registered skills)**: every
+  registered skill's `category:` now holds its cluster id instead of its
+  plugin name, applied via a deterministic script (not hand-edits) with a
+  built-in disk-vs-mapping cross-check. One placement judgment call:
+  dojo-craft's `codebase-viewer` is filed under `understand-codebase` (its
+  DUP target `codebase-cartography`'s cluster) rather than `repo-docs-health`
+  (where the raw cluster spec listed it), per the spec's own
+  DUP-target-cluster resolution rule; `semantic-clusters` and
+  `repo-context-sync` (system-health) stay in `repo-docs-health`, their
+  literal/home-plugin-dominant cluster.
+- **`scripts/plugin-lint.py`**: new check enforces the 12-cluster
+  `category:` vocabulary on all registered-plugin skills; community-skills
+  stays exempt (it has no `category:` field at all — predates the taxonomy).
+- **`scripts/face-parity.py`**: fixed a gate bug the Clusters section
+  exposed — the llms.txt plugin-list-bullet regex scanned the *whole file*
+  for `- **bold**` bullets instead of scoping to the `## Plugins` section,
+  so it collided with the new cluster-id bullets. Scoped to the section body.
+- **`plugins/community-skills/.claude-plugin/plugin.json`**: count 426 → 597
+  (426 was the original Apr 6, 2026 security-audited batch; grown since via
+  `supply-chain-refresh`), added the dormant-by-design framing.
+- **marketplace.json + README version**: 1.3.1 → 1.4.0.
+
 ## 2026-07-11 — Wave 1: reconcile faces to disk truth (v1.3.1)
 
 ### What happened

@@ -2,7 +2,7 @@
 name: build-sweep
 model: sonnet
 description: Produces a verified build/test status report and auto-fixed modules by sweeping all Go modules in a workspace. Use when: "run a sweep", "check all builds", "nightly sweep", "fix all failing modules", "workspace health check".
-category: system-health
+category: repo-docs-health
 
 inputs:
   - name: workspace_path

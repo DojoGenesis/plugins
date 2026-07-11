@@ -3,7 +3,7 @@ name: tool-intercept-logger
 model: sonnet
 description: Produces structured OTEL-compatible log entries and a session summary (call counts, success rate, cost, top tools by cost and frequency) for all tool executions within a session. Use when: "log tool calls for this session", "debug unexpected tool selection", "audit token cost by tool", "validate a new MCP integration", "build a session summary for handoff".
 license: proprietary
-category: system-health
+category: agent-telemetry
 
 inputs:
   - name: session_context

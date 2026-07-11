@@ -2,7 +2,7 @@
 name: bring
 description: Surface and stage TODAY'S ONE outward action (send/decision/close/ship) from the project's bring/ queue, then log the outcome on the human's word. Use when the user says "bring it", "what's my bring", "log the send", "skip today's bring", or when the SessionStart brief shows an unbrought action and the user engages with it.
 model: inherit
-category: productivity
+category: govern-publish
 ---
 
 # Bring — surface, stage, log (never execute)

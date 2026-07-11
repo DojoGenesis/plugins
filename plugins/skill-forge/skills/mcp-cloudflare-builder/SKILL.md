@@ -2,7 +2,7 @@
 name: mcp-cloudflare-builder
 model: sonnet
 description: Builds production-ready remote MCP servers on Cloudflare Workers with typed tools, OAuth authentication, and Wrangler deployment. Use when: "build MCP server on Cloudflare", "remote MCP", "deploy MCP to Workers", "MCP OAuth authentication", "expose tools via MCP".
-category: skill-forge
+category: forge
 
 inputs:
   - name: server_name

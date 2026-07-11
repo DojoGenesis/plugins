@@ -2,7 +2,7 @@
 name: pdf-export
 description: Produces a typeset PDF artifact from any source file — code, Markdown, HTML, chat JSON, or structured Dojo files (specs, ADRs, skills). Use when: "export this to PDF", "generate a PDF of this file", "make a PDF from this".
 model: sonnet
-category: publishing
+category: govern-publish
 
 inputs:
   - name: source_path

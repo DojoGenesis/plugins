@@ -2,7 +2,7 @@
 name: frontend-from-backend
 model: opus
 description: Produces a backend-grounded frontend specification document covering API contracts, integration guide, auth flows, and updated track prompts. Use when 'spec the frontend for this API', 'write frontend spec from backend', or 'ground the UI in this existing backend'.
-category: specification-driven-development
+category: specify-commission
 
 inputs:
   - name: backend_spec

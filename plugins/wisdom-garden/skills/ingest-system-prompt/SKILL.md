@@ -3,7 +3,7 @@ name: ingest-system-prompt
 model: sonnet
 description: Produces a stored MemoryEntry (structured sections + ADA disposition indicators) and one or more MemorySeeds by parsing a system prompt from an external AI tool into Dojo memory. Use when: "ingest this system prompt", "store this prompt in memory", "parse this agent's rules", "import this Cursor prompt", "analyze what this prompt does".
 license: proprietary
-category: wisdom-garden
+category: system-prompt-intel
 
 inputs:
   - name: system_prompt

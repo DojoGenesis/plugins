@@ -2,7 +2,7 @@
 name: continuity-ledger
 model: sonnet
 description: "Maintains a running decision log and context state across agent sessions, preventing context loss between clears and session boundaries. Use when: 'starting a new session on an ongoing project', 'context is getting heavy', 'preserve state before clearing', 'create a handoff document', 'pick up where I left off'."
-category: wisdom-garden
+category: remember-continue
 
 inputs:
   - name: session_context
