@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "A practice space for building better software through patient cultivation. 101 skills organized into 11 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.5.2",
+    "version": "1.5.3",
     "pluginRoot": "./plugins"
   },
   "plugins": [

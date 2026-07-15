@@ -1,5 +1,23 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — kata-harness python3 text sweep re-synced (v1.5.3)
+
+### What happened
+
+Canonical kata-harness landed `4b5ce72`, finishing the interpreter fix that `301bf61` started:
+every bare `python` invocation in the skill's command examples and `roll_core.py`'s usage/status
+strings became `python3` (bare `python` doesn't exist on modern macOS). Re-synced both files into
+the distribution copy — it now matches canonical HEAD exactly (verified per-file).
+
+### Changes
+
+- **`plugins/kata-harness/skills/kata-harness/SKILL.md`** — command examples `python` → `python3`
+  (synced from canonical `4b5ce72`).
+- **`plugins/kata-harness/scripts/roll_core.py`** — usage/status-face strings `python` → `python3`
+  (synced; byte-identical with both canonical copies, 62/62 tests green upstream).
+- Sync line unchanged (`Synced 2026-07-15 @ v0.1.1` — same day, plugin version not bumped upstream).
+- **marketplace.json + README version**: 1.5.2 → 1.5.3. Counts unchanged (101/11).
+
 ## 2026-07-15 — kata-harness hook interpreter fix re-synced (v1.5.2)
 
 ### What happened

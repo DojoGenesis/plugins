@@ -24,8 +24,8 @@ The user names a target — reps ("roll for 3 reps"), a duration ("do a
 don't give one, ask for it before starting — do not default to unbounded.
 
 ```
-python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-start --reps 3
-python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-start --minutes 25 --cadence 25m --timer
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-start --reps 3
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-start --minutes 25 --cadence 25m --timer
 ```
 
 `--cadence` sets the default per-rep duration (`25m` count-down, or `open`
@@ -34,7 +34,7 @@ default — a roll is model-paced unless asked otherwise).
 
 ## Each tick
 
-1. Run `python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-tick`. This
+1. Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-tick`. This
    surfaces exactly ONE bring — never the remaining queue, never the deck as
    a to-do list. A short "on deck" preview (at most two) may ride along; it
    is context, not a second ask. If the output reports the target reached,
@@ -53,14 +53,14 @@ default — a roll is model-paced unless asked otherwise).
 ## Resolving a tick — only on their word
 
 - **It happened:**
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-resolve --kind sent|decided|closed|shipped [--note "..."]`
+  `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-resolve --kind sent|decided|closed|shipped [--note "..."]`
 - **A conscious decline:**
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-skip --note "<reason>"`
+  `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-skip --note "<reason>"`
   A reason is required (invariant #3). Treat a logged skip as a success of
   the system, not a failure of the person.
 - **Moving on without a decision** (the window passed, or they're not doing
   this one right now):
-  `python "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-elapse`. This is
+  `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/roll_core.py" roll-elapse`. This is
   **not** a skip — no reason needed, nothing is written to
   `bring/ledger.jsonl`, and the bring **stays open** for a future tick.
   Rolling forward is not failure; it is the mechanism — the roll remembers.
