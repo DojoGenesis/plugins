@@ -1,5 +1,25 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — kata-harness setup fix re-synced (v1.5.1)
+
+### What happened
+
+The kata-harness-setup skill's missing-queue branch instructed running
+`${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py init` — a file the kata-harness plugin never ships
+(it bundles only `roll_core.py`, which vendors bring_core *functions* but deliberately has no
+`init` verb). The branch failed in both dev and installed layouts. Fixed in the canonical repo
+(kata-harness v0.1.1) and re-synced here: the step now invokes the bring-loop plugin's own
+`bring-setup` skill by name (installing `bring-loop@dojo-genesis` first if absent) — one owner
+for the queue scaffold format, no cross-plugin paths.
+
+### Changes
+
+- **`plugins/kata-harness/skills/kata-harness-setup/SKILL.md`** — step 1 missing-queue branch
+  rewritten (synced from canonical).
+- **`plugins/kata-harness/.claude-plugin/plugin.json`** — 0.1.0 → 0.1.1.
+- **`plugins/kata-harness/README.md`** — sync line: Synced 2026-07-15 @ v0.1.1.
+- **marketplace.json + README version**: 1.5.0 → 1.5.1. Counts unchanged (101/11).
+
 ## 2026-07-15 — Add kata-harness plugin (v1.5.0)
 
 ### What happened

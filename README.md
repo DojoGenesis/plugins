@@ -282,7 +282,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.5.0** — 101 first-party skills organized into 12 semantic clusters, published as the `dojo-genesis` marketplace. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
+**1.5.1** — 101 first-party skills organized into 12 semantic clusters, published as the `dojo-genesis` marketplace. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications

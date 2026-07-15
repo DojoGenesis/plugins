@@ -16,10 +16,15 @@ surface layered on top of it.
 
 Check for `bring/actions.md` in the project root.
 
-- **Missing:** run `python "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" init`
-  (kata-harness reuses bring-loop's own init rather than inventing a second
-  queue format). It scaffolds `bring/actions.md` and `bring/ledger.jsonl`,
-  never overwriting anything that already exists.
+- **Missing:** scaffold it with bring-loop itself — the queue format has one
+  owner, and it is not this plugin. Invoke the bring-loop plugin's
+  `bring-setup` skill: its `bring_core.py init` creates `bring/actions.md`
+  and `bring/ledger.jsonl`, never overwriting anything that already exists.
+  If bring-loop isn't installed yet, install it first
+  (`/plugin install bring-loop@dojo-genesis` — the same marketplace this
+  plugin ships from). kata-harness deliberately ships no second init: its
+  `scripts/` holds only `roll_core.py`, whose roll verbs assume the queue
+  already exists.
 - **Present:** leave it alone. If bring-loop is already installed and in use,
   there is nothing to scaffold — the roll rides on the existing queue as-is.
 
