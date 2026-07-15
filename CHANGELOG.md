@@ -1,5 +1,21 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — kata-harness hook interpreter fix re-synced (v1.5.2)
+
+### What happened
+
+Canonical kata-harness landed `301bf61`: the SessionStart hook invoked bare `python`, which
+modern macOS doesn't ship, so the roll-status injector had silently failed (exit 127) on every
+session start. Re-synced the fixed `hooks.json` (`python3`) into the distribution copy. A wider
+`python` → `python3` sweep of the skill text and `roll_core.py` usage strings is in flight
+upstream; it re-syncs here when it lands.
+
+### Changes
+
+- **`plugins/kata-harness/hooks/hooks.json`** — hook command `python` → `python3` (synced from
+  canonical HEAD `301bf61`; plugin version unchanged at 0.1.1).
+- **marketplace.json + README version**: 1.5.1 → 1.5.2. Counts unchanged (101/11).
+
 ## 2026-07-15 — kata-harness setup fix re-synced (v1.5.1)
 
 ### What happened
