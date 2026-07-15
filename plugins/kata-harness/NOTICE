@@ -1,0 +1,8 @@
+Kata Harness
+Copyright 2026 DojoGenesis
+
+This product includes software vendored from the bring-loop plugin
+(CoworkPluginsByDojoGenesis/plugins/bring-loop), licensed under the MIT License.
+The vendored functions in scripts/roll_core.py (slugify, parse_actions, load_ledger,
+open_actions, pick, week_counts, streak, scoreboard_text — see the file header) retain
+their original MIT license. All new code here is licensed under Apache-2.0 (see LICENSE).

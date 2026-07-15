@@ -1,12 +1,12 @@
 # DojoGenesis Plugins
 
-> 99 first-party methodology skills across 10 behavioral plugins — strategic thinking, spec-driven development, system health, wisdom garden, and more.
+> 101 first-party methodology skills across 11 behavioral plugins — strategic thinking, spec-driven development, system health, wisdom garden, and more.
 
 ## What this is
 
 The canonical first-party skill collection for the Dojo Genesis platform. Each plugin is a directory containing skills in SKILL.md format with YAML frontmatter that defines metadata, trigger conditions, and usage guidance. Skills are active cognitive scaffolds — structured methodologies that guide AI agents through complex decisions, not passive documentation. The collection is quality-gated and designed to work with the Dojo MCP Server and Claude Code.
 
-## Plugins (10)
+## Plugins (11)
 
 - **agent-orchestration** — Multi-agent coordination patterns, parallel dispatch, delegation playbooks
 - **continuous-learning** — Research modes, project exploration, synthesis, retrospectives, era architecture
@@ -18,10 +18,11 @@ The canonical first-party skill collection for the Dojo Genesis platform. Each p
 - **pretext-pdf** — PDF export, typography configuration for AI-generated documents
 - **dojo-craft** — Practitioner's workbench: strategic thinking, codebase intelligence, memory curation, project governance
 - **bring-loop** — Gate the outward loop: one send/decision/close a day, agent stages, human executes, honest separate streams (the BringItCruz! effect; canonical: github.com/DojoGenesis/bring-loop)
+- **kata-harness** — Roll the bring queue one tick at a time: bounded, self-terminating sessions (reps or minutes) over the same bring/ queue, opt-in timer display, session ledger folded fresh on every read (canonical: github.com/DojoGenesis/kata-harness)
 
 ## Clusters
 
-12 behavioral clusters cross-cut the 10 plugins — skills grouped by what they
+12 behavioral clusters cross-cut the 11 plugins — skills grouped by what they
 *do*, not just which plugin ships them. Every registered skill's `category:`
 frontmatter is one of these 12 ids (enforced by `scripts/plugin-lint.py`).
 Flags: **DUP** = near-duplicate of another member (see README's twin-skill
@@ -48,7 +49,7 @@ exactly this reason; they stay in `system-health`.)
 - **learn-research** — continuous-learning:research-modes, continuous-learning:research-synthesis, continuous-learning:web-research, continuous-learning:web-research-external, continuous-learning:patient-learning-protocol, continuous-learning:retrospective, continuous-learning:debugging
 - **understand-codebase** — continuous-learning:codebase-cartography, continuous-learning:tldr-code-analysis, continuous-learning:project-exploration, continuous-learning:figma-to-code (MISFILED), continuous-learning:design-system-selector (MISFILED), dojo-craft:codebase-viewer (DUP of continuous-learning:codebase-cartography — placed here, not in repo-docs-health, to match its DUP target's cluster)
 - **forge** — skill-forge:skill-creation, skill-forge:process-extraction, skill-forge:skill-maintenance, skill-forge:normalize-community-skill, skill-forge:scan-community-repos, skill-forge:batch-normalize-and-package, skill-forge:file-management, skill-forge:mcp-server-builder, skill-forge:mcp-cloudflare-builder, system-health:mcp-builder (MISFILED), system-health:supply-chain-refresh (MISFILED), system-health:hooks-reference (X), wisdom-garden:voice-before-structure (X)
-- **govern-publish** — dojo-craft:adr-writer, dojo-craft:project-scaffolder, pretext-pdf:pdf-export, pretext-pdf:pdf-typography, bring-loop:bring, bring-loop:bring-setup
+- **govern-publish** — dojo-craft:adr-writer, dojo-craft:project-scaffolder, pretext-pdf:pdf-export, pretext-pdf:pdf-typography, bring-loop:bring, bring-loop:bring-setup, kata-harness:kata-harness, kata-harness:kata-harness-setup
 
 ## Skill format
 

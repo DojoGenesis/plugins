@@ -1,0 +1,10 @@
+{
+  "name": "kata-harness",
+  "version": "0.1.0",
+  "description": "Roll your bring queue like a timed kata: one bring surfaced per tick inside a bounded session, staged by the agent, executed by you, logged as a win or a conscious skip. Rolling forward an unworked tick is not failure — the roll remembers.",
+  "author": {
+    "name": "Cruz Romero Morales (TresPies / DojoGenesis)"
+  },
+  "homepage": "https://github.com/DojoGenesis/kata-harness",
+  "license": "Apache-2.0"
+}

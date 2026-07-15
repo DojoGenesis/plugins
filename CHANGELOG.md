@@ -1,5 +1,31 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — Add kata-harness plugin (v1.5.0)
+
+### What happened
+
+Registered **kata-harness** as the 11th plugin — the Kata Roll runner that extends bring-loop:
+bounded, self-terminating roll sessions (reps or minutes) over the same `bring/` queue, one bring
+surfaced per tick, surface + stage only, session shape folded fresh from its own append-only
+`bring/roll-ledger.jsonl`. Closes the HARNESS-STANDARD H4 gap: kata-harness's SPEC §7 committed to
+this marketplace on 2026-07-13, but the listing didn't exist until now.
+
+### Changes
+
+- **`plugins/kata-harness/`** — distribution copy synced from the canonical repo
+  (`github.com/DojoGenesis/kata-harness`, `plugin/` dir + `SPEC.md`/`NOTICE`), following
+  bring-loop's pattern: plugin manifest, SessionStart roll-status injector (report-only,
+  fail-open), `kata-harness` + `kata-harness-setup` skills (both `category: govern-publish`),
+  self-contained `scripts/roll_core.py` (stdlib-only; MIT retained on the vendored
+  `bring_core.py` functions — see its `NOTICE`), dist README with the sync line.
+- **`.claude-plugin/marketplace.json`** — kata-harness entry registered; corpus claims
+  99 skills/10 plugins → 101/11.
+- **README.md** — headline + tagline counts, per-plugin table row (ROLL, 2 skills),
+  cluster prose count, govern-publish cluster row, directory tree, version section.
+- **llms.txt** — headline count, `## Plugins (11)` header + kata-harness bullet, clusters
+  intro count, govern-publish roster (+2 skills).
+- **marketplace.json + README version**: 1.4.4 → 1.5.0.
+
 ## 2026-07-11 — Marketplace renamed to `dojo-genesis` + publish-polish (v1.4.4)
 
 ### What happened

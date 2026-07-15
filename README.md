@@ -1,10 +1,10 @@
 # DojoGenesis Plugins
 
-**99 first-party methodology skills across 10 behavioral plugins for Claude Code and the Dojo platform.**
+**101 first-party methodology skills across 11 behavioral plugins for Claude Code and the Dojo platform.**
 
 AI agents are powerful but chaotic. They hallucinate requirements, forget context between sessions, skip verification, and produce work that needs rework. The problem isn't intelligence — it's discipline. These plugins encode the discipline: battle-tested workflows from actually shipping software with autonomous agents.
 
-**99 first-party methodology skills across 10 behavioral plugins — structured scaffolds for strategy, specs, orchestration, review, and memory.**
+**101 first-party methodology skills across 11 behavioral plugins — structured scaffolds for strategy, specs, orchestration, review, and memory.**
 
 ---
 
@@ -54,6 +54,7 @@ Or via the Dojo MCP tools: `dojo.list_skills`, `dojo.search_skills`, `dojo.invok
 | [pretext-pdf](plugins/pretext-pdf/) | PUBLISH | 2 | Export structured documents to print-quality PDF using the Pretext layout engine. Zero-reflow typography, adaptive pagination, auto table of contents. |
 | [dojo-craft](plugins/dojo-craft/) | CRAFT | 8 | The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. |
 | [bring-loop](plugins/bring-loop/) | BRING | 2 | Gate your outward loop like your build loop: one send/decision/close a day, staged by the agent, executed by you, measured in honest separate streams. The BringItCruz! effect, generalized. |
+| [kata-harness](plugins/kata-harness/) | ROLL | 2 | Roll the bring queue one tick at a time: bounded, self-terminating sessions (reps or minutes) over the same `bring/` queue — one bring surfaced per tick, staged by the agent, executed by you. Rolling forward is not failure. |
 
 **Not in the table above:** [`plugins/community-skills/`](plugins/community-skills/)
 holds 597 harvested SKILL.md files. Dormant-by-design: not a
@@ -65,7 +66,7 @@ plugins above once proven, never installed wholesale.
 ## Find the Right Skill in 30 Seconds
 
 Plugins are how skills ship; **clusters are how they behave.** 12 clusters
-cross-cut the 10 plugins — skills grouped by what they *do*, not which
+cross-cut the 11 plugins — skills grouped by what they *do*, not which
 directory holds them. Every registered skill's `category:` frontmatter is
 one of these 12 ids (enforced by `scripts/plugin-lint.py`); see the full
 `plugin:skill` roster with DUP/MISFILED/X flags in [llms.txt](llms.txt).
@@ -88,7 +89,7 @@ callers. The `misfiled`/`dup` notes below are descriptive, not a to-do list.
 | **learn-research** | research a question or retro a sprint | continuous-learning |
 | **understand-codebase** | get oriented in an unfamiliar codebase | continuous-learning (+1 dojo-craft dup) |
 | **forge** | build, maintain, or normalize a skill or MCP server | skill-forge (+2 misfiled, +2 span from other plugins) |
-| **govern-publish** | record a decision, scaffold a project, export a PDF, gate an outward send | dojo-craft, pretext-pdf, bring-loop |
+| **govern-publish** | record a decision, scaffold a project, export a PDF, gate an outward send, run a bounded roll | dojo-craft, pretext-pdf, bring-loop, kata-harness |
 
 ### Twin Skills — Which One Do I Want?
 
@@ -168,6 +169,9 @@ plugins/
 ├── bring-loop/skills/            (2)
 │   ├── bring/SKILL.md
 │   └── bring-setup/SKILL.md
+├── kata-harness/skills/          (2)
+│   ├── kata-harness/SKILL.md
+│   └── kata-harness-setup/SKILL.md
 └── community-skills/             ← community-contributed SKILL.md files, dormant-by-design
 ```
 
@@ -278,7 +282,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**1.4.4** — 99 first-party skills organized into 12 semantic clusters, published as the `dojo-genesis` marketplace. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
+**1.5.0** — 101 first-party skills organized into 12 semantic clusters, published as the `dojo-genesis` marketplace. Cluster membership is metadata-only; skills are never moved between plugins (invoke-name stability).
 
 Semantic versioning:
 - **Patch** (1.x.x): typo fixes, minor clarifications
