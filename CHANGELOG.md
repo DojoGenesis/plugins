@@ -1,5 +1,41 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — kata-harness v0.1.2 — plugin version bumped so the cache can see the fix (v1.5.5)
+
+### What happened
+
+v1.5.4 synced the correct `roll_core.py`, and the distribution copy was verifiably right — but the
+fix still could not reach an installed plugin. Claude Code's plugin cache is keyed by version
+(`~/.claude/plugins/cache/<marketplace>/<plugin>/<version>/`), and `7ab0505` had shipped changed
+content under the already-published version 0.1.1, so nothing downstream could tell the content had
+moved.
+
+Observed on this machine, not theorised: `claude plugin update kata-harness@kata-harness` printed
+"updated from 0.1.0 to 0.1.1", wrote `gitCommitSha: 7ab0505` into `installed_plugins.json`, and
+served pre-fix bytes anyway — it cleared the `.orphaned_at` marker on the pre-existing 0.1.1 cache
+dir and re-pointed the manifest at it without re-copying content. The manifest claimed a commit
+whose code it did not contain. Only a sha256 of the file on disk caught it; the CLI reported
+success throughout. Recovery took an uninstall plus removing the stale cache dir so the reinstall
+had nothing to resurrect.
+
+Canonical `48aab5e` bumps the plugin to 0.1.2. A fresh version key cannot collide with an existing
+cache dir, so the copy is forced. It also revives the sync stamp below, which had been inert across
+v1.5.2/v1.5.3/v1.5.4 — three consecutive syncs where the line could not move because neither the
+date nor the plugin version had changed. A stamp that cannot move is not evidence of a sync.
+
+### Changes
+
+- **`plugins/kata-harness/.claude-plugin/plugin.json`** — version 0.1.1 → 0.1.2 (synced from
+  canonical `48aab5e`). Upstream bumps two declarations in lockstep — the plugin manifest and the
+  root single-plugin marketplace metadata — since `claude plugin tag` validates that the two agree
+  and treats both as the release surface. Only the manifest is distributed here.
+- **Sync line: `Synced 2026-07-15 @ v0.1.1` → `@ v0.1.2`** — first time it has moved since the
+  plugin was added. Date is the *local* working day (2026-07-15 CDT); UTC had already rolled to
+  07-16 when this was written, which is the same class of bug `7ab0505` fixed.
+- No core change: `roll_core.py` untouched since v1.5.4 (sha256 `194d07da…`), byte-identical with
+  both canonical copies, 67/67 upstream.
+- **marketplace.json + README version**: 1.5.4 → 1.5.5. Counts unchanged (101/11).
+
 ## 2026-07-15 — kata-harness local-date resolve fix re-synced (v1.5.4)
 
 ### What happened
