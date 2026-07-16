@@ -1,5 +1,30 @@
 # Changelog — dojo-genesis
 
+## 2026-07-15 — kata-harness local-date resolve fix re-synced (v1.5.4)
+
+### What happened
+
+Canonical kata-harness landed `7ab0505`: `_resolve_now()` computed `today` off a UTC-aware
+timestamp, so any `roll-resolve` / `roll-skip` fired after ~19:00 in a negative-UTC-offset zone
+(Central included) was stamped with tomorrow's date once UTC had already rolled over — the ledger's
+`date` field means "which local working day", the same contract as `bring.py`. Confirmed against a
+real incident: a roll-skip at `utc=2026-07-16T01:30:05Z` (20:30 CDT on the 15th) landed as
+`date=2026-07-16`. The intended `date.today()` live-usage branch was also unreachable, since
+`now_ts` always resolves non-None via its own `_utc_now()` fallback. Re-synced the fixed core into
+the distribution copy.
+
+### Changes
+
+- **`plugins/kata-harness/scripts/roll_core.py`** — `_resolve_now()` converts to the local date via
+  `.astimezone().date()` before taking the date component; the true no-override path now reaches
+  `date.today()`. No timezone is ever hardcoded (system-local only, per `bring.py`'s contract), so
+  it stays correct on the Windows machine too. The `utc` field is untouched — still the true UTC
+  instant. Synced from canonical `7ab0505`; byte-identical with both canonical copies
+  (`scripts/` + `plugin/scripts/`, sha256 `194d07da…`). 67/67 tests green run directly against
+  this distribution copy (62 + 5 new `ResolveNowLocalDateTests` regressions).
+- Sync line unchanged (`Synced 2026-07-15 @ v0.1.1` — same day, plugin version not bumped upstream).
+- **marketplace.json + README version**: 1.5.3 → 1.5.4. Counts unchanged (101/11).
+
 ## 2026-07-15 — kata-harness python3 text sweep re-synced (v1.5.3)
 
 ### What happened

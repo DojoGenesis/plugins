@@ -1111,9 +1111,25 @@ def _resolve_now(a):
     now_str = getattr(a, "now", None)
     if now_str:
         today = datetime.date.fromisoformat(now_str)
-    elif now_ts is not None:
-        today = now_ts.date()
+    elif now_ts_str:
+        # --now-ts pins a specific instant (deterministic tests / timer verbs).
+        # now_ts is always UTC-aware (_parse_iso defaults naive input to UTC),
+        # so a bare `.date()` here reads the UTC calendar date, not the local
+        # one — the evening-misdate bug (2026-07-15): a roll-resolve/roll-skip
+        # after ~19:00 in a negative-UTC-offset zone lands on tomorrow's date
+        # because UTC has already rolled over. The ledger's `date` field means
+        # "which local working day", same contract as bring.py/bring_core.py
+        # (both use system-local date) — so convert to local before taking
+        # the date component.
+        today = now_ts.astimezone().date()
     else:
+        # No override at all: the live/real-usage path (every actual
+        # roll-tick/roll-resolve/roll-skip invocation). now_ts above always
+        # resolves to a non-None value (_utc_now() as its own fallback), so
+        # this branch was previously unreachable and the `elif` above caught
+        # this case too via the same UTC-.date() bug — that was the actual
+        # live bug, not just the --now-ts test path. date.today() is the
+        # single most direct system-local "today", matching bring.py.
         today = datetime.date.today()
     return today, now_ts
 
