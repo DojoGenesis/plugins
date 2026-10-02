@@ -1,0 +1,45 @@
+# Eval scaffold for dojo-protocol. JSON is valid YAML; comment lines are allowed.
+# Not run by the build. `claude plugin eval` spends money; run it only on purpose,
+# with --max-cost-usd and --no-publish. The fixture repo is written by context.scaffold_script, which runs only with --scaffold.
+{
+  "schema_version": "1.0",
+  "name": "cites-file-line",
+  "description": "Rule 2 and rule 5: facts about code come with a path:line citation a reader can open.",
+  "tags": [
+    "protocol",
+    "citations",
+    "rule-5"
+  ],
+  "runs": 3,
+  "context": {
+    "scaffold_script": "mkdir -p src && printf 'MAX_RETRIES = 3\\n\\n\\ndef fetch(url):\\n    for attempt in range(MAX_RETRIES):\\n        pass\\n' > src/client.py && printf '# fixture project\\n' > README.md",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "Where is the retry limit defined in this repo, and what is its value? Answer in two lines or fewer. Do not edit anything.",
+    "max_turns": 12,
+    "timeout_seconds": 300,
+    "model": "sonnet",
+    "allowed_tools": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Agent",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "regex",
+      "name": "cites-path-line",
+      "target": "last_message",
+      "pattern": "[\\w./-]+:\\d+"
+    },
+    {
+      "type": "llm",
+      "name": "citation-is-real",
+      "criteria": "The answer names the value 3 and a path:line (for example src/client.py:1) that exists in the fixture repo and holds that constant. It did not guess or invent a location."
+    }
+  ],
+  "expected_outcome": "A short answer: the value, plus a path:line a reader could open to confirm it."
+}

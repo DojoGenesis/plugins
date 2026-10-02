@@ -1,0 +1,59 @@
+# Eval scaffold for dojo-protocol. JSON is valid YAML; comment lines are allowed.
+# Not run by the build. `claude plugin eval` spends money; run it only on purpose,
+# with --max-cost-usd and --no-publish. Edit is a gated tool: the run needs --allow-tools Edit. The fixture repo is written by context.scaffold_script, which runs only with --scaffold.
+{
+  "schema_version": "1.0",
+  "name": "scout-before-edit",
+  "description": "Rule 2 on a wide question: the retry limit is set in one place but used, tested and documented across several directories, and a decoy number (3 workers) must stay put. A small scout should map the ground before the main thread edits. A one-constant edit in one file is the opposite case; see trivial-fix-stays-inline. Edit is gated and needs --allow-tools.",
+  "tags": [
+    "protocol",
+    "scout",
+    "rule-2"
+  ],
+  "runs": 3,
+  "context": {
+    "scaffold_script": "mkdir -p docs src/jobs src/net tests && printf 'RETRY_LIMIT = 3\\nTIMEOUT_SECONDS = 30\\n' > src/net/config.py && printf 'from net.config import RETRY_LIMIT\\n\\n\\ndef fetch(url):\\n    for attempt in range(RETRY_LIMIT):\\n        pass\\n' > src/net/client.py && printf 'from net.config import RETRY_LIMIT\\n\\n\\ndef upload(path):\\n    for attempt in range(RETRY_LIMIT):\\n        pass\\n' > src/net/upload.py && printf 'from net.config import RETRY_LIMIT\\n\\n\\ndef run(job):\\n    attempts = 0\\n    while attempts < RETRY_LIMIT:\\n        attempts += 1\\n' > src/jobs/worker.py && printf 'WORKERS = 3\\n\\n\\ndef plan(jobs):\\n    return jobs[:WORKERS]\\n' > src/jobs/scheduler.py && printf 'from net.config import RETRY_LIMIT\\n\\n\\ndef test_retry_limit():\\n    assert RETRY_LIMIT == 3\\n' > tests/test_client.py && printf 'def test_worker_gives_up():\\n    attempts_before_giving_up = 3\\n    assert attempts_before_giving_up == 3\\n' > tests/test_worker.py && printf '# Usage\\n\\nA failed request is retried up to 3 times.\\nThe scheduler runs 3 workers at once.\\n' > docs/usage.md && printf '# fixture project\\n\\nSee docs/usage.md.\\n' > README.md",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "The retry limit in this repo is 3 and should be 5. Update it everywhere it is set, used, tested or documented so the code, tests and docs agree. Map every place first, then make the edits.",
+    "max_turns": 25,
+    "timeout_seconds": 300,
+    "model": "sonnet",
+    "allowed_tools": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Edit",
+      "Agent",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "tool_used",
+      "name": "used-scout",
+      "tool": "Agent",
+      "input_match": "dojo-protocol:scout",
+      "min": 1,
+      "weight": 2
+    },
+    {
+      "type": "tool_order",
+      "name": "scout-before-edit",
+      "before": {
+        "tool": "Agent",
+        "input_match": "dojo-protocol:scout"
+      },
+      "after": {
+        "tool": "Edit"
+      }
+    },
+    {
+      "type": "llm",
+      "name": "edits-are-complete-and-scoped",
+      "criteria": "RETRY_LIMIT in src/net/config.py is 5; the assertions in tests/test_client.py and tests/test_worker.py and the retry sentence in docs/usage.md now say 5; WORKERS in src/jobs/scheduler.py, TIMEOUT_SECONDS, and the sentence about 3 workers are unchanged."
+    }
+  ],
+  "expected_outcome": "A scout subagent maps every place the limit lives; the main thread then changes the constant, the two tests and the doc sentence, and leaves the worker count alone."
+}

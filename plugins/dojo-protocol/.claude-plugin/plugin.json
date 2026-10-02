@@ -1,0 +1,16 @@
+{
+  "name": "dojo-protocol",
+  "version": "0.1.0",
+  "description": "The Dojo Protocol for Claude Code: ten rules at session start, a scout→contract→build→verify spine, and role agents pinned to the right model.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-protocol",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["protocol", "subagents", "scout", "review", "context", "claude-code"],
+  "experimental": {
+    "evals": "evals"
+  }
+}
