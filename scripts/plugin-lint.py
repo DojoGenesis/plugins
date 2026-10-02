@@ -25,17 +25,42 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 # but exempt from the marketplace-registration requirement.
 IMPORTED_NOT_PUBLISHED = {"community-skills"}
 
-# Valid Claude Code hook event names (2026-06-09 shape-check)
+# Valid Claude Code hook event names (Claude Code 2.1.286 event list; the
+# 2026-06-09 shape-check list was a subset and rejected newer events)
 VALID_HOOK_EVENTS = {
     "PreToolUse",
     "PostToolUse",
+    "PostToolUseFailure",
+    "PostToolBatch",
+    "Notification",
     "UserPromptSubmit",
-    "Stop",
-    "SubagentStop",
+    "UserPromptExpansion",
     "SessionStart",
     "SessionEnd",
+    "Stop",
+    "StopFailure",
+    "SubagentStart",
+    "SubagentStop",
     "PreCompact",
-    "Notification",
+    "PostCompact",
+    "PreModelSwitch",
+    "PostModelSwitch",
+    "PermissionRequest",
+    "PermissionDenied",
+    "Setup",
+    "TeammateIdle",
+    "TaskCreated",
+    "TaskCompleted",
+    "Elicitation",
+    "ElicitationResult",
+    "ConfigChange",
+    "WorktreeCreate",
+    "WorktreeRemove",
+    "InstructionsLoaded",
+    "CwdChanged",
+    "FileChanged",
+    "DirectoryAdded",
+    "MessageDisplay",
 }
 
 # The 12 semantic-cluster ids (2026-07-11 clustering makeover). Every

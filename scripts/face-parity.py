@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-face-parity.py — dual-navigability gate for the CoworkPlugins corpus.
+face-parity.py — dual-navigability gate for the Dojo Genesis plugin corpus.
 
 The corpus has ONE source of truth (the plugin directories on disk under
 plugins/) and three faces that describe it:
@@ -12,16 +12,22 @@ plugins/) and three faces that describe it:
 All three have drifted from disk before (README said 92/9 and llms.txt 84/8
 while disk held 97 — hand-repaired 2026-07-04, and the repair itself missed
 two body claims). This gate makes that class of drift fail closed instead of
-waiting for the next hand-audit. Pattern: seed_dual_navigability.md in
-TresPies-AI-Orchestration — one source, N faces, one gate.
+waiting for the next hand-audit. Pattern: one source, N faces, one gate.
+
+Since 2.0.0 the marketplace has three groups, set by each entry's `category`:
+suite (the protocol suite), library (the practice skills) and companion
+(bring-loop, kata-harness). A count claim can name a group ("9 library
+plugins"); it is then checked against that group, not the whole corpus.
 
 Checks
   1  marketplace.json: every registered plugin exists on disk with a
-     .claude-plugin/plugin.json and at least one skill
+     .claude-plugin/plugin.json and something to install (a skill, agent,
+     command, workflow, or a dependency list)
   2  disk: every plugins/*/ dir holding a plugin.json is either registered
      in marketplace.json or consciously allowlisted as unregistered
   3  count claims: every "N ... skills" / "N ... plugins" number in the three
-     faces matches computed disk truth (numbers at per-plugin scale exempt)
+     faces matches computed disk truth (numbers at per-plugin scale exempt;
+     a claim that names a group is checked against that group)
   4  README's per-plugin table: each row's own skill count matches that
      plugin's disk-computed count — closes the gap check 3 leaves open,
      since per-plugin-scale numbers are exempt there by design (this is
@@ -30,10 +36,10 @@ Checks
   5  llms.txt "## Plugins (N)" header + its bullet list (scoped to that
      section body, not the whole file) match the registered set exactly
   6  README's version line matches marketplace.json metadata.version
+  7  README's suite table (between the suite-table markers) is exactly what
+     scripts/suite_table.py generates from the suite plugins on disk
 
-Exit 0 = CONTRACT PASS, 1 = CONTRACT FAIL. Stdlib only, by design — same
-posture as trespies-dev/scripts/validate_facet.py and the dag-essentials
-check_verb_parity.py.
+Exit 0 = CONTRACT PASS, 1 = CONTRACT FAIL. Stdlib only, by design.
 """
 from __future__ import annotations
 
@@ -48,10 +54,12 @@ LLMS = ROOT / "llms.txt"
 README = ROOT / "README.md"
 
 # Plugin dirs that hold a plugin.json but are deliberately NOT registered in
-# marketplace.json. community-skills: 597 harvested skills, dormant by design
-# (wholesale registration floods context budgets and fails plugin-lint; skills
-# are promoted individually into the registered plugins instead).
+# marketplace.json. community-skills: dormant by design, and removed from the
+# public repo in 2.0.0 (history keeps it); the entry stays only so the gate
+# still passes in a checkout where that directory has not been deleted yet.
 ALLOWLIST_UNREGISTERED = {"community-skills"}
+
+GROUPS = ("suite", "library", "companion")
 
 findings: list[str] = []
 passes: list[str] = []
@@ -74,24 +82,38 @@ def main() -> int:
     version = market.get("metadata", {}).get("version", "")
 
     skills_per_plugin: dict[str, int] = {}
+    group_of: dict[str, str] = {}
     for entry in market.get("plugins", []):
         name, source = entry["name"], entry["source"]
+        group_of[name] = entry.get("category", "")
+        if group_of[name] not in GROUPS:
+            fail(f"marketplace.json: '{name}' has category '{group_of[name]}', expected one of {list(GROUPS)}")
         pdir = (ROOT / source).resolve()
-        if not (pdir / ".claude-plugin" / "plugin.json").is_file():
+        pjson = pdir / ".claude-plugin" / "plugin.json"
+        if not pjson.is_file():
             fail(f"marketplace.json registers '{name}' but {source}/.claude-plugin/plugin.json is missing on disk")
             continue
         count = len(list((pdir / "skills").glob("*/SKILL.md")))
         skills_per_plugin[name] = count
-        if count == 0:
-            fail(f"registered plugin '{name}' has zero skills on disk")
+        has_other = (any((pdir / "agents").glob("*.md")) or any((pdir / "commands").glob("*.md"))
+                     or any((pdir / "workflows").glob("*.js")))
+        try:
+            has_deps = bool(json.loads(pjson.read_text(encoding="utf-8")).get("dependencies"))
+        except ValueError:
+            has_deps = False
+        if count == 0 and not (has_other or has_deps):
+            fail(f"registered plugin '{name}' ships nothing on disk (no skills, agents, commands, workflows or dependencies)")
     if len(skills_per_plugin) == len(registered):
-        ok(f"marketplace.json: all {len(registered)} registered plugins exist on disk with skills")
+        ok(f"marketplace.json: all {len(registered)} registered plugins exist on disk with something to install")
 
     total_skills = sum(skills_per_plugin.values())
     total_plugins = len(registered)
     per_plugin_max = max(skills_per_plugin.values(), default=0)
+    group_plugins = {g: sum(1 for n in registered if group_of.get(n) == g) for g in GROUPS}
+    group_skills = {g: sum(c for n, c in skills_per_plugin.items() if group_of.get(n) == g) for g in GROUPS}
     print(f"       disk truth: {total_skills} skills across {total_plugins} registered plugins "
           f"(largest plugin: {per_plugin_max} skills)")
+    print("       groups: " + ", ".join(f"{g} {group_plugins[g]} plugins / {group_skills[g]} skills" for g in GROUPS))
 
     # ---- disk dirs vs registry ------------------------------------------
     on_disk = {d.name for d in (ROOT / "plugins").iterdir()
@@ -109,9 +131,17 @@ def main() -> int:
     # Any "N <up to 3 words> skills" claim above per-plugin scale must equal
     # the corpus total; any "N <up to 2 words> plugins" claim must equal the
     # registered count. Numbers at or below the largest single plugin are
-    # treated as per-plugin references and exempted.
-    skills_re = re.compile(r"\b(\d+)(?:\s+[A-Za-z-]+){0,3}?\s+skills\b", re.IGNORECASE)
-    plugins_re = re.compile(r"\b(\d+)(?:\s+[A-Za-z-]+){0,2}?\s+plugins\b", re.IGNORECASE)
+    # treated as per-plugin references and exempted. A claim that names a
+    # group (suite, library, companion) in those words is checked against
+    # that group's count instead, and is never exempt.
+    skills_re = re.compile(r"\b(\d+)((?:\s+[A-Za-z-]+){0,3}?)\s+skills\b", re.IGNORECASE)
+    plugins_re = re.compile(r"\b(\d+)((?:\s+[A-Za-z-]+){0,2}?)\s+plugins\b", re.IGNORECASE)
+
+    def named_group(words: str):
+        for w in words.lower().split():
+            if w in GROUPS:
+                return w
+        return None
 
     claims_checked = 0
     for face in (MARKETPLACE, LLMS, README):
@@ -119,6 +149,12 @@ def main() -> int:
         for lineno, line in enumerate(face.read_text(encoding="utf-8").splitlines(), 1):
             for m in skills_re.finditer(line):
                 n = int(m.group(1))
+                grp = named_group(m.group(2))
+                if grp:
+                    claims_checked += 1
+                    if n != group_skills[grp]:
+                        fail(f"{rel}:{lineno} {grp} skills claim says {n}, disk truth is {group_skills[grp]}")
+                    continue
                 if n <= per_plugin_max:
                     continue  # plausibly a per-plugin count, not a corpus claim
                 claims_checked += 1
@@ -126,9 +162,11 @@ def main() -> int:
                     fail(f"{rel}:{lineno} skills claim says {n}, disk truth is {total_skills}")
             for m in plugins_re.finditer(line):
                 n = int(m.group(1))
+                grp = named_group(m.group(2))
                 claims_checked += 1
-                if n != total_plugins:
-                    fail(f"{rel}:{lineno} plugins claim says {n}, registered count is {total_plugins}")
+                want = group_plugins[grp] if grp else total_plugins
+                if n != want:
+                    fail(f"{rel}:{lineno} {grp or 'registered'} plugins claim says {n}, disk truth is {want}")
     ok(f"count claims: {claims_checked} corpus-scale claims swept across the three faces")
 
     # ---- README per-plugin table parity -----------------------------------
@@ -192,6 +230,18 @@ def main() -> int:
         fail(f"README.md version line says {ver_line.group(1)}, marketplace.json metadata.version is {version}")
     else:
         ok(f"version: README line matches marketplace.json ({version})")
+
+    # ---- README suite table ------------------------------------------------
+    sys.path.insert(0, str(ROOT / "scripts"))
+    try:
+        import suite_table
+        problems = suite_table.check_readme(str(ROOT))
+    except Exception as e:  # noqa: BLE001 - a table that cannot be generated is a failure, not a crash
+        problems = [f"suite table could not be checked: {e}"]
+    for pr in problems:
+        fail(pr)
+    if not problems:
+        ok("README suite table: matches what scripts/suite_table.py generates from disk")
 
     # ---- verdict ----------------------------------------------------------
     print()
