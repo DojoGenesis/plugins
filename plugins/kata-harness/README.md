@@ -25,4 +25,4 @@ session ledger (`bring/roll-ledger.jsonl`). MIT attribution for the vendored
 
 ---
 
-*Distribution copy. Canonical source: [github.com/DojoGenesis/kata-harness](https://github.com/DojoGenesis/kata-harness) (`plugin/` dir + `SPEC.md`/`NOTICE`) - sync from there, do not edit here. Synced 2026-07-15 @ v0.1.2.*
+*Source: [DojoGenesis/plugins](https://github.com/DojoGenesis/plugins/tree/main/plugins/kata-harness). The standalone repo this README used to point at does not exist (404), so this directory is the source. v0.1.3 fixes the homepage link.*
