@@ -1,13 +1,13 @@
 ---
 name: bring-setup
-description: Initialize the bring loop in the current project — scaffold bring/actions.md + ledger, seed the first real outward actions from conversation, and explain the daily contract. Use when the user says "set up bring-loop", "install the bring loop", "start gating my sends", or asks how to get the BringItCruz effect in their system.
+description: Initialize the bring loop in this project — scaffold bring/actions.md and the ledger, seed the first real outward actions, explain the daily contract. Use for "set up bring-loop", "start gating my sends", or the BringItCruz effect.
 model: inherit
 category: govern-publish
 ---
 
 # Bring-setup — initialize the loop in this project
 
-1. Run `python "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" init` from the
+1. Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" init` from the
    project root. It scaffolds `bring/actions.md` (with a template) and an
    empty `bring/ledger.jsonl`. It never overwrites existing files.
 2. **Seed real actions immediately** — an empty queue teaches nothing. Ask the

@@ -1,6 +1,6 @@
 ---
 name: bring
-description: Surface and stage TODAY'S ONE outward action (send/decision/close/ship) from the project's bring/ queue, then log the outcome on the human's word. Use when the user says "bring it", "what's my bring", "log the send", "skip today's bring", or when the SessionStart brief shows an unbrought action and the user engages with it.
+description: Surface and stage today's one outward action (send/decision/close/ship) from the project's bring/ queue, then log the outcome on the human's word. Use for "bring it", "what's my bring", "log the send", "skip today's bring", or the SessionStart brief.
 model: inherit
 category: govern-publish
 ---
@@ -12,7 +12,7 @@ bring-loop plugin/repo; the five invariants are binding).
 
 ## When the user says "bring it"
 
-1. Run `python "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" brief --json` from
+1. Run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" brief --json` from
    the project root. Present ONLY the top action — never the whole queue.
 2. **Stage it**: gather everything the human needs to execute in one motion —
    open/quote the draft if `link`/`note` points at one, confirm recipient and
@@ -26,7 +26,7 @@ bring-loop plugin/repo; the five invariants are binding).
 ## Logging (only on their word)
 
 When they say it happened (or they skip):
-`python "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" log <sent|decided|closed|shipped|skipped> --id <id> [--note "..."]`
+`python3 "${CLAUDE_PLUGIN_ROOT}/scripts/bring_core.py" log <sent|decided|closed|shipped|skipped> --id <id> [--note "..."]`
 - `skipped` requires a reason in `--note`. Treat a logged skip as a success of
   the system, not a failure of the person.
 - The log command refreshes `bring/SCOREBOARD.md` automatically; if you edited
