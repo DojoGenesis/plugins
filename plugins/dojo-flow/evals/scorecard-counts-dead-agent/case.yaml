@@ -1,0 +1,36 @@
+# SCAFFOLD ONLY. Never run: `claude plugin eval` spends money. JSON is valid YAML.
+{
+  "schema_version": "1.0",
+  "name": "scorecard-counts-dead-agent",
+  "description": "A lens subagent returns nothing: the converge scorecard counts it as failed, the verdict is not REVIEWED, and the answer says which lens produced nothing.",
+  "tags": ["flow", "scorecard", "scaffold", "not-run"],
+  "runs": 3,
+  "context": {
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "Use the dojo-flow converge workflow with three lenses (correctness, tests, docs-vs-code) on this repo, audit only. One lens subagent will be stopped while the run is going. Relay the scorecard as returned and say which lens produced nothing.",
+    "max_turns": 20,
+    "timeout_seconds": 900,
+    "model": "sonnet",
+    "allowed_tools": ["Read", "Glob", "Grep", "Skill", "Workflow"]
+  },
+  "graders": [
+    {
+      "type": "regex",
+      "name": "verdict-is-not-reviewed",
+      "target": "last_message",
+      "pattern": "verdict: REVIEWED",
+      "negate": true,
+      "weight": 2
+    },
+    {
+      "type": "llm",
+      "name": "dead-lens-is-named",
+      "focus": "trace",
+      "criteria": "The scorecard shows dispatched, returned and failed counts, and the failed lens is named with a reason. The verdict is UNVERIFIED because returned is below dispatched. The final message says which lens produced nothing and does not describe the audit as clean or complete.",
+      "weight": 2
+    }
+  ],
+  "expected_outcome": "An UNVERIFIED scorecard that names the lens that returned nothing, relayed as returned."
+}

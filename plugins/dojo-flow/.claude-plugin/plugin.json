@@ -1,0 +1,13 @@
+{
+  "name": "dojo-flow",
+  "version": "0.1.0",
+  "description": "Parallel builds that stay independent: a contract gate, scouts on small models, builders in the middle, judges at the ends, and a scorecard that counts returns.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-flow",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["workflow", "parallel", "multi-agent", "contract", "scorecard", "dag"]
+}
