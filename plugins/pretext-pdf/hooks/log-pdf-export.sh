@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
-# log-pdf-export.sh — fires on PostToolUse for mcp__* tools; logs PDF export events
+# log-pdf-export.sh — fires on PostToolUse for mcp__* tools; logs PDF export events.
+# Fails open: it exits 0 for every call that is not an export, and for any error.
+# (Before 0.2.1 it exited 1 on every non-export call, because `set -e` fired on the
+# parser's "not applicable" exit code before the check that was meant to handle it.)
 
-set -euo pipefail
-
-INPUT=$(cat)
+INPUT=$(cat) || exit 0
 
 PARSED=$(python3 -c "
 import json, sys
@@ -27,18 +28,17 @@ input_file = tool_input.get('input_file', tool_input.get('inputFile', tool_input
 
 print(input_file)
 print(output_path)
-" "$INPUT" 2>/dev/null)
+" "$INPUT" 2>/dev/null) || exit 0
 
-# python3 exits 1 when 'export' not in tool_name — bail out silently
-if [ $? -ne 0 ] || [ -z "$PARSED" ]; then
-    exit 0
-fi
+[ -n "$PARSED" ] || exit 0
 
 INPUT_FILE=$(echo "$PARSED" | sed -n '1p')
 OUTPUT_PATH=$(echo "$PARSED" | sed -n '2p')
 
-LOG_DIR="${CLAUDE_PLUGIN_DATA}"
-mkdir -p "${LOG_DIR}"
+LOG_DIR="${CLAUDE_PLUGIN_DATA:-}"
+[ -n "$LOG_DIR" ] || exit 0
+mkdir -p "$LOG_DIR" 2>/dev/null || exit 0
 
 TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-echo "${TIMESTAMP} exported: ${INPUT_FILE} → ${OUTPUT_PATH}" >> "${LOG_DIR}/exports.log"
+echo "${TIMESTAMP} exported: ${INPUT_FILE} → ${OUTPUT_PATH}" >> "${LOG_DIR}/exports.log" 2>/dev/null || true
+exit 0
