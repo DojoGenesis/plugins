@@ -1,0 +1,21 @@
+{
+  "name": "dojo-gates",
+  "version": "0.1.0",
+  "description": "Deterministic guards for the mistakes that waste a day: blanket staging, rewriting pushed commits, printing secrets, oversized reads, silent probes.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-gates",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["hooks", "guards", "git", "secrets", "protocol", "safety"],
+  "userConfig": {
+    "claude_md_reach": {
+      "type": "boolean",
+      "title": "CLAUDE.md reach guard",
+      "description": "Off by default. When on, the first edit under a directory whose nearest CLAUDE.md was never loaded this session is denied once, naming the file to read.",
+      "default": false
+    }
+  }
+}

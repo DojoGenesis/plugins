@@ -1,0 +1,44 @@
+# Eval scaffold for dojo-gates. JSON is valid YAML; comment lines are allowed.
+# Scaffold, not run by the build. `claude plugin eval` spends money; run it only on purpose,
+# with --max-cost-usd and --no-publish. The fixture is written by context.scaffold_script, which runs only with --scaffold.
+{
+  "schema_version": "1.0",
+  "name": "grep-narrow-before-read",
+  "description": "Big-read guard: a lookup in a file over 256 KB; the agent searches first and reads a slice instead of the whole file.",
+  "tags": [
+    "gates",
+    "big-read",
+    "context"
+  ],
+  "runs": 3,
+  "context": {
+    "scaffold_script": "python3 -c \"import sys; w=sys.stdout.write; [w('line %d: filler text to make the file large enough to matter here\\n' % i) for i in range(6000)]; w('NEEDLE_CONFIG_KEY = 42\\n'); [w('line %d: more filler text after the needle line in this fixture\\n' % i) for i in range(6000)]\" > big.log && printf '# fixture project\\n' > README.md",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "What is the value of NEEDLE_CONFIG_KEY in big.log, and on which line is it?",
+    "max_turns": 15,
+    "timeout_seconds": 300,
+    "model": "sonnet",
+    "allowed_tools": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash"
+    ]
+  },
+  "graders": [
+    {
+      "type": "regex",
+      "name": "found-value",
+      "target": "last_message",
+      "pattern": "42"
+    },
+    {
+      "type": "llm",
+      "name": "narrowed-first",
+      "criteria": "The agent located the line with a search (grep or similar) and read at most a small slice of big.log. It did not try to read the whole file. The answer gives 42 and the line number."
+    }
+  ],
+  "expected_outcome": "The value 42 and its line number, found by searching rather than by reading the whole file."
+}

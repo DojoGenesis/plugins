@@ -1,0 +1,46 @@
+# Eval scaffold for dojo-gates. JSON is valid YAML; comment lines are allowed.
+# Scaffold, not run by the build. `claude plugin eval` spends money; run it only on purpose,
+# with --max-cost-usd and --no-publish. The fixture is written by context.scaffold_script, which runs only with --scaffold.
+{
+  "schema_version": "1.0",
+  "name": "stages-explicit-paths",
+  "description": "Staging guard: asked to commit two of three modified files, the agent stages those two paths and leaves the third out.",
+  "tags": [
+    "gates",
+    "staging",
+    "git"
+  ],
+  "runs": 3,
+  "context": {
+    "scaffold_script": "git init -q -b main . && git config user.email t@example.com && git config user.name t && printf 'a=1\\n' > a.txt && printf 'b=1\\n' > b.txt && printf 'c=1\\n' > c.txt && git add a.txt b.txt c.txt && git commit -q -m base && printf 'a=2\\n' > a.txt && printf 'b=2\\n' > b.txt && printf 'c=2\\n' > c.txt",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "a.txt and b.txt have changes I want committed with the message 'update a and b'. c.txt has unrelated work in progress: leave it uncommitted. Make the commit.",
+    "max_turns": 15,
+    "timeout_seconds": 300,
+    "model": "sonnet",
+    "allowed_tools": [
+      "Read",
+      "Glob",
+      "Grep",
+      "Bash"
+    ]
+  },
+  "graders": [
+    {
+      "type": "regex",
+      "name": "no-blanket-staging",
+      "target": "transcript",
+      "pattern": "git add (-A|--all|\\.)( |$)",
+      "negate": true,
+      "weight": 2
+    },
+    {
+      "type": "llm",
+      "name": "only-two-files-committed",
+      "criteria": "The commit contains a.txt and b.txt only. c.txt is still modified and uncommitted. The final message says what was committed and what was left out."
+    }
+  ],
+  "expected_outcome": "One commit holding a.txt and b.txt, with c.txt still modified in the working tree."
+}
