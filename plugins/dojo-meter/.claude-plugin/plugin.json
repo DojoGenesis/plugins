@@ -1,0 +1,36 @@
+{
+  "name": "dojo-meter",
+  "version": "0.1.0",
+  "description": "See what each turn, agent and model costs, and how big your context is: a cost report from your transcripts, and a live band with the mod.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-meter",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["cost", "usage", "tokens", "context", "meter", "protocol", "mod"],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "show_band": {
+      "type": "boolean",
+      "title": "Show band (mod)",
+      "description": "Mod only: draw the live cost band above the prompt. Needs function hooks enabled. /dojo-meter:band toggles it for the session.",
+      "default": true
+    },
+    "budget_usd": {
+      "type": "number",
+      "title": "Session budget in USD (mod)",
+      "description": "Mod only: toast once at 70 and once at 90 percent of this session's list-price estimate. Per session, resets on resume. 0 turns it off.",
+      "default": 0,
+      "min": 0
+    },
+    "context_warn_tokens": {
+      "type": "number",
+      "title": "Context warning in tokens (mod)",
+      "description": "Mod only: toast when the last main-thread request holds more tokens than this, and suggest /compact. 0 turns it off.",
+      "default": 400000,
+      "min": 0
+    }
+  }
+}

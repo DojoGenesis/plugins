@@ -1,0 +1,5 @@
+{
+  "description": "Live cost band, budget and context toasts, and daily totals (mod, early access). The classic tier is the /dojo-meter:cost command: no classic hooks.",
+  "hooks": {},
+  "modules": ["./register.ts"]
+}
