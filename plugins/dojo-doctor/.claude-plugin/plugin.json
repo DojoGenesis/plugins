@@ -1,0 +1,13 @@
+{
+  "name": "dojo-doctor",
+  "version": "0.1.0",
+  "description": "Find the hooks and settings that fail or cost you silently: broken interpreters, noisy injections, always-on token weight, flags that are off.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-doctor",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["doctor", "hooks", "diagnostics", "settings", "context", "claude-code"]
+}
