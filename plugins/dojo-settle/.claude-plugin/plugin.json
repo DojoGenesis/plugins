@@ -1,0 +1,13 @@
+{
+  "name": "dojo-settle",
+  "version": "0.1.0",
+  "description": "Settle claims with evidence: pre-registered experiments, with/without baselines and decision gates before anything becomes a number.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-settle",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["evaluation", "preregistration", "ablation", "decision", "evidence"]
+}

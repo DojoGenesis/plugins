@@ -1,0 +1,47 @@
+# Eval case TEMPLATE. Copy to <your-plugin>/evals/<case-name>/case.yaml and replace every TODO.
+#
+# Before you run anything:
+#   - Someone other than the plugin's author writes the prompt below.
+#   - Keep the prompt self-contained: code inline, no absolute or home-directory paths.
+#   - Never run without a cap: claude plugin eval --runs 1 --ablation with-without \
+#       --no-scaffold --no-publish --max-cost-usd <cap> \
+#       --allow-tools Write Edit "Bash(python3:*)" --judge-model opus <plugin-path>
+#   - Tools follow graders: grant only what the task needs; Bash, Write and Edit are gated.
+#   - An llm grader that judges ordering needs focus: trace (the default is last_message).
+#   - claude plugin validate does not read this file. Check keys by hand.
+schema_version: "1.0"
+name: TODO-case-name
+description: TODO one sentence on what this case checks.
+tags: [scaffold, not-run]
+runs: 3
+context:
+  add_dirs: []
+execution:
+  prompt: |
+    TODO A self-contained task. State the goal, put any code inline, say what a finished answer looks like.
+  max_turns: 12
+  timeout_seconds: 600
+  model: sonnet
+  allowed_tools: [Read, Write, Edit, Bash, Glob, Grep, Skill]
+graders:
+  # Fired indicator. Shows whether the plugin's skill ran; adds nothing to the score.
+  - type: tool_used
+    name: plugin-skill-fired
+    tool: Skill
+    input_match: "TODO-plugin-name"
+    min: 1
+    arm: with-only
+  # Score-bearing check on the answer text. Make sure it fails on a run that is wrong.
+  # target: last_message | trace | files | mock_calls, or {source: file, path: <relative path>}.
+  - type: regex
+    name: answer-has-the-expected-value
+    target: last_message
+    pattern: "TODO-pattern"
+    weight: 2
+  # Score-bearing judge. Criteria describe behavior, not the plugin's own vocabulary.
+  - type: llm
+    name: behavior-is-sound
+    focus: trace
+    criteria: TODO what a careful reader would accept as correct, stated so a bad run would fail it.
+    weight: 2
+expected_outcome: TODO one or two sentences on what a good run looks like.

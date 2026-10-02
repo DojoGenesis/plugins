@@ -1,0 +1,39 @@
+# SCAFFOLD. Not run. No result from this case exists.
+#
+# The case where dojo-settle should not fire (best case for the with arm: a tie): a one-line
+# arithmetic question has nothing to settle, so the settle skill should stay out. The
+# graders reward staying out. In the without arm the plugin is absent, so these pass
+# trivially; the case is only informative in the with arm. Bash is not in allowed_tools,
+# so the prereg script can't run here and there is no grader for it.
+#
+# Do not run without a cap: claude plugin eval --runs 1 --ablation with-without \
+#   --no-scaffold --no-publish --max-cost-usd <cap> --judge-model opus plugins/dojo-settle
+schema_version: "1.0"
+name: protocol-should-lose
+description: A trivial arithmetic question should be answered directly, with no pre-registration.
+tags: [scaffold, not-run, should-lose]
+runs: 3
+context:
+  add_dirs: []
+execution:
+  prompt: |
+    Which is larger, 17 times 3 or 50? Answer in one line with the product.
+  max_turns: 4
+  timeout_seconds: 180
+  model: sonnet
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - type: tool_used
+    name: settle-skill-not-called
+    tool: Skill
+    input_match: "dojo-settle"
+    min: 0
+    max: 0
+    weight: 2
+    arm: both
+  - type: regex
+    name: gives-the-product
+    target: last_message
+    pattern: "\\b51\\b"
+    weight: 1
+expected_outcome: A one-line answer that says 51 and that 51 is larger, with no skill call and no script run.

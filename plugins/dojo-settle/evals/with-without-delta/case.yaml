@@ -1,0 +1,67 @@
+# SCAFFOLD. Not run. No result from this case exists.
+#
+# A claim-then-check task, shown as the with/without baseline exemplar: one fired
+# indicator (with-only, adds nothing to the score) beside two score-bearing graders
+# that do not name the plugin. Caution: rule-was-hashed is close to plugin-specific,
+# because a baseline run has no reason to hash anything, so a with-arm lead there mostly
+# reflects the plugin's own instruction; the llm grader carries the behavioral weight.
+# Written by the plugin's author, so it is not held out: have someone else write the real
+# prompts before anyone reads a delta from it.
+#
+# Do not run without a cap: claude plugin eval --runs 1 --ablation with-without \
+#   --no-scaffold --no-publish --max-cost-usd <cap> --allow-tools Write Edit "Bash(python3:*)" \
+#   --judge-model opus plugins/dojo-settle
+schema_version: "1.0"
+name: with-without-delta
+description: A teammate claims a bigger retry limit finishes sooner. Does the run state its rule before measuring?
+tags: [scaffold, not-run, baseline]
+runs: 3
+context:
+  add_dirs: []
+execution:
+  prompt: |
+    A teammate says raising a job's retry limit from 3 to 5 makes it finish sooner. Decide
+    whether to switch, using a measurement. Keep your notes in files in the working directory,
+    and write any pre-registration to prereg.md.
+
+    Here is the simulator. Save it as sim.py and call finish_time(retries, seed) for seeds 0
+    through 29:
+
+        import random
+        def finish_time(retries, seed):
+            rng = random.Random(seed)
+            t = 0.0
+            for _ in range(20):
+                t += 1.0
+                failed = rng.random() < 0.3
+                n = 0
+                while failed and n < retries:
+                    t += 0.5 * (2 ** n)
+                    n += 1
+                    failed = rng.random() < 0.3
+            return t
+
+    End with your decision and the numbers behind it.
+  max_turns: 25
+  timeout_seconds: 900
+  model: sonnet
+  allowed_tools: [Read, Write, Edit, Bash, Glob, Grep, Skill]
+graders:
+  - type: tool_used
+    name: settle-skill-fired
+    tool: Skill
+    input_match: "dojo-settle"
+    min: 1
+    arm: with-only
+  - type: regex
+    name: rule-was-hashed
+    target: files
+    pattern: "[0-9a-f]{64}"
+    match: contains
+    weight: 1
+  - type: llm
+    name: rule-and-bar-stated-before-any-result
+    focus: trace
+    criteria: The notes or the pre-registration state a decision rule and a numeric bar, and say what result would keep the current setting of 3, before any simulator result appears in the transcript. The final decision follows that rule, and a null or mixed result is reported as such rather than reinterpreted.
+    weight: 3
+expected_outcome: A decision that follows a rule written down before the first simulator run, reported with the numbers and any result that cut against the claim.
