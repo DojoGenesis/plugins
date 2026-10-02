@@ -1,0 +1,23 @@
+{
+  "name": "dojo-suite",
+  "version": "0.1.0",
+  "description": "All eight Dojo suite plugins in one install: protocol, gates, router, meter, verify, flow, doctor and settle. Adds no skills, agents or hooks of its own.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-suite",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["suite", "protocol", "bundle", "claude-code"],
+  "dependencies": [
+    "dojo-protocol",
+    "dojo-gates",
+    "dojo-router",
+    "dojo-meter",
+    "dojo-verify",
+    "dojo-flow",
+    "dojo-doctor",
+    "dojo-settle"
+  ]
+}
