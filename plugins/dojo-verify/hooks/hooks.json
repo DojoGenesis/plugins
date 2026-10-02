@@ -1,0 +1,17 @@
+{
+  "description": "Stop hook: a final message that claims success with no passing check since the last change is sent back once; the mod shows UNVERIFIED and the dispatched / returned / failed agent count.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/stop_evidence.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "modules": ["./register.ts"]
+}

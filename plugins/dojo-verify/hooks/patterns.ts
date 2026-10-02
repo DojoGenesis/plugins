@@ -1,0 +1,700 @@
+// Generated from patterns.json by scripts/sync_patterns.py. Do not edit here: edit the JSON, run the script.
+// A unit test fails when this copy and the JSON differ.
+export const PATTERNS: any = (
+// BEGIN patterns.json
+{
+  "version": 1,
+  "claim_edges": {
+    "before": "(?<![\\w/.-])",
+    "after": "(?![\\w/-]|\\.\\w)"
+  },
+  "strong": [
+    "(?:all\\s+(?:the\\s+)?)?(?:(?:full|whole|entire|test|unit|integration|e2e)\\s+){0,3}(?:suites?|tests?|specs?|ci)(?:\\s*:)?\\s+(?:(?:are|is|now|all|also|still|finally)\\s+){0,4}(?:pass(?:ed|es|ing)?|green)",
+    "(?:all\\s+(?:the\\s+)?)?checks\\s+(?:(?:are|is|now|all)\\s+){0,4}(?:pass(?:ed|es|ing)?|green)",
+    "all\\s+green",
+    "all\\s+\\d+\\s+(?:\\w+\\s+)?(?:(?:tests?|specs?|checks?)\\s+)?(?:pass(?:ed|es|ing)?|green)",
+    "\\d+\\s?/\\s?\\d+\\s+(?:(?:tests?|specs?|checks?)\\s+)?pass(?:ed|ing)?",
+    "[1-9]\\d*\\s+passed(?:\\s*,\\s*0\\s+failed)?(?!\\s*,\\s*[1-9]\\d*\\s+(?:failed|failing|errors?))(?!\\s+(?:through|to|the|by|over|into|on|in|from|as|a|an)\\b)",
+    "(?:\\d+\\s+)?tests?\\s*,\\s*all\\s+pass(?:ing|ed)?",
+    "(?:(?:no|zero)\\s+(?:test\\s+)?failures?|0\\s+failed)",
+    "both\\s+pass(?:ed|es|ing)?(?=\\s*(?:[.,;:!)]|$))",
+    "confirmed\\s+working",
+    "everything\\s+(?:(?:is|now|also)\\s+){0,3}(?:green|passing|passes|passed)",
+    "verified",
+    "fixed",
+    "deployed",
+    "build\\s+(?:(?:is|now)\\s+){0,3}(?:clean|green|passing|passes|passed|succeeds|succeeded|successful)",
+    "builds\\s+(?:clean(?:ly)?|pass(?:es|ed)?|successfully|fine|ok)",
+    "(?:typecheck|type-check|lint|linting)(?:\\s+and\\s+(?:typecheck|type-check|lint|linting))?\\s+(?:(?:is|are|now)\\s+){0,3}(?:clean|green|passing|passes|passed)"
+  ],
+  "weak": [
+    "done",
+    "works(?!\\s+(?:on|with|by|as)\\b)",
+    "(?:is|are)\\s+working",
+    "builds(?!\\s+(?:a|an|the|your|its|their|this|that|on|from|up|out|and|with|all|every)\\b)"
+  ],
+  "weak_skip_before": {
+    "words": [
+      "how"
+    ],
+    "window": 4
+  },
+  "attributive": {
+    "words": [
+      "fixed",
+      "verified",
+      "deployed"
+    ],
+    "before": [
+      "a",
+      "an",
+      "the",
+      "this",
+      "that",
+      "these",
+      "those",
+      "its",
+      "their",
+      "your",
+      "my",
+      "our",
+      "his",
+      "her",
+      "any",
+      "some",
+      "no",
+      "each",
+      "every",
+      "with",
+      "using",
+      "use",
+      "uses",
+      "same",
+      "per",
+      "of",
+      "at"
+    ]
+  },
+  "negators": [
+    "not",
+    "no",
+    "never",
+    "without",
+    "nothing",
+    "none",
+    "cannot",
+    "nor",
+    "unable",
+    "isnt",
+    "arent",
+    "wasnt",
+    "werent",
+    "hasnt",
+    "havent",
+    "hadnt",
+    "didnt",
+    "doesnt",
+    "dont",
+    "cant",
+    "couldnt",
+    "wont",
+    "wouldnt",
+    "shouldnt"
+  ],
+  "negation_window": 3,
+  "negated_after": [
+    "yet"
+  ],
+  "future_before": [
+    "will",
+    "once",
+    "if",
+    "when",
+    "until",
+    "should",
+    "need",
+    "needs",
+    "let",
+    "going",
+    "before",
+    "unless",
+    "whenever",
+    "would",
+    "shall",
+    "after",
+    "want",
+    "wants",
+    "wanted",
+    "hope",
+    "hoping",
+    "trying"
+  ],
+  "future_window": 4,
+  "disclosure": [
+    "(?:\\b(?:is|are|remains?|remained|still|left|leave|leaving|stays?|stayed|marked?|flagged?|call|calling|treat(?:ed)?|considered?|be|been)\\s+(?:it\\s+|this\\s+|that\\s+|them\\s+)?(?:(?:as|currently|still|otherwise|entirely|fully|so\\s+far)\\s+)*(?:unverified|untested)(?![\\w-]))|\\(\\s*(?:unverified|untested)\\s*\\)",
+    "(?:^[\\s\\-*>#]*|[,;:(\u2014\u2013]\\s*|\\s-\\s+)(?:unverified|untested)(?:\\s+(?:in|on|against|for|under)\\s+[\\w-]+(?:\\s+[\\w-]+){0,2})?\\s*(?:[:.,;)]|[\u2014\u2013-]|$)"
+  ],
+  "disclosure_frames": [
+    "\\b(?:i|we)\\s+(?:have\\s+not|haven't|did\\s+not|didn't|could\\s+not|couldn't|can\\s+not|cannot|can't|am\\s+unable\\s+to|was\\s+unable\\s+to|were\\s+unable\\s+to|wasn't\\s+able\\s+to|was\\s+not\\s+able\\s+to|weren't\\s+able\\s+to|won't\\s+be\\s+able\\s+to|never)\\s+(?:(?:yet|really|fully|actually|properly|even|manage\\s+to|been\\s+able\\s+to|get\\s+to|bother\\s+to)\\s+){0,3}(?:\\w+\\s+){0,2}?(?:run|ran|verify|verified|test|tested|check|checked|confirm|confirmed|execute|executed|validate|validated|exercise|exercised)(?:\\s+(?:(?:it|this|that|them|these|those|any|anything|everything|either|again|yet|locally|here|myself|at\\s+all)\\b|(?:the|any)\\s+(?:(?:full|whole|entire|unit|integration|e2e|new|existing|updated|test)\\s+){0,2}(?:tests?|suite|specs?|checks?|fix|change|changes|patch|build|deploy(?:ment)?|code|app|page|site|migration|script|result|results|feature|update)\\b|in\\s+(?:prod(?:uction)?|staging|ci|a\\s+browser|the\\s+browser|dev|development)\\b|on\\s+(?:prod(?:uction)?|ci|windows|mac(?:os)?|linux|ios|android|a\\s+device|real\\s+devices?)\\b)|\\s*(?:[.,;:)!]|$))",
+    "(?:^[\\s\\-*>#\\\"'(]*|[,;:(\u2014\u2013]\\s*|\\s-\\s+|\\b(?:and|but|so|though|although|however)\\s+)(?:it|this|that|they|these|those)\\s+(?:is|are|has|have)(?:n't|\\s+not|\\s+never)\\s+(?:(?:been|yet|fully|actually|really|properly|even)\\s+){0,3}(?:verified|tested|checked|confirmed|validated|run|executed)(?:\\s+(?:yet|here|locally|myself|at\\s+all|in\\s+(?:prod(?:uction)?|staging|ci|a\\s+browser|the\\s+browser|dev|development)|on\\s+(?:prod(?:uction)?|ci|windows|mac(?:os)?|linux|ios|android)))?\\s*(?:[.,;:)!\u2014\u2013]|$)",
+    "(?:^[\\s\\-*>#\\\"'(]*|[,;:(\u2014\u2013]\\s*|\\s-\\s+|\\b(?:and|but|so|though|although|however)\\s+)(?:the\\s+)?(?:tests?|checks?|test\\s+suite|suite|build|lint|typecheck|fix|change|changes|patch|deploy(?:ment)?|code|edit|edits|update|migration|result|results|work|feature|script|config|output)\\s+(?:is|are|was|were|has|have|had)(?:n't|\\s+not|\\s+never)\\s+(?:(?:been|yet|fully|actually|really|properly|even)\\s+){0,3}(?:verified|tested|checked|confirmed|validated|run|executed)(?:\\s+(?:yet|here|locally|myself|at\\s+all|in\\s+(?:prod(?:uction)?|staging|ci|a\\s+browser|the\\s+browser|dev|development)|on\\s+(?:prod(?:uction)?|ci|windows|mac(?:os)?|linux|ios|android)))?\\s*(?:[.,;:)!\u2014\u2013]|$)",
+    "(?:^[\\s\\-*>#\\\"'(]*|[,;:(\u2014\u2013]\\s*|\\s-\\s+|\\b(?:and|but|so|though|although|however)\\s+)(?:but\\s+|and\\s+)?(?:not|never)\\s+(?:(?:been|yet|fully|actually|really|properly|even)\\s+){0,3}(?:verified|tested|checked|confirmed|validated|run|executed)(?:\\s+(?:yet|here|locally|myself|at\\s+all|in\\s+(?:prod(?:uction)?|staging|ci|a\\s+browser|the\\s+browser|dev|development)|on\\s+(?:prod(?:uction)?|ci|windows|mac(?:os)?|linux|ios|android)))?\\s*(?:[.,;:)!\u2014\u2013]|$)",
+    "\\bno\\s+(?:tests?|checks?|verification|test\\s+suite)\\s+(?:(?:was|were|has|have|had)\\s+(?:been\\s+)?(?:run|ran|executed|performed|done)|ran|run)\\b",
+    "\\bnothing\\s+(?:was|were|has\\s+been|have\\s+been|is|got)\\s+(?:yet\\s+)?(?:run|ran|executed|tested|verified|checked)\\b"
+  ],
+  "history": {
+    "before": "\\b(?:previously|earlier|originally|initially|formerly)\\b|\\bat\\s+first\\b|\\bback\\s+(?:then|in|when)\\b|\\b(?:last\\s+(?:time|week|month|year|night|sprint|release|quarter|round|session)|yesterday)\\b|\\bin\\s+the\\s+past\\b|\\broot\\s+cause\\b|\\bslipped\\s+through\\b|\\b(?:which|that)(?:'s|\\s+is)\\s+(?:why|how)\\b|\\b(?:until|till)\\b|\\bin\\s+(?:the\\s+)?(?:original|first|old|earlier|previous|prior|initial|last)\\b|\\b(?:turns|turned)\\s+out\\b",
+    "after": "^(?:\\s+[\\w.'/-]+){0,6}?\\s*,?\\s*\\b(?:before|previously|earlier|originally|initially|beforehand|ago|yesterday)\\b(?:\\s*(?:[.,;:)!\u2014\u2013]|$)|\\s+(?:this|now|today|that|the\\s+fix|but|and|so)\\b)|^(?:\\s+[\\w.'/-]+){0,6}?\\s+(?:at\\s+first|back\\s+then)\\b|^[^.;]{0,80}\\b(?:which|that)(?:'s|\\s+is)\\s+(?:why|how)\\b",
+    "past_frame": "\\b(?:never|didn't|did\\s+not|hadn't|had\\s+not|(?:was|were)(?:n't|\\s+not)(?!\\s+able))",
+    "past_before": "\\bbecause\\b|\\b(?:cause|culprit|problem|bug|issue|mistake|defect|regression|failure|crash)(?:\\s+(?:was|is))?\\s*(?::|because\\b)|\\b(?:cause|culprit|problem|bug|issue|mistake|defect|regression)\\s+(?:was|is)\\s+that\\b",
+    "past_near": "\\b(?:because|since|as|when|given\\s+that|now\\s+that)\\s*$",
+    "past_after": "\\b(?:until|till|hence|thus)\\b|\\bwhich\\s+(?:broke|caused|led|allowed|let|resulted|explains|explained|triggered|crashed|failed|hid|masked|produced)\\b|\\bso\\s+(?:it|that|they|prod|production|ci|users?|the\\s+\\w+)\\s+(?:broke|crashed|failed|went|blew|died|errored|threw|regressed)\\b"
+  },
+  "failure_markers": "\\b[1-9]\\d*\\s+(?:failed|failures?|errors?|failing)\\b|\\bFAILED\\b|\\bFAIL\\b|Traceback \\(most recent|npm ERR!|\\berror:|\\berror TS\\d+|^Exit code [1-9]",
+  "check": {
+    "any": [
+      "pytest",
+      "vitest",
+      "jest",
+      "tsc",
+      "eslint",
+      "oxlint",
+      "mypy",
+      "pyright",
+      "golangci-lint",
+      "bats",
+      "shellcheck",
+      "playwright",
+      "curl",
+      "unittest",
+      "py_compile",
+      "tox",
+      "nox",
+      "rspec",
+      "phpunit",
+      "gotestsum",
+      "hadolint",
+      "markdownlint",
+      "hurl",
+      "ctest",
+      "mocha",
+      "ava",
+      "rubocop",
+      "stylelint",
+      "flake8",
+      "pylint",
+      "bandit",
+      "semgrep",
+      "knip"
+    ],
+    "sub": {
+      "go": [
+        "test",
+        "vet",
+        "build"
+      ],
+      "cargo": [
+        "test",
+        "check",
+        "build",
+        "clippy",
+        "nextest"
+      ],
+      "swift": [
+        "test",
+        "build"
+      ],
+      "dotnet": [
+        "test",
+        "build"
+      ],
+      "mvn": [
+        "test",
+        "verify",
+        "package",
+        "compile"
+      ],
+      "gradle": [
+        "test",
+        "check",
+        "build"
+      ],
+      "deno": [
+        "test",
+        "check",
+        "lint"
+      ],
+      "xcodebuild": [
+        "test",
+        "build"
+      ],
+      "ruff": [
+        "check"
+      ],
+      "claude": [
+        "plugin test",
+        "plugin validate"
+      ],
+      "pre-commit": [
+        "run"
+      ],
+      "mix": [
+        "test"
+      ],
+      "rake": [
+        "test",
+        "spec"
+      ],
+      "php": [
+        "artisan test"
+      ],
+      "rails": [
+        "test"
+      ],
+      "sbt": [
+        "test"
+      ],
+      "lein": [
+        "test"
+      ],
+      "dart": [
+        "test",
+        "analyze"
+      ],
+      "flutter": [
+        "test",
+        "analyze"
+      ],
+      "bazel": [
+        "test"
+      ],
+      "cabal": [
+        "test"
+      ],
+      "stack": [
+        "test"
+      ],
+      "cypress": [
+        "run"
+      ],
+      "bun": [
+        "test"
+      ]
+    },
+    "flag": {
+      "node": [
+        "--check",
+        "--test"
+      ],
+      "black": [
+        "--check"
+      ],
+      "prettier": [
+        "--check"
+      ],
+      "ruff": [
+        "--check"
+      ]
+    },
+    "aliases": {
+      "py.test": "pytest",
+      "gradlew": "gradle",
+      "mvnw": "mvn"
+    },
+    "script_runners": [
+      "npm",
+      "pnpm",
+      "yarn",
+      "bun"
+    ],
+    "script_pattern": "^(?:test|tests|t|build|lint|typecheck|type-check|check|verify|e2e)(?::(?![\\w:.-]*fix)[\\w:.-]+)?$",
+    "script_skip_first": [
+      "install",
+      "i",
+      "add",
+      "ci",
+      "publish",
+      "remove",
+      "uninstall",
+      "update",
+      "init",
+      "link",
+      "pack",
+      "create"
+    ],
+    "task_runners": [
+      "make",
+      "just"
+    ],
+    "task_pattern": "^(?:test|tests|check|build|lint|typecheck|verify|vet)(?:[-_:][\\w:-]+)?$",
+    "prefix_wrappers": [
+      "env",
+      "time",
+      "nice",
+      "exec",
+      "npx",
+      "bunx"
+    ],
+    "timeout_wrappers": [
+      "timeout",
+      "gtimeout"
+    ],
+    "wrapper_pairs": [
+      [
+        "pnpm",
+        "exec"
+      ],
+      [
+        "npm",
+        "exec"
+      ],
+      [
+        "yarn",
+        "exec"
+      ],
+      [
+        "bun",
+        "x"
+      ],
+      [
+        "uv",
+        "run"
+      ],
+      [
+        "poetry",
+        "run"
+      ],
+      [
+        "pipenv",
+        "run"
+      ],
+      [
+        "bundle",
+        "exec"
+      ],
+      [
+        "rye",
+        "run"
+      ]
+    ],
+    "shell_c": [
+      "bash",
+      "sh",
+      "zsh"
+    ],
+    "python_re": "^python(?:3(?:\\.\\d+)?)?$",
+    "errexit_re": "(?:^|[\\s;&(])set\\s+(?:-[A-Za-z]*e[A-Za-z]*|-o\\s+errexit)(?![\\w-])",
+    "pipefail_re": "pipefail",
+    "browser_tool_re": "(?:playwright|browser|in[-_]chrome).*(?:navigate|screenshot|snapshot|get_page_text|read_page|test)",
+    "noop_flags": [
+      "--version",
+      "-V",
+      "--help",
+      "-h",
+      "--collect-only",
+      "--co",
+      "--listTests",
+      "--list-tests"
+    ],
+    "var_program_suffixes": [
+      "_bin",
+      "_path",
+      "_cmd",
+      "_exe"
+    ],
+    "interpreters": [
+      "node",
+      "tsx",
+      "ts-node",
+      "ruby"
+    ],
+    "script_exts": [
+      ".py",
+      ".sh",
+      ".bash",
+      ".js",
+      ".mjs",
+      ".cjs",
+      ".ts",
+      ".rb"
+    ],
+    "script_dirs": [
+      "tests",
+      "test",
+      "__tests__",
+      "spec",
+      "specs"
+    ],
+    "script_dir_name_re": "^(?:[*?\\[].*|run|runner|run[-_]?all|all|suite|smoke|e2e|integration|unit|main|__main__)$",
+    "script_name_re": "(?:^|[-_.])(?:tests?|specs?|checks?|verify|lint|validate|typecheck)(?:[-_.]|$)",
+    "task_noop_flags": [
+      "-n",
+      "--dry-run",
+      "--just-print",
+      "--recon"
+    ],
+    "script_skip_dirs": [
+      "fixtures",
+      "fixture",
+      "helpers",
+      "helper",
+      "data",
+      "testdata",
+      "mocks",
+      "__mocks__",
+      "snapshots",
+      "__snapshots__"
+    ],
+    "inline_interpreters": [
+      "node",
+      "tsx",
+      "ts-node",
+      "ruby",
+      "perl",
+      "deno",
+      "bun"
+    ],
+    "inline_code_flags": [
+      "-c",
+      "-e",
+      "-p",
+      "--eval",
+      "--print"
+    ],
+    "shell_reserved": [
+      "do",
+      "then",
+      "else",
+      "elif",
+      "if",
+      "while",
+      "until",
+      "{",
+      "!"
+    ],
+    "loop_words": [
+      "for",
+      "select"
+    ]
+  },
+  "negation_cut_words": [
+    "and",
+    "but",
+    "so",
+    "then"
+  ],
+  "negation_cut_chars": ",;:()\u2014\u2013",
+  "future_phrases": [
+    [
+      "to",
+      "be"
+    ]
+  ],
+  "mutate": {
+    "tools": [
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "MultiEdit"
+    ],
+    "programs": [
+      "mv",
+      "cp",
+      "rm",
+      "rmdir",
+      "mkdir",
+      "touch",
+      "ln",
+      "install",
+      "chmod",
+      "chown",
+      "truncate",
+      "patch",
+      "rsync",
+      "unzip",
+      "rustfmt",
+      "black",
+      "autopep8",
+      "yapf"
+    ],
+    "sub": {
+      "git": [
+        "apply",
+        "checkout",
+        "restore",
+        "reset",
+        "clean",
+        "stash",
+        "merge",
+        "rebase",
+        "cherry-pick",
+        "revert",
+        "pull",
+        "am",
+        "rm",
+        "mv",
+        "switch",
+        "clone"
+      ],
+      "npm": [
+        "install",
+        "i",
+        "add",
+        "remove",
+        "uninstall",
+        "update",
+        "upgrade",
+        "ci"
+      ],
+      "pnpm": [
+        "install",
+        "i",
+        "add",
+        "remove",
+        "uninstall",
+        "update",
+        "upgrade"
+      ],
+      "yarn": [
+        "install",
+        "add",
+        "remove",
+        "upgrade"
+      ],
+      "bun": [
+        "install",
+        "i",
+        "add",
+        "remove",
+        "update"
+      ],
+      "pip": [
+        "install",
+        "uninstall"
+      ],
+      "pip3": [
+        "install",
+        "uninstall"
+      ],
+      "uv": [
+        "add",
+        "remove",
+        "sync",
+        "lock",
+        "pip install"
+      ],
+      "cargo": [
+        "add",
+        "remove",
+        "update",
+        "fix",
+        "fmt"
+      ],
+      "go": [
+        "get",
+        "fmt",
+        "mod tidy",
+        "generate"
+      ],
+      "ruff": [
+        "format"
+      ],
+      "gh": [
+        "pr checkout",
+        "repo clone"
+      ]
+    },
+    "flag_prefix": {
+      "sed": [
+        "-i",
+        "--in-place"
+      ],
+      "perl": [
+        "-i",
+        "-pi",
+        "-ni"
+      ],
+      "dd": [
+        "of="
+      ],
+      "prettier": [
+        "--write",
+        "-w"
+      ],
+      "gofmt": [
+        "-w"
+      ]
+    },
+    "sink_programs": [
+      "tee"
+    ],
+    "null_targets": [
+      "/dev/null",
+      "/dev/stdout",
+      "/dev/stderr",
+      "/dev/tty"
+    ],
+    "dest_programs": [
+      "cp",
+      "install",
+      "ln",
+      "rsync"
+    ],
+    "xargs_value_flags": [
+      "-I",
+      "-n",
+      "-P",
+      "-L",
+      "-s",
+      "-E",
+      "-d",
+      "-a",
+      "-l"
+    ],
+    "temp_prefixes": [
+      "/tmp/",
+      "/private/tmp/",
+      "/var/folders/",
+      "/private/var/folders/",
+      "/dev/shm/",
+      "$TMPDIR/",
+      "${TMPDIR}/",
+      "$TMP/",
+      "$TEMP/"
+    ],
+    "refused_markers": "has been denied|was denied|hook blocked|blocked by (?:a )?hook|doesn't want to proceed",
+    "not_found_re": "command not found:\\s+(\\S+)|([^\\s:]+):\\s+command not found(?!:\\s*\\S)|([^\\s:]+):\\s+not found",
+    "not_found_skip": [
+      "zsh",
+      "bash",
+      "sh",
+      "dash",
+      "ksh",
+      "fish",
+      "eval",
+      "(eval)",
+      "line",
+      "error",
+      "fatal"
+    ],
+    "interp_write_re": "\\.write_text\\(|\\.write_bytes\\(|\\bopen\\([^)]*,\\s*(?:mode\\s*=\\s*)?['\\\"][wax]\\+?b?['\\\"]|\\bshutil\\.(?:copy|copy2|copyfile|copytree|move|rmtree)\\b|\\bos\\.(?:remove|unlink|rename|replace|makedirs|mkdir|rmdir|truncate)\\b|\\.unlink\\(|\\.touch\\(|\\.mkdir\\(|\\bwriteFile(?:Sync)?\\b|\\bappendFile(?:Sync)?\\b|\\bcopyFile(?:Sync)?\\b|\\brmSync\\b|\\bunlink(?:Sync)?\\b|\\bmkdirSync\\b|\\brenameSync\\b|\\bcreateWriteStream\\b|\\bDeno\\.write\\w*|\\bBun\\.write\\b|\\bFile\\.(?:write|open)\\b|\\bFileUtils\\."
+  },
+  "clause_break": ";|,\\s*(?=(?:but|and|though|although|however|yet|so|while|whereas)\\b)|\\s(?=(?:but|though|although|however|whereas)\\s)",
+  "question": {
+    "lead": "^[\\s\\-*>#\"'(]*(?:(?:is|are|am|was|were|do|does|did|can|could|would|should(?!\\s+(?:be|now|have\\s+been)\\b)|shall|will|may|might|must|have|has|had|need)(?:n't)?|want|wanna|what|which|why|how|who|whom|whose|where|when|anything|any)(?![\\w])",
+    "mid": "^\\s*(?:(?:so|and|or|but|then|now)\\s+)?(?:(?:do|does|did|can|could|would|should|shall|will|is|are)(?:n't)?\\s+(?:i|we|you|it|this|that|they|there|anyone|anybody)|want\\s+(?:me|us)|wanna|anything|what|which|why|how|who|where|any\\s+(?:objection|concern|thought|question|feedback)s?|ok(?:ay)?|right|yes|yeah|correct)(?![\\w])",
+    "soft_boundary": "[,;:\u2014\u2013]|\\s-+\\s|\\b(?:and|so|but|or|then)\\b",
+    "hard_boundary": "[,;:\u2014\u2013]|\\s-+\\s",
+    "asserting": "\\b(?:now\\s+that|given(?:\\s+that)?|seeing\\s+(?:as|that)|considering\\s+that|since|because|(?<!soon\\s)(?<!long\\s)(?<!well\\s)(?<!many\\s)(?<!much\\s)(?<!far\\s)(?<!early\\s)(?<!late\\s)as(?=\\s+(?:the|a|an|all|both|every|everything|it|its|this|that|these|those|they|we|i|you|there|my|our|your|their|no|tests?|ci|build|lint|typecheck|checks?|suite)\\b))\\b"
+  },
+  "limits": {
+    "raw_head": 4000,
+    "raw_tail": 12000,
+    "sentence_head": 1000,
+    "sentence_tail": 1000,
+    "max_sentences_head": 40,
+    "max_sentences_tail": 360
+  }
+}
+// END patterns.json
+)

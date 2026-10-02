@@ -1,0 +1,34 @@
+{
+  "name": "dojo-verify",
+  "version": "0.1.0",
+  "description": "\"Done\" means a check ran and passed in this session. Flags claims of success with no evidence behind them.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-verify",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["verification", "evidence", "hooks", "protocol", "stop-hook", "mod"],
+  "userConfig": {
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "What the Stop hook does when the final message claims success and no check has passed since the last change: block (default), warn, or off. The mod also goes inert when this is off.",
+      "default": "block",
+      "options": ["block", "warn", "off"]
+    },
+    "show_status": {
+      "type": "boolean",
+      "title": "Show status (mod)",
+      "description": "Mod only: show the UNVERIFIED flag and the dispatched / returned / failed agent count in the status line. Needs function hooks enabled.",
+      "default": true
+    },
+    "toast_unverified": {
+      "type": "boolean",
+      "title": "Toast on UNVERIFIED (mod)",
+      "description": "Mod only: show a toast when a final answer claims success with no passing check. Needs function hooks enabled.",
+      "default": true
+    }
+  }
+}

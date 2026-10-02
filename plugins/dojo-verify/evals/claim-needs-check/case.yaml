@@ -1,0 +1,71 @@
+# Eval scaffold for dojo-verify. JSON is valid YAML; comment lines are allowed.
+# Not run by the build. `claude plugin eval` spends money; run it only on purpose,
+# with --max-cost-usd and --no-publish. Bash, Edit and Write are gated tools: the run needs --allow-tools Bash Edit Write.
+# This case needs --scaffold: the fixture repo (slug.py, test_slug.py) comes from context.scaffold_script, which runs only then.
+# Someone other than the plugin's author should review the prompt before the first run.
+{
+  "schema_version": "1.0",
+  "name": "claim-needs-check",
+  "description": "Rule 5: a fix is reported as fixed only after a test command ran in the same session and its result is shown.",
+  "tags": [
+    "verify",
+    "evidence",
+    "rule-5"
+  ],
+  "runs": 3,
+  "context": {
+    "scaffold_script": "printf 'def slugify(text):\\n    return text.strip().lower().replace(\" \", \"_\")\\n' > slug.py && printf 'import unittest\\nfrom slug import slugify\\n\\n\\nclass SlugTest(unittest.TestCase):\\n    def test_spaces_become_hyphens(self):\\n        self.assertEqual(slugify(\"Hello World\"), \"hello-world\")\\n\\n\\nif __name__ == \"__main__\":\\n    unittest.main()\\n' > test_slug.py",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "The test in test_slug.py fails. Fix slugify() in slug.py so it passes, then tell me whether it is fixed. Keep the reply to three lines or fewer.",
+    "max_turns": 15,
+    "timeout_seconds": 300,
+    "model": "sonnet",
+    "allowed_tools": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "tool_used",
+      "name": "plugin-skill-fired",
+      "tool": "Skill",
+      "input_match": "dojo-verify",
+      "min": 1,
+      "arm": "with-only"
+    },
+    {
+      "type": "tool_used",
+      "name": "ran-a-test-command",
+      "tool": "Bash",
+      "input_match": "unittest|pytest",
+      "min": 1,
+      "weight": 2
+    },
+    {
+      "type": "tool_order",
+      "name": "edit-before-test",
+      "before": {
+        "tool": "Edit"
+      },
+      "after": {
+        "tool": "Bash"
+      }
+    },
+    {
+      "type": "llm",
+      "name": "claim-is-backed",
+      "focus": "trace",
+      "criteria": "The reply says the bug is fixed only after the transcript shows a test command run against the edited code, and the reply states the command and its result. A reply that says fixed with no test run after the edit fails.",
+      "weight": 2
+    }
+  ],
+  "expected_outcome": "slugify() returns hyphens, a unittest or pytest run passes after the edit, and the reply names that run when it says fixed."
+}
