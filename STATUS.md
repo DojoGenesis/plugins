@@ -6,7 +6,7 @@ stops being true. This repo now has two live, gated sources of truth instead
 of a third hand-maintained one:
 
 - **What's here, and how many, by plugin:** [README.md](README.md) — the
-  `## Plugins` table is disk-truth-gated by `scripts/face-parity.py`, which
+  suite, Library and Companions tables are disk-truth-gated by `scripts/face-parity.py`, which
   fails closed if any face (README, llms.txt, marketplace.json) drifts from
   the actual `plugins/*/skills/*/SKILL.md` count.
 - **What changed and when:** [CHANGELOG.md](CHANGELOG.md) — dated entries,

@@ -1,5 +1,46 @@
 # Changelog — dojo-genesis
 
+## 2026-10-02 — 2.0.0 — the Dojo protocol suite comes first
+
+The marketplace now leads with a protocol suite for Claude Code: plugins and mods that put the right model on each job, keep context small, and don't call work done until a check passes. The library and the companions are unchanged apart from the fixes listed under Wave-0 and Cleanup, and no library plugin was removed.
+
+### Added
+
+- **`dojo-suite`** — an install bundle. `plugin.json` only, with the eight suite plugins as `dependencies` (bare names, resolved against this marketplace). No skills, agents, commands or hooks, so no always-on weight. `/plugin install dojo-suite@dojo-genesis` installs the set.
+- **`dojo-protocol`** — the ten-rule protocol injected at session start, four role agents pinned to a model each, five skills.
+- **`dojo-gates`** — ten deterministic guards (hooks) for blanket staging, rewriting pushed commits, printing secrets, token URLs, oversized reads, silent probes and similar. `hooks/guards.json` lists the guard ids so the count comes from a file.
+- **`dojo-router`** — warns or blocks subagent and workflow dispatches that name no model; the mod (early access) fills one in by role.
+- **`dojo-meter`** — a cost report from your transcripts (`/dojo-meter:cost`) and, with the mod, a live band.
+- **`dojo-verify`** — a Stop hook that flags a success claim with no passing check after the last change; the mod (early access) adds status and a dispatched/returned tally.
+- **`dojo-flow`** — workflow scripts for parallel builds and convergence audits, with a scorecard that counts returns.
+- **`dojo-doctor`** — a read-only report on hooks and settings that fail or cost you silently.
+- **`dojo-settle`** — pre-registered experiments, decision gates and eval scaffolds. Nothing was run; no with/without result exists yet.
+- **`scripts/suite_table.py`** — generates the README suite table from the plugin directories; `--check` fails when the README drifts.
+
+### Changed
+
+- **`marketplace.json` 1.5.6 → 2.0.0.** The nine suite entries come first, then the library, then the companions. Each entry carries a `category` of `suite`, `library` or `companion`; suite entries also carry a `displayName`. Both fields pass `claude plugin validate`.
+- **README and `llms.txt`** open with the premise, the install block and the suite table, then the library and the companions. Counts are generated from disk or checked against it.
+- **`scripts/face-parity.py`** counts a plugin that ships agents, commands, workflows or dependencies as installable even with no skills, checks claims that name a group ("library plugins") against that group, and checks the README suite table against `scripts/suite_table.py`.
+- **`scripts/plugin-lint.py`** accepts the hook events Claude Code 2.1.286 defines; its list had stopped at nine and rejected `PostToolUseFailure` and `InstructionsLoaded`.
+- The suite skills carry `model: inherit` and a cluster `category:`, which `scripts/validate-skills.sh` and `scripts/plugin-lint.py` require of first-party skills.
+
+### Wave-0 fixes (each is its own commit)
+
+- **bring-loop 0.1.1 → 0.1.2** — synced from the canonical repo: every hook command and every command a skill tells you to run now says `python3`, because a bare `python` is missing on macOS and the hooks failed silently. The distribution copy keeps its `govern-publish` cluster category, and it now ships an MIT LICENSE.
+- **pretext-pdf 0.2.0 → 0.2.1** — the export-logging hook exited 1 on every call that was not an export (its `set -e` fired before the check meant to handle that case). It now exits 0 whenever it does not apply, and on any error. The manifest description was also reworded.
+- **kata-harness 0.1.2 → 0.1.3** — the homepage link pointed at a repository that does not exist (404). It now points at this plugin's directory in this repository, and the manifest names the repository.
+- **Licence lines** — removed `license: proprietary` from nine first-party skills in continuous-learning, system-health and wisdom-garden (patch versions bumped). The repository is Apache-2.0.
+
+### Cleanup
+
+- **`community-skills` is slated for removal from the public repository in a follow-up (an operator step, not part of this change).** It holds harvested third-party skills and was never registered, so nothing installs from it; history will keep it. `dojo-craft` has a corrected `author` object (1.0.1) so the marketplace validates.
+- Private product and repository names were removed from library skill text and from the kata-harness spec (patch versions bumped: agent-orchestration, continuous-learning, skill-forge, system-health, wisdom-garden, kata-harness).
+
+### Not measured
+
+The suite's effect on cost, speed or accuracy has not been measured. The counts and the always-on description weight are measured by script and published, with method and date, at https://dojogenesis.com/proof. The mods need function hooks enabled and are early access.
+
 ## 2026-10-02 — bring-loop v0.1.1 — generated queues stop hiding open multi-step items (v1.5.6)
 
 Synced from canonical `DojoGenesis/bring-loop` @ `80acfe1`. `open_actions` used to drop any id that
@@ -183,7 +224,7 @@ would embarrass a public launch. All fixed; text-only, no structural change.
 
 - **`compression-ritual` Step 7 genericized** — the close-out step had hardcoded
   one private workspace's handoff mechanism (dead `handoffs/README.md` /
-  `scripts/handoff-register.py` references, a `BringItCruz!` Linear label, a
+  `scripts/handoff-register.py` references, an issue-tracker label, a
   Mac↔Windows topology) into a skill anyone installs. Reworked 7a, the
   disposition table, scenario 3, an edge case, and the quality checklist to
   "use your workspace's own handoff/task mechanism" — the three-disposition

@@ -5,65 +5,139 @@
     "email": "cruz@trespiesdesign.com"
   },
   "metadata": {
-    "description": "A practice space for building better software through patient cultivation. 101 skills organized into 11 behavioral plugins — each one a different way of paying attention to your work. Governance multiplies velocity.",
-    "version": "1.5.6",
+    "description": "Plugins and mods for Claude Code that put the right model on each job, keep context small, and don't call work done until a check passes: the Dojo suite, a library of practice skills, and two companion plugins.",
+    "version": "2.0.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
     {
+      "name": "dojo-suite",
+      "source": "./plugins/dojo-suite",
+      "description": "All eight Dojo suite plugins in one install: protocol, gates, router, meter, verify, flow, doctor and settle. Adds no skills, agents or hooks of its own.",
+      "displayName": "dojo-suite — all eight",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-protocol",
+      "source": "./plugins/dojo-protocol",
+      "description": "The Dojo Protocol for Claude Code: ten rules at session start, a scout→contract→build→verify spine, and role agents pinned to the right model.",
+      "displayName": "dojo-protocol — session protocol",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-gates",
+      "source": "./plugins/dojo-gates",
+      "description": "Deterministic guards for the mistakes that waste a day: blanket staging, rewriting pushed commits, printing secrets, oversized reads, silent probes.",
+      "displayName": "dojo-gates — tool guards",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-router",
+      "source": "./plugins/dojo-router",
+      "description": "No subagent silently inherits your most expensive model. Warns or blocks unpinned dispatches; the mod routes them by role.",
+      "displayName": "dojo-router — model router",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-meter",
+      "source": "./plugins/dojo-meter",
+      "description": "See what each turn, agent and model costs, and how big your context is: a cost report from your transcripts, and a live band with the mod.",
+      "displayName": "dojo-meter — cost report",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-verify",
+      "source": "./plugins/dojo-verify",
+      "description": "\"Done\" means a check ran and passed in this session. Flags claims of success with no evidence behind them.",
+      "displayName": "dojo-verify — evidence check",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-flow",
+      "source": "./plugins/dojo-flow",
+      "description": "Parallel builds that stay independent: a contract gate, scouts on small models, builders in the middle, judges at the ends, and a scorecard that counts returns.",
+      "displayName": "dojo-flow — workflow DAGs",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-doctor",
+      "source": "./plugins/dojo-doctor",
+      "description": "Find the hooks and settings that fail or cost you silently: broken interpreters, noisy injections, always-on token weight, flags that are off.",
+      "displayName": "dojo-doctor — config doctor",
+      "category": "suite"
+    },
+    {
+      "name": "dojo-settle",
+      "source": "./plugins/dojo-settle",
+      "description": "Settle claims with evidence: pre-registered experiments, with/without baselines and decision gates before anything becomes a number.",
+      "displayName": "dojo-settle — decision experiments",
+      "category": "suite"
+    },
+    {
       "name": "strategic-thinking",
       "source": "./plugins/strategic-thinking",
-      "description": "Begin with a tension, not a solution. Scout the landscape of possibility before committing to a path. Position products, design multi-surface strategies, and bridge the gap between vision and execution."
+      "description": "Begin with a tension, not a solution. Scout the landscape of possibility before committing to a path. Position products, design multi-surface strategies, and bridge the gap between vision and execution.",
+      "category": "library"
     },
     {
       "name": "specification-driven-development",
       "source": "./plugins/specification-driven-development",
-      "description": "A specification is a contract, not documentation — an act of respect for the builder's time. Write specs grounded in measured reality, transform them into self-contained implementation prompts, and commission parallel tracks with pre-flight alignment."
+      "description": "A specification is a contract, not documentation — an act of respect for the builder's time. Write specs grounded in measured reality, transform them into self-contained implementation prompts, and commission parallel tracks with pre-flight alignment.",
+      "category": "library"
     },
     {
       "name": "wisdom-garden",
       "source": "./plugins/wisdom-garden",
-      "description": "Knowledge is planted, cultivated, and harvested — not created, stored, and retrieved. Compress session context into lasting memory, reflect on patterns as seeds, and elevate proven seeds into reusable skills."
+      "description": "Knowledge is planted, cultivated, and harvested — not created, stored, and retrieved. Compress session context into lasting memory, reflect on patterns as seeds, and elevate proven seeds into reusable skills.",
+      "category": "library"
     },
     {
       "name": "system-health",
       "source": "./plugins/system-health",
-      "description": "You cannot improve what you do not observe. Audit ecosystem health, map semantic clusters across codebases, track documentation drift, and sync repository context to keep the soil healthy for future growth."
+      "description": "You cannot improve what you do not observe. Audit repository health, map semantic clusters across codebases, track documentation drift, and sync repository context to keep the soil healthy for future growth.",
+      "category": "library"
     },
     {
       "name": "continuous-learning",
       "source": "./plugins/continuous-learning",
-      "description": "The process is the purpose. Harvest learnings from sprints through structured retrospectives, explore research deeply and widely, diagnose problems systematically, and let curiosity guide exploration of new projects."
+      "description": "The process is the purpose. Harvest learnings from sprints through structured retrospectives, explore research deeply and widely, diagnose problems systematically, and let curiosity guide exploration of new projects.",
+      "category": "library"
     },
     {
       "name": "agent-orchestration",
       "source": "./plugins/agent-orchestration",
-      "description": "Handoffs are sacred relays, not tosses over the wall. Coordinate work across autonomous agents with full context preservation, navigate shared workspaces, teach peer-to-peer, and propagate decisions through living document ecosystems."
+      "description": "Handoffs are sacred relays, not tosses over the wall. Coordinate work across autonomous agents with full context preservation, navigate shared workspaces, teach peer-to-peer, and propagate decisions through living documents.",
+      "category": "library"
     },
     {
       "name": "skill-forge",
       "source": "./plugins/skill-forge",
-      "description": "The meta-layer — skills about making skills. Create, maintain, and evolve the reusable patterns that power every other plugin. Good governance of the forge multiplies the velocity of everything built in it."
+      "description": "The meta-layer — skills about making skills. Create, maintain, and evolve the reusable patterns that power every other plugin. Good governance of the forge multiplies the velocity of everything built in it.",
+      "category": "library"
     },
     {
       "name": "dojo-craft",
       "source": "./plugins/dojo-craft",
-      "description": "The lean workbench — single-file variants of six flagship skills (scout-writer, convergence-checker, community-claude-md-guardian, codebase-viewer, memory-curator, seed-curator) for when you want the output fast and self-contained, plus two skills unique to DojoCraft: adr-writer and project-scaffolder."
+      "description": "The lean workbench — single-file variants of six flagship skills (scout-writer, convergence-checker, community-claude-md-guardian, codebase-viewer, memory-curator, seed-curator) for when you want the output fast and self-contained, plus two skills unique to DojoCraft: adr-writer and project-scaffolder.",
+      "category": "library"
     },
     {
       "name": "pretext-pdf",
       "source": "./plugins/pretext-pdf",
-      "description": "Pretext-powered PDF export connector. Converts code, Markdown, HTML, chat conversations, and structured Dojo ecosystem files into beautifully typeset PDFs using @chenglou/pretext for precise Canvas-based typography measurement and layout."
+      "description": "Pretext-powered PDF export connector. Converts code, Markdown, HTML, chat conversations, and structured project files into beautifully typeset PDFs using @chenglou/pretext for precise Canvas-based typography measurement and layout.",
+      "category": "library"
     },
     {
       "name": "bring-loop",
       "source": "./plugins/bring-loop",
-      "description": "Your agents made building easy; the outward step stayed ungated. Surface ONE send/decision/close a day, stage it, execute it yourself, measure honest separate streams — a logged skip is a valid rep. The BringItCruz! effect, generalized. Canonical source: github.com/DojoGenesis/bring-loop."
+      "description": "Your agents made building easy; the outward step stayed ungated. Surface ONE send/decision/close a day, stage it, execute it yourself, measure honest separate streams — a logged skip is a valid rep. Canonical source: github.com/DojoGenesis/bring-loop.",
+      "category": "companion"
     },
     {
       "name": "kata-harness",
       "source": "./plugins/kata-harness",
-      "description": "Roll the bring queue one tick at a time. Extends the bring-loop plugin's queue (bring/actions.md) with bounded roll sessions — reps or minutes, an opt-in timer display, and a session ledger folded fresh on every read. Rolling a tick forward is the mechanism, not failure. Canonical source: github.com/DojoGenesis/kata-harness."
+      "description": "Roll the bring queue one tick at a time. Extends the bring-loop plugin's queue (bring/actions.md) with bounded roll sessions — reps or minutes, an opt-in timer display, and a session ledger folded fresh on every read. Rolling a tick forward is the mechanism, not failure. Source: this repository.",
+      "category": "companion"
     }
   ]
 }
