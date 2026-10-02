@@ -2,7 +2,6 @@
 name: reflect-and-learn
 model: sonnet
 description: Captures user corrections from a session, validates them semantically, and writes approved learnings to the most specific persistence target (skill file, project CLAUDE.md, or global CLAUDE.md). Use when: "remember this for next time", "don't do that again", "update your behavior", "capture this correction", "reflect on what we learned".
-license: proprietary
 category: remember-continue
 
 inputs:

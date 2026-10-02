@@ -1,8 +1,10 @@
 {
   "name": "dojo-craft",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The practitioner's workbench — strategic thinking, codebase intelligence, memory curation, and project governance as composable workflows. DojoCraft turns scattered orchestration patterns into repeatable craft.",
-  "author": "DojoGenesis",
+  "author": {
+    "name": "Dojo Genesis"
+  },
   "license": "Apache-2.0",
   "keywords": ["adr", "scout", "memory", "seeds", "claude-md", "codebase", "governance", "craft"]
 }
