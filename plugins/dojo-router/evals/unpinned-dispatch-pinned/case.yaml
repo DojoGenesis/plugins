@@ -1,0 +1,37 @@
+# Scaffold only. Nothing in this build runs it: an eval spends money.
+# It checks one behaviour: a dispatch made during a multi-step task names its model.
+schema_version: "1.0"
+name: unpinned-dispatch-pinned
+description: A subagent dispatched from a multi-step task carries an explicit model.
+tags: [router, model]
+runs: 3
+context:
+  add_dirs: []
+execution:
+  prompt: |
+    I need two independent answers about this repo: where the retry limit is defined, and
+    where request timeouts are configured. Use subagents to look both up in parallel, then
+    tell me both values with file:line. Do not edit anything.
+  max_turns: 12
+  timeout_seconds: 300
+  model: sonnet
+  allowed_tools: [Read, Glob, Grep, Agent, Skill]
+graders:
+  - type: tool_used
+    name: dispatched-a-subagent
+    tool: Agent
+    min: 1
+  - type: tool_used
+    name: every-dispatch-names-a-model
+    tool: Agent
+    input_match: "\"model\"\\s*:\\s*\"(haiku|sonnet|opus)\""
+    min: 2
+    weight: 2
+  - type: regex
+    name: cites-file-line
+    target: last_message
+    pattern: "[\\w./-]+:\\d+"
+  - type: llm
+    name: answer-is-grounded
+    criteria: Both values are named with a file:line a reader could open to confirm them. Nothing was edited.
+expected_outcome: Two lookups dispatched to subagents that each name a model, and both answers cited.

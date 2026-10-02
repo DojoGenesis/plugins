@@ -1,0 +1,50 @@
+{
+  "name": "dojo-router",
+  "version": "0.1.0",
+  "description": "No subagent silently inherits your most expensive model. Warns or blocks unpinned dispatches; the mod routes them by role.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-router",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": ["model-routing", "subagents", "workflows", "hooks", "protocol", "mod"],
+  "userConfig": {
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "What the classic hooks do with a dispatch that names no model: warn (default), block, or off. Does not affect the mod.",
+      "default": "warn",
+      "options": ["warn", "block", "off"]
+    },
+    "default_tier": {
+      "type": "string",
+      "title": "Default tier",
+      "description": "Model alias suggested by the hooks, and filled in by the mod, for unpinned dispatches.",
+      "default": "sonnet",
+      "options": ["haiku", "sonnet", "opus"]
+    },
+    "explore_tier": {
+      "type": "string",
+      "title": "Explore tier",
+      "description": "Model alias suggested or filled in for Explore dispatches.",
+      "default": "haiku",
+      "options": ["haiku", "sonnet", "opus"]
+    },
+    "auto_route": {
+      "type": "boolean",
+      "title": "Auto-route (mod)",
+      "description": "Mod only: fill in the model on unpinned built-in dispatches. Needs function hooks enabled.",
+      "default": true
+    },
+    "opus_cap": {
+      "type": "number",
+      "title": "Opus cap (mod)",
+      "description": "Mod only: after this many opus dispatches in a session, unpinned dispatches stop landing on opus: Explore keeps the Explore tier, the rest go to the default tier (sonnet if that is opus). 0 turns the cap off.",
+      "default": 0,
+      "min": 0,
+      "max": 100
+    }
+  }
+}

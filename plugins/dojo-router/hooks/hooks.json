@@ -1,0 +1,28 @@
+{
+  "description": "Flags subagent dispatches and workflow agents that name no model; the mod routes unpinned dispatches by role.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Agent|Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/agent_model.py\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Workflow",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/workflow_models.py\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  },
+  "modules": ["./register.ts"]
+}
