@@ -331,4 +331,4 @@ See [CHANGELOG.md](CHANGELOG.md) for full history.
 
 Apache 2.0 — see [LICENSE](LICENSE).
 
-Built by Dojo Genesis at Tres Pies Design. Every skill here exists because we needed it. And then needed it again.
+Built by Dojo Genesis at TresPies LLC. Every skill here exists because we needed it. And then needed it again.

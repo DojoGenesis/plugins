@@ -18,7 +18,7 @@ outputs:
 # Project Exploration Skill
 
 **Version:** 1.0
-**Author:** Tres Pies Design
+**Author:** TresPies LLC
 **Purpose:** Structured process for respectfully exploring a new project to determine collaboration readiness and fit before committing.
 
 ---

@@ -551,5 +551,5 @@ Potential future integrations:
 ---
 
 **Last Updated:** 2026-02-11
-**Maintained By:** Tres Pies Design
+**Maintained By:** TresPies LLC
 **Status:** Active

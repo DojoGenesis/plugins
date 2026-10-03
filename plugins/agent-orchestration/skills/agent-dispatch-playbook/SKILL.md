@@ -9,7 +9,7 @@ triggers:
 metadata:
   version: "1.1"
   created: "2026-04-07"
-  author: "Tres Pies Design"
+  author: "TresPies LLC"
   tool_dependencies: ["Agent", "Bash", "TodoWrite"]
   portable: true
   tier: 1
