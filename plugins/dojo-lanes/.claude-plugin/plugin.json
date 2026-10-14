@@ -1,0 +1,47 @@
+{
+  "name": "dojo-lanes",
+  "version": "0.1.0",
+  "description": "Two agents writing one file clobber each other: the first writer holds the file while it runs, a second running agent is refused, and fan-outs get the shared contract.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-lanes",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "lanes",
+    "ownership",
+    "subagents",
+    "coordination",
+    "hooks",
+    "protocol",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "What happens when a running subagent writes a file another running subagent holds: lock (refuse the write, default), warn (allow it, log once), or off.",
+      "default": "lock",
+      "options": [
+        "lock",
+        "warn",
+        "off"
+      ]
+    },
+    "attach_contract": {
+      "type": "boolean",
+      "title": "Attach contract",
+      "description": "Append a short note to a subagent's prompt pointing at the shared contract file (when one exists) and explaining lanes.",
+      "default": true
+    },
+    "contract_paths": {
+      "type": "string",
+      "title": "Contract paths",
+      "description": "Comma-separated paths checked in order for a frozen shared-decisions file. Relative paths are under the session directory.",
+      "default": "CONTRACT.md,.dojo/CONTRACT.md,.dojo/dag-contract.md,.parallel-tracks/manifest.json"
+    }
+  }
+}

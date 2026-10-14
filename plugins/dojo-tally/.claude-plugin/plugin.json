@@ -1,0 +1,45 @@
+{
+  "name": "dojo-tally",
+  "version": "0.1.0",
+  "description": "Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-tally",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "fan-out",
+    "review",
+    "verification",
+    "protocol",
+    "agents",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "min_wave": {
+      "type": "number",
+      "title": "Minimum wave size",
+      "description": "Only report a settled fan-out when it had at least this many agents.",
+      "default": 2
+    },
+    "settle_note": {
+      "type": "boolean",
+      "title": "Tell the model when a fan-out settles",
+      "description": "Append one meta row to the conversation with the tally and each non-returned agent when a wave settles.",
+      "default": true
+    },
+    "judge_model": {
+      "type": "string",
+      "title": "Judge model",
+      "description": "Model the /refute judge runs on.",
+      "default": "opus",
+      "options": [
+        "opus",
+        "sonnet"
+      ]
+    }
+  }
+}

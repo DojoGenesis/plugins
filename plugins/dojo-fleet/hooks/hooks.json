@@ -1,0 +1,7 @@
+{
+  "description": "Fan-out view, steering and the stall tripwire (mod, early access): the Fleet pane, the band above the prompt, /fleet and /steer. No classic hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.ts"
+  ]
+}

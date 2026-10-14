@@ -78,6 +78,17 @@ Two small plugins that gate the outward loop (sends, decisions, closes) the way 
 | [bring-loop](plugins/bring-loop/) | BRING | 2 | Gate your outward loop like your build loop: one send/decision/close a day, staged by the agent, executed by you, measured in honest separate streams. |
 | [kata-harness](plugins/kata-harness/) | ROLL | 2 | Roll the bring queue one tick at a time: bounded, self-terminating sessions (reps or minutes) over the same `bring/` queue — one bring surfaced per tick, staged by the agent, executed by you. Rolling forward is not failure. |
 
+## Orchestration mods
+
+Four mods that put the protocol's orchestration rules into Claude Code's own interface: what each subagent of a fan-out is doing, which files it holds, what actually came back, and whether its brief said enough. Each is a function-hook mod (early access), with a classic fallback command that says how to turn the mod on. They are listed with the companions in the marketplace, and each works on its own.
+
+| Plugin | Verb | Skills | What it does |
+|--------|------|--------|--------------|
+| [dojo-fleet](plugins/dojo-fleet/) | WATCH | 0 | See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word. |
+| [dojo-lanes](plugins/dojo-lanes/) | HOLD | 0 | Two agents writing one file clobber each other: the first writer holds the file while it runs, a second running agent is refused, and fan-outs get the shared contract. |
+| [dojo-tally](plugins/dojo-tally/) | COUNT | 0 | Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge. |
+| [dojo-brief](plugins/dojo-brief/) | BRIEF | 0 | Lints every subagent brief at dispatch against the delegate skill: detail, owned files, done-check, return shape. A notice, or one send-back. |
+
 ---
 
 ## Find the Right Skill in 30 Seconds
@@ -142,6 +153,10 @@ plugins/
 ├── dojo-flow/                    skills, commands, workflows, scripts
 ├── dojo-doctor/                  skills, commands, scripts
 ├── dojo-settle/                  skills, scripts, templates
+├── dojo-fleet/                   command (fallback), mod (hooks/register.ts, hooks/views.tsx)
+├── dojo-lanes/                   command (fallback), mod (hooks/register.ts)
+├── dojo-tally/                   command (fallback), mod (hooks/register.ts)
+├── dojo-brief/                   command (fallback), mod (hooks/register.ts)
 ├── agent-orchestration/
 │   ├── README.md
 │   ├── CONNECTORS.md
@@ -307,7 +322,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**2.0.0** — the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) listed first, then the library and the companions. 114 first-party skills across 20 plugins, with 12 semantic clusters as metadata; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
+**2.1.0** — (unreleased) four orchestration mods join the companions: dojo-fleet, dojo-lanes, dojo-tally and dojo-brief. 114 first-party skills across 24 plugins, with 12 semantic clusters as metadata. **2.0.0** put the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) first, then the library and the companions; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
 
 Semantic versioning:
 - **Patch** (x.x.1): typo fixes, minor clarifications
