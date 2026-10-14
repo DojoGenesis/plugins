@@ -21,8 +21,9 @@ function beneath(on: any): Seen[] {
 
 function watchUi(on: any): { status: Array<string | undefined>; toast: string[] } {
   const rows = { status: [] as Array<string | undefined>, toast: [] as string[] }
-  on('ui.status', (_$: any, e: any) => { rows.status.push(e.text as string | undefined); return {} })
-  on('ui.toast', (_$: any, e: any) => { rows.toast.push(String(e.text)); return {} })
+  // ui ops resolve to nothing, and the kit wants that said as { value }: a bare {} is "neither { value } nor { deny }".
+  on('ui.status', (_$: any, e: any) => { rows.status.push(e.text as string | undefined); return { value: undefined } })
+  on('ui.toast', (_$: any, e: any) => { rows.toast.push(String(e.text)); return { value: undefined } })
   return rows
 }
 
