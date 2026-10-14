@@ -1,0 +1,7 @@
+{
+  "description": "Brief lint at dispatch, /dojo-brief for the template and the tally (mod, early access). No classic hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.ts"
+  ]
+}

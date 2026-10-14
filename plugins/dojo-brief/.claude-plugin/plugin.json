@@ -1,0 +1,47 @@
+{
+  "name": "dojo-brief",
+  "version": "0.1.0",
+  "description": "Lints every subagent brief at dispatch against the delegate skill: detail, owned files, done-check, return shape. A notice, or one send-back.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-brief",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "delegation",
+    "subagents",
+    "brief",
+    "lint",
+    "protocol",
+    "mod"
+  ],
+  "userConfig": {
+    "lint_briefs": {
+      "type": "boolean",
+      "title": "Lint briefs (mod)",
+      "description": "Mod only: lint each subagent brief at dispatch. false turns the lint off; /dojo-brief still inserts the template.",
+      "default": true
+    },
+    "mode": {
+      "type": "string",
+      "title": "Mode",
+      "description": "What to do with a thin subagent brief: notice (default) logs one dim line, sendback refuses the first dispatch with a missing field once, off passes everything.",
+      "default": "notice",
+      "options": [
+        "notice",
+        "sendback",
+        "off"
+      ]
+    },
+    "min_chars": {
+      "type": "number",
+      "title": "Minimum brief length",
+      "description": "A prompt shorter than this many characters is flagged as thin.",
+      "default": 200,
+      "min": 0,
+      "max": 5000
+    }
+  }
+}

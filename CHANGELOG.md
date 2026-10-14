@@ -1,5 +1,16 @@
 # Changelog — dojo-genesis
 
+## Unreleased — 2.1.0 — orchestration mods
+
+### Added
+
+- **`dojo-fleet`** — the Fleet pane, a band above the prompt with one chip per agent, `/fleet`, `/steer`, and a stall check judged by tool calls and files written. An agent that ends a turn while the engine still holds it is shown as waiting, not done.
+- **`dojo-lanes`** — the first subagent to write a file holds it while it runs; another running subagent's write to it is refused. The contract note on spawn, the rule-4 nudge, `/lanes`.
+- **`dojo-tally`** — fan-out waves classified as returned, failed, silent or unchecked; a settle note added to the conversation; `/tally`; `/refute` sends a report to the judge agent.
+- **`dojo-brief`** — each subagent brief linted at dispatch against the delegate skill (detail, owned files, done-check, return shape), as a notice or one send-back; `/dojo-brief` for the template and the tally.
+
+Each is a function-hook mod (early access) with a classic fallback command, listed with the companions. Tested with Claude Code 2.1.295.
+
 ## 2026-10-02 — 2.0.0 — the Dojo protocol suite comes first
 
 The marketplace now leads with a protocol suite for Claude Code: plugins and mods that put the right model on each job, keep context small, and don't call work done until a check passes. The library and the companions are unchanged apart from the fixes listed under Wave-0 and Cleanup, and no library plugin was removed.

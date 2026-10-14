@@ -1,0 +1,7 @@
+{
+  "description": "Lane locks between running subagents, the contract note on spawn, and /lanes (mod, early access). No classic hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.ts"
+  ]
+}

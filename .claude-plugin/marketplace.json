@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugins and mods for Claude Code that put the right model on each job, keep context small, and don't call work done until a check passes: the Dojo suite, a library of practice skills, and two companion plugins.",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -72,6 +72,30 @@
       "description": "Settle claims with evidence: pre-registered experiments, with/without baselines and decision gates before anything becomes a number.",
       "displayName": "dojo-settle — decision experiments",
       "category": "suite"
+    },
+    {
+      "name": "dojo-fleet",
+      "source": "./plugins/dojo-fleet",
+      "description": "See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.",
+      "category": "companion"
+    },
+    {
+      "name": "dojo-lanes",
+      "source": "./plugins/dojo-lanes",
+      "description": "Two agents writing one file clobber each other: the first writer holds the file while it runs, a second running agent is refused, and fan-outs get the shared contract.",
+      "category": "companion"
+    },
+    {
+      "name": "dojo-tally",
+      "source": "./plugins/dojo-tally",
+      "description": "Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge.",
+      "category": "companion"
+    },
+    {
+      "name": "dojo-brief",
+      "source": "./plugins/dojo-brief",
+      "description": "Lints every subagent brief at dispatch against the delegate skill: detail, owned files, done-check, return shape. A notice, or one send-back.",
+      "category": "companion"
     },
     {
       "name": "strategic-thinking",

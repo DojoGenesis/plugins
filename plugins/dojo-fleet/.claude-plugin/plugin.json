@@ -1,0 +1,43 @@
+{
+  "name": "dojo-fleet",
+  "version": "0.1.0",
+  "description": "See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-fleet",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "fan-out",
+    "subagents",
+    "steering",
+    "orchestration",
+    "protocol",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "stall_minutes": {
+      "type": "number",
+      "title": "Stall after (minutes)",
+      "description": "A running agent is flagged stalled after this long with no tool call, a tool call that has not returned, or (for a writing agent) no file written. 0 turns stall checks off.",
+      "default": 10,
+      "min": 0,
+      "max": 240
+    },
+    "show_band": {
+      "type": "boolean",
+      "title": "Band above the prompt",
+      "description": "While agents run, show the fleet count above the prompt; when an agent's transcript is open, the band becomes its steering bar.",
+      "default": true
+    },
+    "stall_toast": {
+      "type": "boolean",
+      "title": "Toast on stall",
+      "description": "Raise one toast when an agent first looks stalled.",
+      "default": true
+    }
+  }
+}
