@@ -1,6 +1,6 @@
 {
   "name": "dojo-fixcards",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A tool call a Dojo guard refuses is drawn as a card: who blocked it, why, and the fix as code you can copy.",
   "author": {
     "name": "Dojo Genesis",

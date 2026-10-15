@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugins and mods for Claude Code that put the right model on each job, keep context small, and don't call work done until a check passes: the Dojo suite, a library of practice skills, and two companion plugins.",
-    "version": "2.2.0",
+    "version": "2.3.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [

@@ -2,8 +2,8 @@ import { atom, read, update } from 'claude-code'
 import type { AgentInfo, EngineInterface, Register } from 'claude-code'
 
 import type { FleetAgent, FleetStatus } from '../types'
-import { renderAgentBar, renderChips, renderPane } from './views'
-import type { Chip, FleetActions, PaneView, Tone } from './views'
+import { renderAgentBar, renderChips, renderPane, renderPaneCards } from './views'
+import type { CardsView, Chip, FleetActions, PaneCard, PaneView, Tone } from './views'
 import {
   READ_TOOLS,
   WRITE_TOOLS,
@@ -52,7 +52,7 @@ const tickAtom = atom({ plugin: 'dojo-fleet', key: 'tick' } as const, 0)
 const selectedAtom = atom({ plugin: 'dojo-fleet', key: 'selected' } as const, null)
 const hiddenAtom = atom({ plugin: 'dojo-fleet', key: 'isBandHidden' } as const, false)
 
-type Settings = { limitMs: number; showBand: boolean; stallToast: boolean }
+type Settings = { limitMs: number; showBand: boolean; stallToast: boolean; autoOpen: boolean }
 
 const isOn = (value: string | undefined): boolean =>
   typeof value === 'string' && ['1', 'true', 'yes'].includes(value.trim().toLowerCase())
@@ -249,6 +249,44 @@ function colorOf(agent: FleetAgent, stalled: boolean): Tone {
   return 'subtle'
 }
 
+function thresholdText(limitMs: number): string {
+  const minutes = limitMs / 60000
+  return limitMs > 0 ? `stall after ${Number.isInteger(minutes) ? `${minutes}m` : fmtDuration(limitMs)}` : 'stall checks off'
+}
+
+// One agent as a desktop card: who, its state in its colour, what it is doing now, and the actions it takes.
+function cardOf(agent: FleetAgent, now: number, stall: string | undefined, isSelected: boolean): PaneCard {
+  const isStalled = stall !== undefined
+  const work = agent.isWriter || agent.writes > 0 ? `${plural(agent.tools, 'tool')} · ${plural(agent.writes, 'write')}` : plural(agent.tools, 'tool')
+  const current = agent.inFlight[agent.inFlight.length - 1]
+  const doing =
+    agent.status === 'running'
+      ? current !== undefined
+        ? `now ${current.tool} · ${fmtDuration(Math.max(0, now - current.since))}`
+        : agent.lastTool !== undefined
+          ? `last ${agent.lastTool}`
+          : 'starting'
+      : agent.status === 'waiting'
+        ? 'waiting on its own background work'
+        : undefined
+  return {
+    id: agent.id,
+    n: agent.n,
+    glyph: glyphOf(agent, isStalled),
+    tone: colorOf(agent, isStalled),
+    title: `#${agent.n} ${agent.label}`,
+    status: isStalled ? 'stalled' : agent.reason !== undefined && !isLive(agent) ? `${agent.status} (${agent.reason})` : agent.status,
+    meta: `${shortModel(agent.model)} · ${fmtDuration((agent.endedAt ?? now) - agent.spawnedAt)} · ${work}`,
+    doing,
+    stallLine: isStalled ? `looks stalled: ${stall}` : undefined,
+    answer: agent.answer !== undefined && !isLive(agent) ? clip(agent.answer.replace(/\s+/g, ' '), 160) : undefined,
+    isSelected,
+    canSteer: isLive(agent),
+    canNudge: agent.status === 'running',
+    canStop: isLive(agent),
+  }
+}
+
 // Every action a drawing offers, bound to one `$`: views.tsx draws, these act. Top level, because `$` may only be
 // handed to a function declared at the top of the module.
 function actionsFor($: EngineInterface, limitMs: number): FleetActions {
@@ -268,9 +306,12 @@ export const register: Register = (on, options) => {
     limitMs: asMinutes(options.stall_minutes, 10) * 60000,
     showBand: asFlag(options.show_band, true),
     stallToast: asFlag(options.stall_toast, true),
+    autoOpen: asFlag(options.auto_open, true),
   }
   let isOff = false
   let timer: { cancel: () => void } | undefined
+  // Whether this wave has already opened the pane by itself (auto_open); a new wave starts it over.
+  let isAutoOpened = false
 
   on('session.start', async ($, e, next) => {
     isOff = await standDown($)
@@ -333,7 +374,17 @@ export const register: Register = (on, options) => {
       }
       return [...list, agent].slice(-MAX_AGENTS)
     })
-    if (isNewWave) await update($, hiddenAtom, () => false)
+    if (isNewWave) {
+      await update($, hiddenAtom, () => false)
+      isAutoOpened = false
+    }
+    // A fan-out (two agents alive at once) opens the pane, once per wave, without taking the keyboard. Seen live:
+    // the pane went unseen unless /fleet was typed. The engine places an unasked pane only where there is room
+    // (a docked pane, or a terminal at least 144 columns wide) and otherwise holds it until the person opens it.
+    if (settings.autoOpen && !isAutoOpened && (await read($, agentsAtom)).filter(isLive).length >= 2) {
+      isAutoOpened = true
+      await $.ui.open({ id: PANE, title: 'Fleet' }).catch(() => undefined)
+    }
     return started
   }).catch(($, e, next) => next(e)) // bookkeeping only: never stand between a spawn and its agent
 
@@ -464,6 +515,20 @@ export const register: Register = (on, options) => {
     const order = (agent: FleetAgent) =>
       stalls.get(agent.id) !== undefined ? 0 : agent.status === 'running' ? 1 : agent.status === 'waiting' ? 2 : 3
     const sorted = [...agents].sort((a, b) => order(a) - order(b) || b.n - a.n)
+    // Surfaces with proportional type draw a card per agent (seen live: the terminal's fixed-width columns read
+    // raggedly in the desktop app, and the actions waited behind a pick-a-row step). The terminal keeps its rows.
+    if (e.surface !== 'terminal') {
+      const fits = Math.max(2, Math.floor((e.viewport?.rows ?? 40) / 6))
+      const cards = sorted.slice(0, fits)
+      const view: CardsView = {
+        title: agents.length === 0 ? 'Fleet' : `Fleet — ${countsText(counts)}`,
+        threshold: thresholdText(settings.limitMs),
+        isEmpty: agents.length === 0,
+        cards: cards.map(agent => cardOf(agent, now, stalls.get(agent.id), agent.id === selectedId)),
+        more: sorted.length - cards.length,
+      }
+      return renderPaneCards($.ui.resolve(e), view, actionsFor($, settings.limitMs))
+    }
     const shown = sorted.slice(0, room)
     const parts = shown.map(agent => rowParts(agent, now, stalls.get(agent.id)))
     const selected = agents.find(one => one.id === selectedId)

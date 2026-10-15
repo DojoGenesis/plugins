@@ -1,7 +1,7 @@
 import { expect, mock, test } from 'claude-code/testing'
 
 import type { LaneAgent } from '../types'
-import { buildLanesSvg, esc, niceStep, stripOf, ticksOf, viewOf, wavesOf } from '../hooks/model'
+import { BREAK_PX, axisLabels, compactGap, buildLanesSvg, esc, niceStep, scaleOf, segmentsOf, stripOf, tickLabel, ticksOf, viewOf, wavesOf } from '../hooks/model'
 
 // Mod kit tests. The hooks a test registers with `on` sit beneath the plugin and stand for the engine.
 
@@ -192,7 +192,13 @@ test('the terminal pane draws rows, the desktop pane draws the SVG', async ($, o
   const desk = await $.ui.mount({ plugin: 'dojo-swimlanes', surface: 'desktop', component: 'Pane', requestId: 'dojo-swimlanes', props: PANE })
   const svg = await desk.find({ type: 'Svg' })
   expect(String(svg?.props.source)).toContain('>now<')
-  expect(String(svg?.props.source)).toContain('height="92"')
+  expect(String(svg?.props.source)).toContain('height="114"')
+  // Seen live: without an explicit size the desktop drew the image at its pixel size in device pixels (half size).
+  expect(svg?.props.width).toBe(800)
+  expect(svg?.props.height).toBe(114)
+  // The numbers again as native text under the chart (seen live: the chart's own type read poorly in a docked pane).
+  expect(await desk.find({ type: 'Text', text: '#1 Draft the notes' })).toBeDefined()
+  expect(await desk.find({ type: 'Text', text: /haiku 4.5 · running · .* · 1 tool call/ })).toBeDefined()
   await desk.unmount()
 })
 
@@ -249,4 +255,62 @@ test('the enabled option off turns the mod into a pass-through, as the kill swit
   const ran = await call($, 'ag-1', 'Read', { file_path: '/work/demo/a.md' })
   expect(ran.text).toBe('ok')
   expect(await swim($, 'text')).toBe('No subagent has run yet')
+})
+
+// Seen live (desktop, 2026-10-15): "All waves" over half a day put ~70 overlapping labels on the axis (the steps
+// stopped at 10m) and left each wave a sliver at either end. Steps now run to days; idle gaps fold into a break.
+test('a half-day span keeps eight ticks at most, labelled in hours', () => {
+  const H = 3600000
+  for (const span of [12 * H, 26 * H, 9 * 24 * H]) {
+    expect(ticksOf(span).length).toBeLessThanOrEqual(9)
+    expect(Math.floor(span / niceStep(span))).toBeLessThanOrEqual(8)
+  }
+  expect(tickLabel(2 * H)).toBe('2h')
+  expect(tickLabel(90 * 60000)).toBe('1h30m')
+  expect(ticksOf(60000, 0).length).toBeGreaterThan(0)
+})
+
+test('two waves half a day apart fold the gap into a labelled break and both stay readable', () => {
+  const H = 3600000
+  const a = agent({ id: 'a', n: 1, label: 'early', spawnedAt: 0, endedAt: 40000, calls: [{ id: 'c1', tool: 'Read', kind: 'read', t0: 1000, t1: 30000, ok: true }] })
+  const b = agent({ id: 'b', n: 2, label: 'late', spawnedAt: 12 * H, endedAt: 12 * H + 60000, calls: [{ id: 'c2', tool: 'Bash', kind: 'bash', t0: 12 * H + 1000, t1: 12 * H + 50000, ok: true }] })
+  const segs = segmentsOf([a, b], 13 * H)
+  expect(segs.length).toBe(2)
+  const scale = scaleOf(segs, 100, 700)
+  expect(scale.breaks.length).toBe(1)
+  const fold = scale.breaks[0]
+  if (fold === undefined) throw new Error('no break drawn')
+  expect(fold.x1 - fold.x0).toBe(BREAK_PX)
+  // each wave keeps a real share of the 600px, not a sliver
+  expect(scale.x(40000) - scale.x(0)).toBeGreaterThan(150)
+  expect(scale.x(12 * H + 60000) - scale.x(12 * H)).toBeGreaterThan(150)
+  // a time inside the gap sits in the break
+  const mid = scale.x(6 * H)
+  expect(mid).toBeGreaterThan(fold.x0)
+  expect(mid).toBeLessThan(fold.x1)
+  const svg = buildLanesSvg({ agents: [a, b], waveNo: 2, isAll: true }, 13 * H, 100)
+  expect(svg).toContain('+11h 59m')
+})
+
+// Seen live: six waves in one pane stacked every segment's ticks and every gap label on top of each other.
+test('six waves give axis labels that never overlap, and every gap keeps its compact label', () => {
+  const H = 3600000
+  const lives = [0, 2 * H, 2 * H + 5 * 60000, 9 * H, 11 * H, 12 * H]
+  const agents = lives.map((t0, i) =>
+    agent({ id: `w${i}`, n: i + 1, label: `wave ${i + 1}`, spawnedAt: t0, endedAt: t0 + 45000, calls: [{ id: `c${i}`, tool: 'Bash', kind: 'bash', t0: t0 + 1000, t1: t0 + 40000, ok: true }] }),
+  )
+  const scale = scaleOf(segmentsOf(agents, 13 * H), 192, 778)
+  const labels = axisLabels(scale)
+  for (let i = 0; i < labels.length; i++) {
+    for (let j = i + 1; j < labels.length; j++) {
+      const a = labels[i]
+      const b = labels[j]
+      if (a === undefined || b === undefined) continue
+      expect(Math.abs(a.x - b.x)).toBeGreaterThanOrEqual(a.text.length * 3.7 + 5 + b.text.length * 3.7 + 5)
+    }
+  }
+  expect(labels.filter(one => one.kind === 'gap').length).toBe(5)
+  expect(compactGap(11 * H + 59 * 60000)).toBe('+12h')
+  expect(compactGap(H + 59 * 60000)).toBe('+2h')
+  expect(compactGap(90000)).toBe('+2m')
 })

@@ -18,7 +18,7 @@ COMMANDS = ['/fleet', '/steer']
 FALLBACK = 'fleet'
 # The promise exactly as the manifest and the README word it.
 PROMISE = 'See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.'
-USER_CONFIG = ['show_band', 'stall_minutes', 'stall_toast']
+USER_CONFIG = ['auto_open', 'show_band', 'stall_minutes', 'stall_toast']
 
 
 def read(*parts):
@@ -41,7 +41,7 @@ class Manifest(unittest.TestCase):
     def test_required_fields(self):
         m = self.manifest
         self.assertEqual(m["name"], NAME)
-        self.assertEqual(m["version"], "0.1.1")
+        self.assertEqual(m["version"], "0.2.0")
         self.assertEqual(m["author"], {"name": "Dojo Genesis", "email": "cruz@trespiesdesign.com"})
         self.assertEqual(m["homepage"], "https://dojogenesis.com/suite#" + NAME)
         self.assertEqual(m["repository"], "https://github.com/DojoGenesis/plugins")

@@ -86,7 +86,11 @@ test('a refusal draws the card on every surface: header, fix code, allow code', 
   beneath(on)
   await started($)
   for (const surface of SURFACES) {
-    const ui = await mountResult($, surface, result(STAGING))
+    // The terminal draws the card in the ToolResult block; every other surface on the refused ToolUse row.
+    const ui =
+      surface === 'terminal'
+        ? await mountResult($, surface, result(STAGING))
+        : await mountUse($, surface, groupCall(STAGING, { tool_use_id: `tu-${surface}`, tool: 'Bash' }))
     expect(await ui.find({ type: 'Text', text: /Blocked by dojo-gates/ })).toBeDefined()
     expect(await ui.find({ type: 'Text', text: /staging/ })).toBeDefined()
     expect(await ui.find({ type: 'Code', text: 'git add path/a path/b' })).toBeDefined()
@@ -100,7 +104,7 @@ test('a refusal draws the card on every surface: header, fix code, allow code', 
 test('the lanes card names the holder and the file', async ($, on) => {
   beneath(on)
   await started($)
-  const ui = await mountResult($, 'desktop', result(LANES))
+  const ui = await mountUse($, 'desktop', groupCall(LANES, { tool_use_id: 'tu-lanes', tool: 'Write' }))
   expect(await ui.find({ type: 'Text', text: /Blocked by dojo-lanes/ })).toBeDefined()
   expect(await ui.find({ type: 'Code', text: '/work/demo/lanes-demo/target.txt' })).toBeDefined()
   expect(await ui.find({ type: 'Text', text: /Held by Lanes holder/ })).toBeDefined()
@@ -124,12 +128,12 @@ test('/fixcards off lets rows pass through, on draws them again', async ($, on) 
   await started($)
   expect((await $.command.run({ command: 'fixcards', args: '' } as any)).text).toBe('on · 0 cards drawn this session')
   expect((await $.command.run({ command: 'fixcards', args: 'off' } as any)).text).toBe('off · 0 cards drawn this session')
-  const off = await mountResult($, 'desktop', result(STAGING))
+  const off = await mountResult($, 'terminal', result(STAGING))
   expect(await off.find({ type: 'Text', text: 'beneath' })).toBeDefined()
   expect(await off.find({ type: 'Text', text: /Blocked by/ })).toBeUndefined()
   await off.unmount()
   expect((await $.command.run({ command: 'dojo-fixcards:fixcards', args: 'on' } as any)).text).toMatch(/^on ·/)
-  const back = await mountResult($, 'desktop', result(STAGING, { tool_use_id: 'tu-3' }))
+  const back = await mountResult($, 'terminal', result(STAGING, { tool_use_id: 'tu-3' }))
   expect(await back.find({ type: 'Text', text: /Blocked by dojo-gates/ })).toBeDefined()
 })
 
@@ -200,13 +204,28 @@ test('the refused row of an unfolded group keeps its own row and draws the card 
   }
 })
 
-test('a standalone refused ToolUse row is left to its ToolResult block: no second card', async ($, on) => {
+test('on the terminal a standalone refused ToolUse row is left to its ToolResult block: no second card', async ($, on) => {
   beneath(on)
   await started($)
-  const row = await mountUse($, 'desktop', groupCall(STAGING, { tool_use_id: 'tu-standalone', tool: 'Bash' }))
+  const row = await mountUse($, 'terminal', groupCall(STAGING, { tool_use_id: 'tu-standalone', tool: 'Bash' }))
   expect(await row.find({ type: 'Text', text: /Blocked by/ })).toBeUndefined()
   expect(await row.find({ type: 'Text', text: 'beneath' })).toBeDefined()
   await row.unmount()
+})
+
+// Seen in a desktop census (2026-10-15, 123 draws): no ToolResult site at all, and the dojo-gates refusal came on a
+// standalone ToolUse row with the guard's text in `output`. So the desktop's card is drawn there, under the row.
+test('on the desktop a standalone refused ToolUse row draws the card, and a ToolResult stands aside', async ($, on) => {
+  beneath(on)
+  await started($)
+  const row = await mountUse($, 'desktop', groupCall(BIGREAD, { tool_use_id: 'tu-desk', tool: 'Read' }))
+  expect(await row.find({ type: 'Text', text: 'beneath' })).toBeDefined()
+  expect(await row.find({ type: 'Text', text: /Blocked by dojo-gates/ })).toBeDefined()
+  expect(await row.find({ type: 'Code', text: 'DOJO_GATES_SKIP=big-read' })).toBeDefined()
+  await row.unmount()
+  const block = await mountResult($, 'desktop', result(BIGREAD, { tool_use_id: 'tu-desk' }))
+  expect(await block.find({ type: 'Text', text: /Blocked by/ })).toBeUndefined()
+  await block.unmount()
 })
 
 test('the enabled option off turns the mod into a pass-through, as the kill switch does', { options: { enabled: false } }, async ($, on) => {

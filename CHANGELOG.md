@@ -1,6 +1,19 @@
 # Changelog — dojo-genesis
 
-## Unreleased — 2.2.0 — desktop mods
+## Unreleased — 2.3.0 — the desktop pass
+
+Found by running the mods in the Claude desktop app and recording what it draws (a census of every `ui.render` site it raised).
+
+### Changed
+
+- **`dojo-fleet` 0.2.0** — off the terminal (the desktop app, VS Code, mobile) the Fleet pane draws a card per agent in its state's colour: model, age, tools and writes, what it is doing now (`now Bash · 12s`), a stall line when flagged, the answer once settled, and Steer, Nudge and Stop on the card itself. The terminal's fixed-width columns had read raggedly in proportional type, and the actions waited behind a pick-a-row step. The terminal keeps its aligned rows. New option `auto_open` (default on): when two agents run at once the pane opens by itself, once per wave, without taking the keyboard; the engine places it only where there is room.
+- **`dojo-swimlanes` 0.2.0** — legibility in a docked desktop pane. The chart is handed its width and height in CSS pixels (without them the desktop drew the image at its pixel size in device pixels, half size on a 2x screen); the time axis runs to hours and days with at most eight ticks (it stopped at 10 minutes, so half a day drew about seventy overlapping labels); idle stretches over 20 seconds between waves fold into a narrow break labelled `+12h`, so every wave keeps its width; axis labels that would overlap are dropped; larger type and lanes; the legend wraps on a narrow pane. Under the chart, one line per agent in the surface's own text: status, model, duration, tool calls, writes and refusals.
+
+### Fixed
+
+- **`dojo-fixcards` 0.1.1** — no card drew in the desktop app. The desktop raises no `ToolResult` site; a refused call arrives on a standalone `ToolUse` row with the guard's text in `output`. Off the terminal the card now goes under the refused tool row, and the result-block hook stands aside there, so no surface draws a refusal twice.
+
+## 2026-10-15 — 2.2.0 — desktop mods
 
 ### Added
 

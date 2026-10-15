@@ -43,7 +43,7 @@ A wave is the set of agents spawned since the last moment no agent was running.
 
 ## What each surface draws
 
-- **Desktop, VS Code and mobile:** a chart with a label column (number, label, model), a lane band from spawn to end, a mark per tool call coloured by kind (read, write, bash, agent, other) and as wide as the call lasted, a red cross for a refused or failed call, a dashed amber tail while an agent waits, an end glyph, a "now" line while agents are live, a time axis and a legend. Hover a mark for its tool, target, duration and the refusal text.
+- **Desktop, VS Code and mobile:** a chart with a label column (number, label, model), a lane band from spawn to end, a mark per tool call coloured by kind (read, write, bash, agent, other) and as wide as the call lasted, a red cross for a refused or failed call, a dashed amber tail while an agent waits, an end glyph, a "now" line while agents are live, a time axis and a legend. Idle stretches between waves fold into a narrow break labelled with how long nothing ran, so every wave keeps its width. Under the chart, one line per agent in the surface's own text: status, model, duration, tool calls, writes and refusals. Hover a mark for its tool, target, duration and the refusal text.
 - **Terminal:** one row per agent with a strip of time buckets: a block where a call ran, a cross for a refused or failed call, a dot for idle, a dashed glyph for waiting.
 
 ## Settings
@@ -57,7 +57,8 @@ A wave is the set of agents spawned since the last moment no agent was running.
 ## Honest limits
 
 - While agents run, the desktop chart is a plain image (an interactive frame reloaded each second and blinked), so hover tooltips appear once the wave settles.
-- The terminal draws text strips, not a chart.
+- The terminal draws text strips, not a chart, and does not fold idle gaps: "All waves" there spans the whole time.
+- Long agent names are cut in the chart's label column; the line under the chart has them in full.
 - It keeps the last 16 agents and 200 calls each.
 - A ✗ marks a refused or a failed call; the chart does not tell the two apart except by the hover text.
 
