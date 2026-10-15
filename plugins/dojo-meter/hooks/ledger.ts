@@ -16,6 +16,7 @@ export type Row = {
   cacheRead: number
   cacheWrite: number
   requests: number
+  long?: true // the requests in this row had a prompt over the model's long-context threshold: priced on that card
 }
 export type Ledger = Map<string, Row>
 export type TierName = 'opus' | 'sonnet' | 'haiku' | 'fable' | 'other'
@@ -70,9 +71,20 @@ export function priceKeyFor(normalized: string): string | undefined {
   return undefined
 }
 
-export function priceFor(normalized: string): Price | undefined {
+export function priceFor(normalized: string, long = false): Price | undefined {
   const key = priceKeyFor(normalized)
-  return key === undefined ? undefined : PRICING.models[key]
+  if (key === undefined) return undefined
+  const row = PRICING.models[key]
+  return long && row.long_context !== undefined ? row.long_context : row
+}
+
+// True when one request's prompt (input + cache reads + cache writes) is over the model's long-context threshold,
+// so that request is priced on the model's second card. Each request is judged on its own size, never the
+// ledger's running total. A model with no long_context card is never long.
+export function isLongPrompt(normalized: string, promptTokens: number): boolean {
+  const key = priceKeyFor(normalized)
+  const card = key === undefined ? undefined : PRICING.models[key].long_context
+  return card !== undefined && promptTokens > card.over_tokens
 }
 
 const scaled = (price: number): number => Math.round(price * 100)
@@ -87,11 +99,13 @@ export function addUsage(ledger: Ledger, loop: string, usage: unknown): number |
   if (typeof usage !== 'object' || usage === null) return undefined
   const u = usage as Record<string, unknown>
   const model = normalizeModel(u.model)
-  const key = `${loop}\u0000${model}`
-  const row: Row = ledger.get(key) ?? { loop, model, input: 0, output: 0, cacheRead: 0, cacheWrite: 0, requests: 0 }
   const input = count(u.input_tokens)
   const cacheRead = count(u.cache_read_input_tokens)
   const cacheWrite = count(u.cache_creation_input_tokens)
+  const long = isLongPrompt(model, input + cacheRead + cacheWrite)
+  const key = `${loop}\u0000${model}${long ? '\u0000long' : ''}`
+  const row: Row = ledger.get(key) ?? { loop, model, input: 0, output: 0, cacheRead: 0, cacheWrite: 0, requests: 0 }
+  if (long) row.long = true
   row.input += input
   row.output += count(u.output_tokens)
   row.cacheRead += cacheRead
@@ -110,7 +124,7 @@ export function estimateUsd(ledger: Ledger): Estimate {
   const writeMultiplier = Math.round(PRICING.cache_write_5m_multiplier * 100)
   for (const row of ledger.values()) {
     const tokens = row.input + row.output + row.cacheRead + row.cacheWrite
-    const price = priceFor(row.model)
+    const price = priceFor(row.model, row.long === true)
     if (price === undefined) {
       unpricedTokens += tokens
       unpricedRows += 1

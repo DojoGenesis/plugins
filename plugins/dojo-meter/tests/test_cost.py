@@ -416,6 +416,121 @@ class Arithmetic(Base):
         self.assertIn("<$0.01", run_cost(self.fx)[1])
 
 
+class HaikuFiveFive(Base):
+    """claude-haiku-5-5 is priced per request on prompt length: two cards, split at 100,000 prompt tokens.
+
+    The prompt is input + cache reads + cache writes of that one request; the long card is the second published
+    price row. Prices: scripts/pricing.json (USD per million tokens, from the live pricing page 2026-10-14).
+    """
+
+    def usd(self, *lines):
+        return run_json(self.fx_with(list(lines)))["totals"]["usd"]
+
+    def test_a_haiku_5_5_usage_line_is_priced_not_unpriced(self):
+        self.fx.write("-p1/s1.jsonl", [entry("a", "ra", model="claude-haiku-5-5", inp=1000, out=1000)])
+        data = run_json(self.fx)
+        (row,) = data["rows"]
+        self.assertTrue(row["priced"])
+        self.assertEqual((row["model"], row["priced_as"], row["tier"]), ("claude-haiku-5-5", "claude-haiku-5-5", "haiku"))
+        self.assertFalse(data["totals"]["partial"])
+        self.assertEqual(data["totals"]["unpriced_tokens"], 0)
+        self.assertIsNotNone(data["totals"]["usd"])
+
+    def test_the_standard_card_prices_each_field(self):
+        # A prompt of exactly 100,000 tokens is still standard. Input 0.10, output 0.50, cache read 0.01,
+        # 5-minute write 0.10 x 1.25, 1-hour write 0.10 x 2 (USD per million tokens).
+        top = 100000
+        self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", inp=top)), top * 0.10 / M)
+        self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", out=M)), 0.50)
+        self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", read=top)), top * 0.01 / M)
+        self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", write=top)), top * 0.125 / M)
+        self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", write=top, split=(0, top))), top * 0.20 / M)
+
+    def test_the_long_card_prices_each_field(self):
+        # Over 100,000 prompt tokens: input 0.50, output 2.50, cache read 0.05, writes 0.50 x 1.25 and 0.50 x 2.
+        # Each case carries 100,001 prompt tokens in the field under test (or in padding input, priced at 0.50).
+        pad = 100001
+        cases = (
+            ({"inp": pad}, pad * 0.50 / M),
+            ({"inp": 1, "read": pad}, 1 * 0.50 / M + pad * 0.05 / M),
+            ({"inp": 1, "write": pad}, 1 * 0.50 / M + pad * 0.625 / M),
+            ({"inp": 1, "write": pad, "split": (0, pad)}, 1 * 0.50 / M + pad * 1.00 / M),
+            ({"inp": pad, "out": M}, pad * 0.50 / M + 2.50),
+        )
+        for fields, want in cases:
+            with self.subTest(fields=fields):
+                self.assertAlmostEqual(self.usd(entry(model="claude-haiku-5-5", **fields)), want)
+
+    def test_the_threshold_is_over_100000_and_cache_tokens_count_toward_it(self):
+        def priced_long(**kw):
+            (row,) = run_json(self.fx_with([entry("a", "ra", model="claude-haiku-5-5", **kw)]))["rows"]
+            return row["long_prompt"]
+        self.assertFalse(priced_long(inp=100000))
+        self.assertTrue(priced_long(inp=100001))
+        self.assertFalse(priced_long(inp=1, read=99999))
+        self.assertTrue(priced_long(inp=1, read=100000))      # cache reads count
+        self.assertTrue(priced_long(inp=1, write=100000))     # and so do cache writes
+        self.assertTrue(priced_long(inp=40000, read=40000, write=20001))
+        self.assertFalse(priced_long(inp=40000, read=40000, write=20000))
+        self.assertFalse(priced_long(inp=0, out=500000))      # output tokens never count toward the prompt
+
+    def test_each_request_is_priced_on_its_own_size_not_on_the_running_total(self):
+        lines = [entry("m%d" % i, "r%d" % i, model="claude-haiku-5-5", inp=60000) for i in range(3)]
+        data = run_json(self.fx_with(lines))
+        (row,) = data["rows"]
+        self.assertFalse(row["long_prompt"])
+        self.assertEqual(row["requests"], 3)
+        self.assertAlmostEqual(data["totals"]["usd"], 3 * 60000 * 0.10 / M)  # all three on the standard card
+
+    def test_one_session_with_both_sizes_has_two_rows_priced_on_their_own_cards(self):
+        data = run_json(self.fx_with([
+            entry("a", "ra", model="claude-haiku-5-5", inp=1000, out=2000),         # standard: 0.0001 + 0.001
+            entry("b", "rb", model="claude-haiku-5-5", inp=200000, out=2000),       # long: 0.10 + 0.005
+        ]))
+        rows = {r["long_prompt"]: r for r in data["rows"]}
+        self.assertEqual(set(rows), {False, True})
+        self.assertAlmostEqual(rows[False]["usd"], 1000 * 0.10 / M + 2000 * 0.50 / M)
+        self.assertAlmostEqual(rows[True]["usd"], 200000 * 0.50 / M + 2000 * 2.50 / M)
+        self.assertEqual(rows[True]["prompt_over_tokens"], 100000)
+        self.assertIsNone(rows[False]["prompt_over_tokens"])
+        self.assertAlmostEqual(data["totals"]["usd"], rows[False]["usd"] + rows[True]["usd"])
+        self.assertAlmostEqual(data["totals"]["by_tier_usd"]["haiku"], data["totals"]["usd"])
+
+    def test_the_text_report_marks_the_long_row_and_never_cuts_the_marker(self):
+        fx = self.fx_with([
+            entry("a", "ra", model="claude-haiku-5-5", inp=1000),
+            entry("b", "rb", model="claude-haiku-5-5", inp=200000),
+        ])
+        lines = run_cost(fx)[1].splitlines()
+        names = [l.split()[0:2] for l in lines if l.startswith("claude-haiku-5-5")]
+        self.assertIn(["claude-haiku-5-5", "main"], names)
+        self.assertIn(["claude-haiku-5-5", ">100k"], names)
+
+    def test_a_model_without_a_long_card_is_never_long(self):
+        data = run_json(self.fx_with([entry("a", "ra", model="claude-haiku-4-5", inp=900000)]))
+        (row,) = data["rows"]
+        self.assertFalse(row["long_prompt"])
+        self.assertAlmostEqual(row["usd"], 0.90)  # 900k x $1 per million
+
+    def test_a_variant_decoration_keeps_the_long_card(self):
+        data = run_json(self.fx_with([entry("a", "ra", model="claude-haiku-5-5-latest", inp=200000)]))
+        (row,) = data["rows"]
+        self.assertEqual((row["priced_as"], row["long_prompt"]), ("claude-haiku-5-5", True))
+        self.assertAlmostEqual(row["usd"], 0.10)
+
+    def test_a_newer_haiku_number_borrows_no_price(self):
+        for unknown in ("claude-haiku-5-6", "claude-haiku-5", "claude-haiku-5-50", "claude-haiku-5-5-preview"):
+            with self.subTest(model=unknown):
+                data = run_json(self.fx_with([entry("a", "ra", model=unknown, inp=M)]))
+                self.assertIsNone(data["totals"]["usd"])
+
+    def fx_with(self, lines):
+        self.fx.cleanup()
+        self.fx = Fixture()
+        self.fx.write("-p1/s1.jsonl", lines)
+        return self.fx
+
+
 class CacheShare(Base):
     def test_read_over_input_side_tokens(self):
         self.fx.write("-p1/s1.jsonl", [entry(inp=100, read=300, write=100, out=999)])

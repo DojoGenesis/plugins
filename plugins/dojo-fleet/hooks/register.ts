@@ -2,7 +2,6 @@ import { atom, read, update } from 'claude-code'
 import type { AgentInfo, EngineInterface, Register } from 'claude-code'
 
 import type { FleetAgent, FleetStatus } from '../types'
-import type { RowParts } from './model'
 import { renderAgentBar, renderChips, renderPane } from './views'
 import type { Chip, FleetActions, PaneView, Tone } from './views'
 import {
@@ -13,6 +12,7 @@ import {
   countsOf,
   countsText,
   findAgent,
+  fitCols,
   fmtDuration,
   glyphOf,
   isLive,
@@ -466,7 +466,6 @@ export const register: Register = (on, options) => {
     const sorted = [...agents].sort((a, b) => order(a) - order(b) || b.n - a.n)
     const shown = sorted.slice(0, room)
     const parts = shown.map(agent => rowParts(agent, now, stalls.get(agent.id)))
-    const col = (pick: (p: RowParts) => string, cap: number) => Math.min(cap, Math.max(1, ...parts.map(p => pick(p).length)))
     const selected = agents.find(one => one.id === selectedId)
     const stall = selected === undefined ? undefined : stalls.get(selected.id)
     const isTripped = selected !== undefined && selected.nudges > 0 && selected.stalls >= 2 && stall !== undefined
@@ -487,7 +486,7 @@ export const register: Register = (on, options) => {
           isFirst: i === 0,
         }
       }),
-      cols: { id: col(p => p.id, 6), label: col(p => p.label, 24), model: col(p => p.model, 16), age: col(p => p.age, 7), work: col(p => p.work, 22) },
+      cols: fitCols(parts, width),
       more: sorted.length - shown.length,
       detail:
         selected === undefined

@@ -76,8 +76,10 @@ const isNamed = (model: unknown): boolean =>
   typeof model === 'string' && model.trim() !== '' && model.trim().toLowerCase() !== 'inherit'
 
 // `$` may only be handed to a function declared at the top of this file, so the toast lives here.
+// The engine heads every toast and status line with the plugin's name, so UI text here carries no "dojo-router: "
+// prefix of its own (it would show twice). Deny texts and meta rows, which the model reads, keep the prefix.
 function showCapToast($: { ui: { toast: (text: string) => void } }, cap: number, explore: Tier, other: Tier): void {
-  $.ui.toast(`dojo-router: opus cap reached (${cap}) — unpinned dispatches stop landing on opus: Explore now goes to ${explore}, the rest to ${other}. Set opus_cap to 0 to turn the cap off.`)
+  $.ui.toast(`opus cap reached (${cap}) — unpinned dispatches stop landing on opus: Explore now goes to ${explore}, the rest to ${other}. Set opus_cap to 0 to turn the cap off.`)
 }
 
 export const register: Register = (on, options) => {
@@ -121,7 +123,7 @@ export const register: Register = (on, options) => {
     if (pick === undefined) return next(e)
     if (pick.capChanged && claimNotice()) showCapToast($, cap, belowOpus(exploreTier), belowOpus(defaultTier))
     statusShown = true
-    $.ui.status(`dojo-router: ${e.subagent_type?.trim() || 'general-purpose'} -> ${pick.model}`)
+    $.ui.status(`${e.subagent_type?.trim() || 'general-purpose'} -> ${pick.model}`)
     return next({ ...e, model: pick.model })
   }).catch(($, e, next) => next(e))
 
@@ -152,7 +154,7 @@ export const register: Register = (on, options) => {
         if (pick !== undefined) {
           if (pick.capChanged && claimNotice()) showCapToast($, cap, belowOpus(exploreTier), belowOpus(defaultTier))
           statusShown = true
-          $.ui.status(`dojo-router: ${e.subagentType?.trim() || 'general-purpose'} -> ${pick.model}`)
+          $.ui.status(`${e.subagentType?.trim() || 'general-purpose'} -> ${pick.model}`)
           input = { ...e, model: pick.model }
         }
       }

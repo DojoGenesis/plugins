@@ -1,6 +1,6 @@
 {
   "name": "dojo-meter",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "See what each turn, agent and model costs, and how big your context is: a cost report from your transcripts, and a live band with the mod.",
   "author": {
     "name": "Dojo Genesis",

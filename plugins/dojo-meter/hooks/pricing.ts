@@ -1,7 +1,7 @@
 // Generated from scripts/pricing.json by scripts/gen_pricing_ts.py. Generated, do not edit here:
 // edit the JSON and run the script. A unit test fails when this copy and the JSON differ.
-export const PRICING: { source: string; unit: string; cache_write_5m_multiplier: number; cache_write_1h_multiplier: number; models: Record<string, { input: number; output: number; cache_read: number }> } = {
-  "source": "Anthropic list prices as cached 2026-09-25",
+export const PRICING: { source: string; unit: string; cache_write_5m_multiplier: number; cache_write_1h_multiplier: number; models: Record<string, { input: number; output: number; cache_read: number; long_context?: { over_tokens: number; input: number; output: number; cache_read: number } }> } = {
+  "source": "Anthropic list prices as cached 2026-09-25; claude-haiku-5-5 as of 2026-10-14",
   "unit": "USD per million tokens",
   "cache_write_5m_multiplier": 1.25,
   "cache_write_1h_multiplier": 2.0,
@@ -55,6 +55,17 @@ export const PRICING: { source: string; unit: string; cache_write_5m_multiplier:
       "input": 3,
       "output": 15,
       "cache_read": 0.3
+    },
+    "claude-haiku-5-5": {
+      "input": 0.1,
+      "output": 0.5,
+      "cache_read": 0.01,
+      "long_context": {
+        "over_tokens": 100000,
+        "input": 0.5,
+        "output": 2.5,
+        "cache_read": 0.05
+      }
     },
     "claude-haiku-4-5": {
       "input": 1,

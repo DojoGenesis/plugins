@@ -45,7 +45,7 @@ class Manifest(unittest.TestCase):
     def test_required_fields(self):
         m = self.manifest
         self.assertEqual(m["name"], "dojo-meter")
-        self.assertEqual(m["version"], "0.1.0")
+        self.assertEqual(m["version"], "0.1.1")
         self.assertEqual(m["author"], {"name": "Dojo Genesis", "email": "cruz@trespiesdesign.com"})
         self.assertEqual(m["homepage"], "https://dojogenesis.com/suite#dojo-meter")
         self.assertEqual(m["repository"], "https://github.com/DojoGenesis/plugins")

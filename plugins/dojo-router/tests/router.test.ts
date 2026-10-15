@@ -46,7 +46,9 @@ test('tool.call: unpinned dispatches are filled in by role, and the layer beneat
   expect(seen[0]?.prompt).toBe('find the thing')
   expect(seen[2]?.subagent_type).toBe('Explore')
   expect(ui.status.length).toBe(4)
-  expect(ui.status[0]).toMatch('dojo-router')
+  // The engine heads the status line with the plugin's name; a prefix of our own would show twice.
+  for (const row of ui.status) expect(row).not.toMatch('dojo-router')
+  expect(ui.status[0]).toBe('general-purpose -> sonnet')
   expect(ui.status[0]).toMatch('sonnet')
   expect(ui.status[2]).toMatch('Explore')
   expect(ui.status[2]).toMatch('haiku')
@@ -240,8 +242,8 @@ test('opus_cap: after N opus spawns Explore keeps explore_tier and the rest go t
   await call($)
   expect(seen.map(s => s.model)).toEqual(['sonnet', 'haiku', 'sonnet'])
   expect(ui.toast.length).toBe(1)
-  expect(ui.toast[0]).toMatch('dojo-router')
-  expect(ui.toast[0]).toMatch('opus cap')
+  expect(ui.toast[0]).not.toMatch('dojo-router')
+  expect(ui.toast[0]).toMatch(/^opus cap reached \(2\)/)
   expect(ui.toast[0]).toMatch('Explore now goes to haiku, the rest to sonnet')
 })
 

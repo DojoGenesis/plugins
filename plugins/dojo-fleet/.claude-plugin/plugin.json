@@ -1,6 +1,6 @@
 {
   "name": "dojo-fleet",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.",
   "author": {
     "name": "Dojo Genesis",

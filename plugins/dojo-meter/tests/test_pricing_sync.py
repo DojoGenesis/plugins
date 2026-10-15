@@ -23,7 +23,14 @@ EXPECTED = {
     "claude-sonnet-5-5": (2, 10, 0.20),
     "claude-sonnet-5": (2, 10, 0.20),
     "claude-sonnet-4-6": (3, 15, 0.30),
+    "claude-haiku-5-5": (0.10, 0.50, 0.01),
     "claude-haiku-4-5": (1, 5, 0.10),
+}
+
+# Models priced on prompt length: a second card for a request whose prompt is over over_tokens
+# (input + cache reads + cache writes). claude-haiku-5-5: $0.10 / $0.50 up to 100,000, $0.50 / $2.50 above.
+LONG_CONTEXT = {
+    "claude-haiku-5-5": {"over_tokens": 100000, "input": 0.50, "output": 2.50, "cache_read": 0.05},
 }
 
 
@@ -42,12 +49,14 @@ class PricingTable(unittest.TestCase):
         self.assertEqual(set(models), set(EXPECTED))
         for name, (inp, out, read) in EXPECTED.items():
             with self.subTest(model=name):
-                self.assertEqual(set(models[name]), {"input", "output", "cache_read"})
+                self.assertEqual(set(models[name]), {"input", "output", "cache_read"} | ({"long_context"} if name in LONG_CONTEXT else set()))
                 self.assertEqual((models[name]["input"], models[name]["output"], models[name]["cache_read"]), (inp, out, read))
+                self.assertEqual(models[name].get("long_context"), LONG_CONTEXT.get(name))
 
     def test_source_and_multipliers(self):
         table = load()
-        self.assertEqual(table["source"], "Anthropic list prices as cached 2026-09-25")
+        self.assertEqual(table["source"], "Anthropic list prices as cached 2026-09-25; "
+                                          "claude-haiku-5-5 as of 2026-10-14")
         self.assertEqual(table["cache_write_5m_multiplier"], 1.25)
         self.assertEqual(table["cache_write_1h_multiplier"], 2.0)
 

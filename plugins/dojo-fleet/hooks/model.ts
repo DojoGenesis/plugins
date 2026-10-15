@@ -167,6 +167,46 @@ export function rowParts(agent: FleetAgent, now: number, stalled: string | undef
   }
 }
 
+// Column widths of the pane's rows, in character cells.
+export type Cols = { id: number; label: number; model: number; age: number; work: number }
+
+// The widest each column grows, and the least the pane keeps for the tail (a stall reason, the last tool).
+const COL_CAPS: Cols = { id: 6, label: 24, model: 16, age: 7, work: 22 }
+const ROW_CHROME = 2 // the glyph and the space before the id, drawn inside the id Button
+const MIN_TAIL = 12
+
+// Column widths that fit `available` cells. A pane row is: [glyph id] label model age work tail, one gap between
+// each. Left alone the fixed boxes shrink together once the row is wider than the pane, and a short cell such as
+// "haiku 5.5" or "25s" wraps. So the columns are sized to the pane here, the tail takes whatever is left, and a
+// narrow pane gives up, in order: label width down to 10, the work column, label width down to 6, then model and
+// age width (their text is truncated, never wrapped). A work width of 0 means the column is not drawn, and the
+// label takes its room back. Wide panes get each column's natural width, so nothing changes for them.
+export function fitCols(parts: readonly RowParts[], available: number): Cols {
+  const natural = (pick: (p: RowParts) => string, cap: number) => Math.min(cap, Math.max(1, ...parts.map(p => pick(p).length)))
+  const cols: Cols = {
+    id: natural(p => p.id, COL_CAPS.id),
+    label: natural(p => p.label, COL_CAPS.label),
+    model: natural(p => p.model, COL_CAPS.model),
+    age: natural(p => p.age, COL_CAPS.age),
+    work: natural(p => p.work, COL_CAPS.work),
+  }
+  const drawn = () => (cols.work > 0 ? 5 : 4) + ROW_CHROME + cols.id + cols.label + cols.model + cols.age + cols.work + MIN_TAIL
+  const trim = (key: 'label' | 'model' | 'age', floor: number) => {
+    const over = drawn() - available
+    if (over > 0 && cols[key] > floor) cols[key] -= Math.min(over, cols[key] - floor)
+  }
+  const labelWidth = cols.label
+  trim('label', 10)
+  if (drawn() > available) {
+    cols.work = 0
+    cols.label = labelWidth // the work column's room goes back to the name
+    trim('label', 6)
+  }
+  trim('model', 5)
+  trim('age', 3)
+  return cols
+}
+
 export function rowText(agent: FleetAgent, now: number, stalled: string | undefined): string {
   const p = rowParts(agent, now, stalled)
   return `${p.id} ${p.label} · ${p.model} · ${p.age} · ${p.work} · ${p.tail}`

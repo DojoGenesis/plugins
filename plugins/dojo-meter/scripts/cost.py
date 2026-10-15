@@ -111,6 +111,16 @@ def price_for(pricing, normalized):
     return None if key is None else pricing["models"][key]
 
 
+def long_card(pricing, normalized):
+    """The model's long-context card (a pricing.json row's long_context), or None when it has none.
+
+    A model with a card is priced per request on prompt length: a request whose prompt (input + cache reads +
+    cache writes) is over the card's over_tokens pays the card's prices. hooks/ledger.ts isLongPrompt is the same rule.
+    """
+    row = price_for(pricing, normalized)
+    return None if row is None else row.get("long_context")
+
+
 def display_model(normalized):
     if not normalized:
         return "unknown"
@@ -355,15 +365,21 @@ def new_row():
     return {"requests": 0, "input": 0, "output": 0, "read": 0, "w5": 0, "w1": 0}
 
 
-def aggregate(store):
-    """(normalised model, 'main'|'sub') -> row. Cache writes split into 5-minute (w5) and 1-hour (w1)."""
+def aggregate(store, pricing=None):
+    """(normalised model, 'main'|'sub', long prompt) -> row. Cache writes split into 5-minute (w5) and 1-hour (w1).
+
+    The third key part is True for requests whose prompt is over the model's long-context threshold (see
+    long_card), which are priced on that card. With no pricing given, nothing is long.
+    """
     rows = {}
     for model, values, sidechain in store.values():
         norm = normalize_model(model)
         who = "sub" if sidechain else "main"
-        row = rows.setdefault((norm, who), new_row())
         inp, out, read, flat, s5, s1 = values
         write_total = max(flat, s5 + s1)
+        card = None if pricing is None else long_card(pricing, norm)
+        long = card is not None and inp + read + write_total > card["over_tokens"]
+        row = rows.setdefault((norm, who, long), new_row())
         row["requests"] += 1
         row["input"] += inp
         row["output"] += out
@@ -373,11 +389,13 @@ def aggregate(store):
     return rows
 
 
-def row_usd(pricing, norm, row):
-    """Decimal USD for a row, or None when the model is not in pricing.json."""
+def row_usd(pricing, norm, row, long=False):
+    """Decimal USD for a row, or None when the model is not in pricing.json. long picks the long-context card."""
     price = price_for(pricing, norm)
     if price is None:
         return None
+    if long and price.get("long_context") is not None:
+        price = price["long_context"]
     m5 = pricing["cache_write_5m_multiplier"]
     m1 = pricing["cache_write_1h_multiplier"]
     total = (
@@ -468,8 +486,8 @@ def summarize(pricing, rows):
     buckets = {"main": Bucket(), "sub": Bucket(), "total": Bucket()}
     by_tier = {}
     read_total = input_side_total = 0
-    for (norm, who), row in rows.items():
-        usd = row_usd(pricing, norm, row)
+    for (norm, who, long), row in rows.items():
+        usd = row_usd(pricing, norm, row, long)
         tier = tier_of(norm)
         tokens = row_tokens(row)
         write = row["w5"] + row["w1"]
@@ -482,9 +500,11 @@ def summarize(pricing, rows):
             "model": display_model(norm), "tier": tier, "who": who, "requests": row["requests"],
             "input": row["input"], "cache_write": write, "cache_read": row["read"], "output": row["output"],
             "cache_write_1h": row["w1"], "usd": usd, "priced_as": price_key(pricing, norm),
+            "long_prompt": long,
+            "prompt_over_tokens": int(long_card(pricing, norm)["over_tokens"]) if long else None,
         })
     rank = {name: i for i, name in enumerate(TIERS + ("other",))}
-    out_rows.sort(key=lambda r: (rank[r["tier"]], r["model"], r["who"]))
+    out_rows.sort(key=lambda r: (rank[r["tier"]], r["model"], r["long_prompt"], r["who"]))
     return {
         "rows": out_rows, "main": buckets["main"], "sub": buckets["sub"], "total": buckets["total"],
         "by_tier": by_tier, "read": read_total, "input_side": input_side_total,
@@ -516,8 +536,13 @@ def render_text(pricing, scope, summary):
     lines.append("%-22s %-4s %5s %7s %7s %7s %7s %11s" % (
         "model", "who", "reqs", "input", "write", "read", "output", "est USD"))
     for row in summary["rows"]:
+        label = row["model"]
+        if row["long_prompt"]:
+            # The marker is never cut off: it is what tells this row from the model's other (cheaper-card) row.
+            marker = " >" + format_tokens(row["prompt_over_tokens"])
+            label = label[:22 - len(marker)] + marker
         lines.append("%-22s %-4s %5d %7s %7s %7s %7s %11s" % (
-            row["model"][:22], row["who"], row["requests"], format_tokens(row["input"]),
+            label[:22], row["who"], row["requests"], format_tokens(row["input"]),
             format_tokens(row["cache_write"]), format_tokens(row["cache_read"]),
             format_tokens(row["output"]), format_usd(row["usd"])))
     lines.append("")
@@ -557,6 +582,7 @@ def render_json(pricing, scope, summary):
             "input": r["input"], "cache_write": r["cache_write"], "cache_write_1h": r["cache_write_1h"],
             "cache_read": r["cache_read"], "output": r["output"], "usd": num(r["usd"]),
             "priced": r["usd"] is not None, "priced_as": r["priced_as"],
+            "long_prompt": r["long_prompt"], "prompt_over_tokens": r["prompt_over_tokens"],
         } for r in summary["rows"]],
         # A usd figure is null when tokens were counted and none could be priced; "partial" is true when the
         # figure is a number that leaves some tokens out (see the matching unpriced_tokens).
@@ -642,7 +668,7 @@ def main(argv=None):
         sys.stdout.write((json.dumps({"scope": scope.label, "rows": [], "message": "no usage entries in scope"})
                           if args.json else message) + "\n")
         return 0
-    summary = summarize(pricing, aggregate(store))
+    summary = summarize(pricing, aggregate(store, pricing))
     sys.stdout.write((render_json(pricing, scope, summary) if args.json else render_text(pricing, scope, summary)) + "\n")
     return 0
 
