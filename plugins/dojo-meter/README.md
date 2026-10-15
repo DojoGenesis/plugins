@@ -98,7 +98,8 @@ export CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1
   (with its share of the context window when the window is known), `cache` is the cache-read share, and
   `today` is the day's stored total plus this session's share. `(partial)` after a figure marks it as
   partial: a model without a price was used and its tokens are left out of the dollars; a figure with no
-  priced tokens reads `unpriced`;
+  priced tokens reads `unpriced`. It sits above whatever else is drawn above the prompt, such as dojo-fleet's
+  band, and never in place of it;
 - shows a toast at 70 and at 90 percent of `budget_usd`, each once per session (one jump past both shows
   only the 90 percent toast);
 - shows a toast when the last main-thread request holds more than `context_warn_tokens` tokens, suggesting

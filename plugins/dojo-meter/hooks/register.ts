@@ -230,16 +230,25 @@ export const register: Register = (on, options) => {
     }
   })
 
+  // The band goes above whatever is drawn beneath it, never in place of it: another plugin's band (dojo-fleet's)
+  // sits in the same chain, and a handler that does not call next() would hide every handler after it.
   on('ui.render', { component: 'AbovePrompt' }, async ($, e, next) => {
+    let text: string
     try {
       const { value: view } = await $.state.get(bandRef)
       const { value: hidden } = await $.state.get(hiddenRef)
       if (!showBand || hidden === true || !view || e.props.hasSurvey || memo.reason !== undefined) return next(e)
-      const text = fitBand(view, e.props.bodyColumns - HIDE_WIDTH)
-      return renderBand($.ui.resolve(e), text, () => update($, hiddenRef, () => true))
+      text = fitBand(view, e.props.bodyColumns - HIDE_WIDTH)
     } catch (_err) {
       // A band that cannot be drawn steps aside: the engine draws what it would have drawn without us.
       return next(e)
+    }
+    // Outside the try: an error from beneath is not ours to swallow, and next() must not run twice.
+    const below = await next(e)
+    try {
+      return renderBand($.ui.resolve(e), text, () => update($, hiddenRef, () => true), below)
+    } catch (_err) {
+      return below
     }
   })
 }

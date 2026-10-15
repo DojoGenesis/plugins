@@ -66,3 +66,55 @@ for (const surface of ['terminal', 'desktop'] as const) {
     expect(status.text).toContain('show_band option is off')
   })
 }
+
+// ------------------------------------------------------------------------------------- stacked with another band
+
+// The 2026-10-14 field test: with dojo-fleet installed beside the meter, the Fleet band never drew. The meter's
+// AbovePrompt handler returned its band without calling next(), so no handler after it ran. The band now goes above
+// whatever is beneath. A handler registered in a test sits beneath the plugin, so the stand-in below plays
+// dojo-fleet's role: it calls next() for what is beneath it and draws its chips above that.
+const chipsAbove = (on: any, calls?: { n: number }) =>
+  on('ui.render', { component: 'AbovePrompt' }, async (_$: any, e: any, next: any) => {
+    if (calls) calls.n += 1
+    const below = await next(e)
+    return { type: 'Box', props: {}, children: [{ type: 'Text', props: {}, children: ['fleet ● #1 build 3s Bash'] }, below] }
+  })
+
+for (const surface of ['terminal', 'desktop'] as const) {
+  test(`the band and a band beneath it both draw on ${surface}`, async ($, on) => {
+    chipsAbove(on)
+    const w = world(on)
+    await step($, w, usageOf('claude-haiku-5-5', { input: 1000, output: 2000 }))
+    await complete($)
+    const ui = await $.ui.mount({ plugin: 'dojo-meter', surface, component: 'AbovePrompt', props: PROPS })
+    expect(await ui.find({ type: 'Text', text: /meter/ })).toBeDefined()
+    expect(await ui.find({ type: 'Text', text: /fleet ● #1 build/ })).toBeDefined()
+    expect(await ui.find({ type: 'Button', key: 'hide' })).toBeDefined()
+    await ui.unmount()
+  })
+
+  test(`a hidden band leaves the band beneath alone on ${surface}`, async ($, on) => {
+    chipsAbove(on)
+    const w = world(on)
+    await step($, w, usageOf('claude-haiku-5-5', { input: 1000 }))
+    const ui = await $.ui.mount({ plugin: 'dojo-meter', surface, component: 'AbovePrompt', props: PROPS })
+    await ui.press({ key: 'hide' })
+    expect(await ui.find({ type: 'Text', text: /meter/ })).toBeUndefined()
+    expect(await ui.find({ type: 'Text', text: /fleet ● #1 build/ })).toBeDefined()
+    await ui.unmount()
+  })
+
+  test(`the handler beneath runs once per render, and a band that cannot draw leaves it intact on ${surface}`, async ($, on) => {
+    const calls = { n: 0 }
+    chipsAbove(on, calls)
+    const w = world(on)
+    await step($, w, usageOf('claude-haiku-5-5', { input: 1000 }))
+    const ui = await $.ui.mount({ plugin: 'dojo-meter', surface, component: 'AbovePrompt', props: PROPS })
+    expect(calls.n).toBe(1)
+    await ui.unmount()
+    const survey = await $.ui.mount({ plugin: 'dojo-meter', surface, component: 'AbovePrompt', props: { ...PROPS, hasSurvey: true } })
+    expect(await survey.find({ type: 'Text', text: /meter/ })).toBeUndefined()
+    expect(await survey.find({ type: 'Text', text: /fleet ● #1 build/ })).toBeDefined()
+    await survey.unmount()
+  })
+}
