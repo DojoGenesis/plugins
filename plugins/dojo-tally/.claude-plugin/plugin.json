@@ -1,7 +1,7 @@
 {
   "name": "dojo-tally",
-  "version": "0.1.0",
-  "description": "Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge.",
+  "version": "0.1.1",
+  "description": "Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /tally refute sends a report to a judge.",
   "author": {
     "name": "Dojo Genesis",
     "email": "cruz@trespiesdesign.com"
@@ -34,7 +34,7 @@
     "judge_model": {
       "type": "string",
       "title": "Judge model",
-      "description": "Model the /refute judge runs on.",
+      "description": "Model the judge runs on (/tally refute).",
       "default": "opus",
       "options": [
         "opus",

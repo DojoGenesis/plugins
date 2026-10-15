@@ -1,5 +1,5 @@
 {
-  "description": "Fan-out waves: what each agent returned, the settle note to the model, /tally and /refute (mod, early access). No classic hooks.",
+  "description": "Fan-out waves: what each agent returned, the settle note to the model, /tally, /tally refute and the /refute shortcut (mod, early access). No classic hooks.",
   "hooks": {},
   "modules": [
     "./register.ts"

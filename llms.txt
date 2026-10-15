@@ -50,7 +50,7 @@ Or one at a time, e.g. `/plugin install dojo-gates@dojo-genesis`. Mods are early
 
 - **dojo-fleet** — Every subagent of a fan-out live: status, writes, stalls judged by tool calls and files written; steer, nudge or stop one (mod, early access)
 - **dojo-lanes** — The first subagent to write a file holds it while it runs; a second running writer is refused; the contract note on spawn (mod, early access)
-- **dojo-tally** — Counts what a fan-out returned (returned, failed, silent, unchecked) and tells the model when the wave settles; /refute sends a report to a judge (mod, early access)
+- **dojo-tally** — Counts what a fan-out returned (returned, failed, silent, unchecked) and tells the model when the wave settles; /tally refute sends a report to a judge (mod, early access)
 - **dojo-brief** — Lints each subagent brief at dispatch: detail, owned files, done-check, return shape (mod, early access)
 
 ## Clusters
