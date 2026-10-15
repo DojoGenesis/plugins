@@ -1,6 +1,12 @@
 # Changelog — dojo-genesis
 
-## Unreleased — 2.1.0 — orchestration mods
+## Unreleased — 2.1.1 — dojo-tally: /tally refute
+
+### Fixed
+
+- **`dojo-tally` 0.1.1** — `/refute <n>` was missing wherever dojo-protocol is installed (the whole suite): its `refute` skill holds the name, and Claude Code keeps it there. The judge is now reached with `/tally refute <n>`, which always works; the bare `/refute` stays as a shortcut where the name is free. The settle note, the `/tally` footer, the README and the promise say `/tally refute`.
+
+## 2026-10-14 — 2.1.0 — orchestration mods
 
 ### Added
 

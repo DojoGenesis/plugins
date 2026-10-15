@@ -12,12 +12,12 @@ from _helpers import PLUGIN_ROOT
 NAME = 'dojo-tally'
 KILL_SWITCH = 'DOJO_TALLY_OFF'
 MODULES = ['register.ts']
-COMMANDS = ['/tally', '/refute']
+COMMANDS = ['/tally', '/tally refute', '/refute']
 # The classic command shipped as the fallback: it runs only when the mod is not loaded, and the mod answers it
 # under its plugin-qualified name when it is.
 FALLBACK = 'tally'
 # The promise exactly as the manifest and the README word it.
-PROMISE = 'Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge.'
+PROMISE = 'Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /tally refute sends a report to a judge.'
 USER_CONFIG = ['judge_model', 'min_wave', 'settle_note']
 
 
@@ -41,7 +41,7 @@ class Manifest(unittest.TestCase):
     def test_required_fields(self):
         m = self.manifest
         self.assertEqual(m["name"], NAME)
-        self.assertEqual(m["version"], "0.1.0")
+        self.assertEqual(m["version"], "0.1.1")
         self.assertEqual(m["author"], {"name": "Dojo Genesis", "email": "cruz@trespiesdesign.com"})
         self.assertEqual(m["homepage"], "https://dojogenesis.com/suite#" + NAME)
         self.assertEqual(m["repository"], "https://github.com/DojoGenesis/plugins")

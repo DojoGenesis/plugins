@@ -1,5 +1,6 @@
 ---
 description: "What each agent of a fan-out returned: returned, failed, silent, unchecked. Needs the mod (function hooks)."
+argument-hint: "[refute <agent #>]"
 allowed-tools: ["Read(${CLAUDE_PLUGIN_ROOT}/README.md)"]
 ---
 

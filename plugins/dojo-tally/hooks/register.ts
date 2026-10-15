@@ -5,7 +5,7 @@ import type { TallyAgent, TallyJudge, TallyOutcome, TallyState } from '../types'
 
 // dojo-tally: Dojo rule 6 (count returns, not dispatches), rule 9 (silence is not a finding) and rule 5 (done means
 // verified). dojo-verify counts any non-empty answer as returned; this mod judges WHAT came back, tells the model
-// the tally when a fan-out settles, and sends one report to a judge on request (/refute).
+// the tally when a fan-out settles, and sends one report to a judge on request (/tally refute <n>; /refute where the name is free).
 //
 // Everything it knows lives in $.state ('dojo-tally' / 'ledger'), so a hot reload keeps the waves. It never calls
 // $.ui.status (dojo-verify owns the status line) and never hooks AbovePrompt.
@@ -302,7 +302,7 @@ async function announce($: Dollar, s: TallyState, wave: number, cfg: Config): Pr
     if (a.outcome !== 'returned') rows.push(`#${a.no} ${a.label} (${a.type}): ${a.outcome} — ${a.reason}`)
   }
   rows.push(
-    'Treat each report as a claim until a check backs it (Dojo rules 5, 6, 9). The person can send one to a judge with /refute <n>.',
+    'Treat each report as a claim until a check backs it (Dojo rules 5, 6, 9). The person can send one to a judge with /tally refute <n>.',
   )
   await post($, rows.join('\n'))
 }
@@ -398,7 +398,7 @@ function tallyText(s: TallyState, now: number): string {
       if (!a.isSettled && a.isParked) rows.push(sub + WAITING_LINE)
     }
   }
-  rows.push("/refute <n> sends a settled agent's report to a judge.")
+  rows.push("/tally refute <n> sends a settled agent's report to a judge.")
   return rows.join('\n')
 }
 
@@ -648,7 +648,7 @@ async function reconcile($: Dollar, ctx: Ctx): Promise<void> {
 
 function findAgent(s: TallyState, q: string): { agent?: TallyAgent; help: string } {
   const settled = s.agents.filter(a => a.isSettled)
-  if (q === '') return { help: `usage /refute <agent #>.\n${listing(settled)}` }
+  if (q === '') return { help: `usage /tally refute <agent #>.\n${listing(settled)}` }
   const num = /^#?(\d+)$/.exec(q)
   if (num !== null) {
     // A number is only ever a number: never fall through to a label that happens to contain it.
@@ -696,7 +696,7 @@ async function refute($: Dollar, ctx: Ctx, args: string): Promise<string> {
   if (a === undefined) return found.help
   if (!a.isSettled) {
     const what = a.isParked ? 'waiting on its own background work' : 'still running'
-    return `#${a.no} ${a.label} is ${what}; /refute takes a settled agent.\n${listing(s.agents.filter(x => x.isSettled))}`
+    return `#${a.no} ${a.label} is ${what}; refute takes a settled agent.\n${listing(s.agents.filter(x => x.isSettled))}`
   }
   const report = (await read($, answers))[String(a.no)] ?? ''
   if (report.trim() === '') return `#${a.no} ${a.label} returned no report (${a.reason}), so there is nothing to refute.`
@@ -736,7 +736,14 @@ export const register: Register = (on, options) => {
 
   on('session.start', async ($, e, next) => {
     try {
-      await $.command.register({ name: 'tally', description: 'Show the fan-out waves: what each agent returned, and how.', immediate: true })
+      await $.command.register({
+        name: 'tally',
+        description: 'Show the fan-out waves: what each agent returned, and how. `refute <n>` sends a report to a judge.',
+        argumentHint: '[refute <agent #>]',
+        immediate: true,
+      })
+      // A shortcut only: another plugin may hold the name (dojo-protocol's refute skill does), and then the engine
+      // keeps it; `/tally refute <n>` is the form that always works.
       await $.command.register({
         name: 'refute',
         description: 'Send a settled agent\'s report to a judge that re-runs its checks.',
@@ -802,8 +809,12 @@ export const register: Register = (on, options) => {
     return r
   }).catch(($, e, next) => next(e))
 
-  on('command.run', { command: ['tally', 'dojo-tally:tally'] }, async $ => {
+  on('command.run', { command: ['tally', 'dojo-tally:tally'] }, async ($, e) => {
     if (await standDown($)) return { text: OFF_TEXT }
+    // `/tally refute <n>`: the form that works whoever holds the bare `refute` name.
+    const sub = /^\s*refute\b\s*([\s\S]*)$/i.exec(e.args)
+    if (sub !== null) return { text: await refute($, ctx, sub[1] ?? '') }
+    if (e.args.trim() !== '') return { text: `Unknown argument "${e.args.trim().slice(0, 20)}". Use /tally, or /tally refute <agent #>.` }
     try {
       await reconcile($, ctx)
     } catch {
@@ -815,5 +826,5 @@ export const register: Register = (on, options) => {
   on('command.run', { command: 'refute' }, async ($, e) => {
     if (await standDown($)) return { text: OFF_TEXT }
     return { text: await refute($, ctx, e.args) }
-  }).catch(() => ({ text: '/refute failed before it could start a judge.' }))
+  }).catch(() => ({ text: 'refute failed before it could start a judge.' }))
 }

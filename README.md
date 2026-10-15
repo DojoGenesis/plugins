@@ -86,7 +86,7 @@ Four mods that put the protocol's orchestration rules into Claude Code's own int
 |--------|------|--------|--------------|
 | [dojo-fleet](plugins/dojo-fleet/) | WATCH | 0 | See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word. |
 | [dojo-lanes](plugins/dojo-lanes/) | HOLD | 0 | Two agents writing one file clobber each other: the first writer holds the file while it runs, a second running agent is refused, and fan-outs get the shared contract. |
-| [dojo-tally](plugins/dojo-tally/) | COUNT | 0 | Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge. |
+| [dojo-tally](plugins/dojo-tally/) | COUNT | 0 | Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /tally refute sends a report to a judge. |
 | [dojo-brief](plugins/dojo-brief/) | BRIEF | 0 | Lints every subagent brief at dispatch against the delegate skill: detail, owned files, done-check, return shape. A notice, or one send-back. |
 
 ---
@@ -322,7 +322,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**2.1.0** — (unreleased) four orchestration mods join the companions: dojo-fleet, dojo-lanes, dojo-tally and dojo-brief. 114 first-party skills across 24 plugins, with 12 semantic clusters as metadata. **2.0.0** put the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) first, then the library and the companions; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
+**2.1.1** — (unreleased) dojo-tally 0.1.1: `/tally refute <n>` reaches the judge whoever holds the bare `/refute` name. **2.1.0** added four orchestration mods to the companions: dojo-fleet, dojo-lanes, dojo-tally and dojo-brief. 114 first-party skills across 24 plugins, with 12 semantic clusters as metadata. **2.0.0** put the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) first, then the library and the companions; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
 
 Semantic versioning:
 - **Patch** (x.x.1): typo fixes, minor clarifications

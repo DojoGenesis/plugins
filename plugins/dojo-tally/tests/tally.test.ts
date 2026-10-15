@@ -105,7 +105,7 @@ test('three agents: returned, silent and failed; the last settle appends one met
   expect(row).toMatch('#2 audit schema (dojo-protocol:reviewer): silent — clean verdict after reading nothing (rule 9)')
   expect(row).toMatch('#3 audit config (general-purpose): failed — it was interrupted before it answered')
   expect(row).not.toMatch('#1 audit routes')
-  expect(row).toMatch('Treat each report as a claim until a check backs it (Dojo rules 5, 6, 9). The person can send one to a judge with /refute <n>.')
+  expect(row).toMatch('Treat each report as a claim until a check backs it (Dojo rules 5, 6, 9). The person can send one to a judge with /tally refute <n>.')
   // a meta row for the model: a user-role row on the main conversation, no agent
   const stored = sess.appended()[0] as any
   expect(stored.message.type).toBe('user')
@@ -476,6 +476,32 @@ test('/refute 2 spawns the judge with the report, and the verdict lands when it 
   expect(tally).toMatch('2 agents in 1 wave')
 })
 
+test('/tally refute 2 is the form that always works: same judge, same answer as /refute', async ($, on) => {
+  const seen = spawner(on)
+  watchUi(on)
+  const sess = await settledPair($, on)
+  const before = seen.length
+  const r = await run($, 'tally', 'refute 2')
+  expect(seen.length).toBe(before + 1)
+  const judge = seen[seen.length - 1] as Spawned
+  expect(judge.subagentType).toBe('dojo-protocol:judge')
+  expect(judge.description).toBe('refute #2')
+  expect(judge.prompt).toMatch('Report from audit schema (general-purpose):')
+  expect(r.text).toBe("sent #2 audit schema's report to dojo-protocol:judge (opus). The verdict lands in the conversation when it returns.")
+  // the plugin-qualified fallback name takes the subcommand too
+  const again = await run($, 'dojo-tally:tally', 'REFUTE #1')
+  expect(again.text).toMatch("sent #1 audit routes's report to dojo-protocol:judge")
+  expect(sess.appended().length).toBe(1) // the settle note only: no verdict yet
+})
+
+test('/tally refute with no target says how to use it; an unknown /tally argument says so', async ($, on) => {
+  spawner(on)
+  watchUi(on)
+  await settledPair($, on)
+  expect((await run($, 'tally', 'refute')).text).toMatch(/^usage \/tally refute <agent #>/)
+  expect((await run($, 'tally', 'bogus')).text).toBe('Unknown argument "bogus". Use /tally, or /tally refute <agent #>.')
+})
+
 test('/refute falls back to general-purpose when the judge type is refused', async ($, on) => {
   const seen = spawner(on, ['dojo-protocol:judge'])
   watchUi(on)
@@ -531,7 +557,7 @@ test('/refute with no target, an unknown one or a running one lists what it can 
   const spawns = seen.length
 
   const none = (await run($, 'refute', '')).text as string
-  expect(none).toMatch('usage /refute <agent #>')
+  expect(none).toMatch('usage /tally refute <agent #>')
   expect(none).toMatch('#1 audit routes (dojo-protocol:reviewer) — returned')
   expect(none).toMatch('#2 audit schema (general-purpose) — unchecked')
 
@@ -1153,7 +1179,7 @@ test('/tally rows are an aligned table: wall-clock life, spelled-out work, a sho
       'Wave 1 (settled): dispatched 2 · returned 2 · failed 0 · silent 0 · unchecked 0',
       '  #1  notes writer  general-purpose  haiku 5.5  returned  7 reads · 1 write · 2 bash  2m28s',
       '  #2  reviewer      Explore          haiku 5.5  returned  1 read · 0 writes · 0 bash     4s',
-      "/refute <n> sends a settled agent's report to a judge.",
+      "/tally refute <n> sends a settled agent's report to a judge.",
     ].join('\n'),
   )
   expect(out).not.toMatch('r/w/b')

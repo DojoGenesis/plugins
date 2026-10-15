@@ -1,6 +1,6 @@
 # dojo-tally
 
-Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /refute sends a report to a judge.
+Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /tally refute sends a report to a judge.
 
 A dead reviewer looks exactly like a clean one. `dojo-tally` reads what each agent of a fan-out did and
 what it said, sorts the returns, and when the whole wave is done tells the model the count, so a quiet
@@ -17,7 +17,7 @@ failure is not read as a pass.
 
 | Component | Tier | What it does |
 |---|---|---|
-| `hooks/register.ts` | mod (early access) | waves, classification, the settle note, `/tally` and `/refute` |
+| `hooks/register.ts` | mod (early access) | waves, classification, the settle note, `/tally` and `/tally refute` |
 | `types/index.d.ts` | mod | the ledger and the stored reports |
 
 This plugin is a mod only. It has no classic hooks, skills or agents.
@@ -47,7 +47,7 @@ What it does:
   - `returned`: everything else.
 - **The settle note.** When a wave of `min_wave` or more agents settles, one toast, and one note added to
   the main conversation for the model to read: the counts and every agent that did not simply return.
-- **Review.** `/refute <n>` sends that agent's report to the protocol's judge agent (or a general-purpose
+- **Review.** `/tally refute <n>` sends that agent's report to the protocol's judge agent (or a general-purpose
   agent when the judge is not installed); the verdict is added to the conversation when it is done.
 
 ## Commands
@@ -55,7 +55,8 @@ What it does:
 | Command | What it does |
 |---|---|
 | `/tally` | the open wave and the last settled ones, one row per agent: outcome, work, how long it lived |
-| `/refute <n>` | sends agent `n`'s report to a judge |
+| `/tally refute <n>` | sends agent `n`'s report to a judge |
+| `/refute <n>` | the same, as a shortcut, where no other plugin holds the name |
 
 ## Options
 
@@ -63,7 +64,7 @@ What it does:
 |---|---|---|
 | `min_wave` | `2` | the smallest wave that gets a settle note |
 | `settle_note` | `true` | add the settle note to the conversation (the toast shows either way) |
-| `judge_model` | `opus` | the model `/refute` asks for (`opus` or `sonnet`) |
+| `judge_model` | `opus` | the model `/tally refute` asks for (`opus` or `sonnet`) |
 
 ## Kill switches
 
@@ -75,11 +76,12 @@ What it does:
   counted as returned.
 - A shell command can check anything, so an agent that ran one and claims a pass is counted as returned
   even when the command checked something else.
-- Only the last five waves are kept; `/refute` names agents by their number in the session.
+- Only the last five waves are kept; `/tally refute` names agents by their number in the session.
+- The bare `/refute` is only a shortcut: when another plugin holds the name (dojo-protocol's `refute` skill does, so the whole suite installed means no `/refute` from this plugin), Claude Code keeps it there. `/tally refute <n>` always works.
 - Teammates (agents that idle between messages) are not tallied.
 - A settle note arrives a few seconds after the last agent ends: the mod first asks the engine whether
   that agent is done.
-- A `/refute` judge runs on the model you pick and costs what that model costs.
+- A `/tally refute` judge runs on the model you pick and costs what that model costs.
 
 ## Tests
 
