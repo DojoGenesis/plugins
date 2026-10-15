@@ -1,0 +1,28 @@
+{
+  "name": "dojo-fixcards",
+  "version": "0.1.0",
+  "description": "A tool call a Dojo guard refuses is drawn as a card: who blocked it, why, and the fix as code you can copy.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-fixcards",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "guards",
+    "refusals",
+    "fix",
+    "orchestration",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Turn the mod on",
+      "description": "Fix cards: draw a refused tool call as a card with the fix. Off, refusals show as the engine draws them.",
+      "default": true
+    }
+  }
+}

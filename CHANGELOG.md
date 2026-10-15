@@ -1,5 +1,14 @@
 # Changelog — dojo-genesis
 
+## Unreleased — 2.2.0 — desktop mods
+
+### Added
+
+- **`dojo-swimlanes`** — a fan-out drawn as a timeline: one lane per agent, a mark per tool call, refusals in red, live in a pane. `/swimlanes`, `/swimlanes text`, `/swimlanes all`. The desktop app draws a chart; the terminal draws text strips.
+- **`dojo-fixcards`** — a tool call a Dojo guard refuses is drawn as a card: who blocked it, why, and the fix as code you can copy. Reads dojo-gates and dojo-lanes refusal text; an unknown guard still gets a card with its reason. `/fixcards`.
+
+Each is a function-hook mod (early access) with a classic fallback command, listed with the companions. Tested with Claude Code 2.1.295.
+
 ## Unreleased — 2.1.2 — mods: field-test fixes
 
 ### Fixed

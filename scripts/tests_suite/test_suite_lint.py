@@ -943,6 +943,16 @@ class TestMechanism(H.Base):
         r = self.lint_plugin(overrides=ov)
         self.assertFalse(r.has("mod"), r.out)
 
+    def test_a_tsx_mod_is_held_to_the_same_rules(self):
+        # Seen 2026-10-15: rules keyed on register.ts let register.tsx mods through unchecked.
+        hooks = H.good_hooks()
+        hooks["modules"] = ["./register.tsx"]
+        ov = {"hooks/hooks.json": json.dumps(hooks), "hooks/register.tsx": "export default function () {}\n"}
+        r = self.lint_plugin(overrides=ov, manifest={"userConfig": {"mode": {"type": "string", "title": "M", "description": "D"}}})
+        self.assertTrue(r.has("mod", text="boolean userConfig"), r.out)
+        r = self.lint_plugin(overrides={"hooks/register.tsx": "export default function () {}\n"})
+        self.assertTrue(r.has("hook", text="register.tsx exists but"), r.out)
+
     def test_ds_store_is_junk(self):
         r = self.lint_plugin(overrides={"skills/.DS_Store": b"\x00"})
         self.assertTrue(r.has("junk", path=".DS_Store"), r.out)

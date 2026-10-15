@@ -1,0 +1,28 @@
+{
+  "name": "dojo-swimlanes",
+  "version": "0.1.0",
+  "description": "See a fan-out as a timeline: one lane per agent, a mark per tool call, refusals in red, live in a pane.",
+  "author": {
+    "name": "Dojo Genesis",
+    "email": "cruz@trespiesdesign.com"
+  },
+  "homepage": "https://dojogenesis.com/suite#dojo-swimlanes",
+  "repository": "https://github.com/DojoGenesis/plugins",
+  "license": "Apache-2.0",
+  "keywords": [
+    "fan-out",
+    "subagents",
+    "timeline",
+    "orchestration",
+    "mod"
+  ],
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "enabled": {
+      "type": "boolean",
+      "title": "Turn the mod on",
+      "description": "Swimlanes: record each subagent's tool calls and draw the timeline pane. Off, the mod records and draws nothing.",
+      "default": true
+    }
+  }
+}

@@ -6,7 +6,7 @@
   },
   "metadata": {
     "description": "Plugins and mods for Claude Code that put the right model on each job, keep context small, and don't call work done until a check passes: the Dojo suite, a library of practice skills, and two companion plugins.",
-    "version": "2.1.2",
+    "version": "2.2.0",
     "pluginRoot": "./plugins"
   },
   "plugins": [
@@ -77,6 +77,18 @@
       "name": "dojo-fleet",
       "source": "./plugins/dojo-fleet",
       "description": "See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.",
+      "category": "companion"
+    },
+    {
+      "name": "dojo-swimlanes",
+      "source": "./plugins/dojo-swimlanes",
+      "description": "See a fan-out as a timeline: one lane per agent, a mark per tool call, refusals in red, live in a pane.",
+      "category": "companion"
+    },
+    {
+      "name": "dojo-fixcards",
+      "source": "./plugins/dojo-fixcards",
+      "description": "A tool call a Dojo guard refuses is drawn as a card: who blocked it, why, and the fix as code you can copy.",
       "category": "companion"
     },
     {

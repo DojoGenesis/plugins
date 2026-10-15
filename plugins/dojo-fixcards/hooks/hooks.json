@@ -1,0 +1,7 @@
+{
+  "description": "Fix cards for refused tool calls (mod, early access): the card, who blocked it, why, and the fix to copy; /fixcards. No classic hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.tsx"
+  ]
+}
