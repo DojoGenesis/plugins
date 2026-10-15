@@ -1,0 +1,7 @@
+{
+  "description": "Fan-out timeline (mod, early access): the Swimlanes pane, one lane per agent, a mark per tool call, and /swimlanes. No classic hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.tsx"
+  ]
+}

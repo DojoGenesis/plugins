@@ -120,14 +120,14 @@ class RC(unittest.TestCase):
         H.write(path, text)
         os.chmod(path, os.stat(path).st_mode | stat.S_IXUSR)
 
-    def add_plugin(self, name, tests=H.TEST_PY, register=False):
+    def add_plugin(self, name, tests=H.TEST_PY, register=False, register_name="register.ts"):
         root = os.path.join(self.repo, "plugins", name)
         shutil.rmtree(root, ignore_errors=True)
         os.makedirs(root, exist_ok=True)
         if tests is not None:
             H.write(os.path.join(root, "tests", "test_x.py"), tests)
         if register:
-            H.write(os.path.join(root, "hooks", "register.ts"), "export default function () {}\n")
+            H.write(os.path.join(root, "hooks", register_name), "export default function () {}\n")
         return root
 
     def env(self, **extra):
@@ -165,7 +165,7 @@ class RC(unittest.TestCase):
             self.assertIn(step, rows)
         self.assertRow(rows, "unittest:dojo-alpha", "PASS", "1 tests, 0 skipped")
         self.assertRow(rows, "validate:dojo-alpha", "PASS", "0 errors, 0 warnings")
-        self.assertRow(rows, "mod:dojo-alpha", "SKIP", "no hooks/register.ts")
+        self.assertRow(rows, "mod:dojo-alpha", "SKIP", "no hooks/register.ts(x)")
         self.assertEqual(os.listdir(self.work).count("git-was-called"), 0)
         self.assertFalse(os.path.exists(self.git_marker))
 
@@ -209,6 +209,14 @@ class RC(unittest.TestCase):
 
     def test_failing_mod_test(self):
         self.add_plugin("dojo-alpha", register=True)
+        rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="fail")
+        self.assertNotEqual(rc, 0)
+        self.assertRow(rows, "mod:dojo-alpha", "FAIL")
+
+    def test_a_tsx_module_is_a_mod_and_is_tested_not_skipped(self):
+        # Seen 2026-10-15: the step looked only for register.ts, so two mods written as register.tsx were SKIP
+        # and the gate passed without running their tests.
+        self.add_plugin("dojo-alpha", register=True, register_name="register.tsx")
         rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="fail")
         self.assertNotEqual(rc, 0)
         self.assertRow(rows, "mod:dojo-alpha", "FAIL")

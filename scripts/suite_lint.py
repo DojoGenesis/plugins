@@ -1072,10 +1072,17 @@ def check_manifest_hooks(name, root, manifest, rep):
     return listed
 
 
+# The file names a mod's hooks module may have. Seen 2026-10-15: two mods written as register.tsx slipped past
+# every rule keyed on register.ts.
+MOD_MODULES = ("register.ts", "register.tsx")
+
+
 def check_hooks(name, root, files, rep, manifest=None):
     hj = root / "hooks" / "hooks.json"
     rel = "hooks/hooks.json"
-    reg = root / "hooks" / "register.ts"
+    # A mod's module is register.ts or register.tsx (a mod that draws JSX); both are held to the same rules.
+    reg = next((root / "hooks" / n for n in MOD_MODULES if (root / "hooks" / n).exists()), root / "hooks" / "register.ts")
+    rrel = "hooks/" + reg.name
     modules_listed = list(check_manifest_hooks(name, root, manifest, rep))
     if hj.exists():
         data, text = _load_json_file(name, rel, hj, rep)
@@ -1084,9 +1091,9 @@ def check_hooks(name, root, files, rep, manifest=None):
         check_root_refs_in_text(name, root, rel, text, rep)
     if reg.exists():
         if os.path.normpath(str(reg)) not in modules_listed:
-            rep.error(name, "hooks/register.ts", 1, "hook", "register.ts exists but hooks.json does not list it in modules")
+            rep.error(name, rrel, 1, "hook", "%s exists but hooks.json does not list it in modules" % reg.name)
         if not hj.exists():
-            rep.error(name, "hooks/register.ts", 1, "hook", "register.ts exists but there is no hooks/hooks.json")
+            rep.error(name, rrel, 1, "hook", "%s exists but there is no hooks/hooks.json" % reg.name)
 
 
 def check_root_refs_md(name, root, files, rep):
@@ -1771,11 +1778,11 @@ def check_mechanism(name, root, files, manifest, rep, kill_switch=True):
             for needle in ("DOJO_OFF", env_name):
                 if not any(needle in c for c in strings):
                     rep.error(name, "hooks", 1, "kill-switch", "no hook script reads %s (a comment or docstring does not count)" % needle)
-    if (root / "hooks" / "register.ts").exists():
+    if any((root / "hooks" / n).exists() for n in MOD_MODULES):
         uc = manifest.get("userConfig") if isinstance(manifest, dict) else None
         has_bool = isinstance(uc, dict) and any(isinstance(e, dict) and e.get("type") == "boolean" for e in uc.values())
         if not has_bool:
-            rep.error(name, ".claude-plugin/plugin.json", 1, "mod", "a plugin with hooks/register.ts needs a boolean userConfig entry to switch the mod off")
+            rep.error(name, ".claude-plugin/plugin.json", 1, "mod", "a plugin with hooks/register.ts(x) needs a boolean userConfig entry to switch the mod off")
     for ab, rel in files:
         parts = rel.split("/")
         if "__pycache__" in parts or rel.endswith(".pyc") or parts[-1] == ".DS_Store":

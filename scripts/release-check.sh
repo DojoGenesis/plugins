@@ -11,7 +11,7 @@
 #               than 25% of the tests skipped is a FAIL)
 #   validate    claude plugin validate --strict per plugin (output that is not JSON is
 #               never a pass: ERROR when claude exited 0, FAIL when it exited non-zero)
-#   mod         claude plugin test, only for plugins with hooks/register.ts
+#   mod         claude plugin test, only for plugins with hooks/register.ts or hooks/register.tsx
 #   self-test   this tooling's own tests, under python3.9
 #   face-parity scripts/face-parity.py
 #   plugin-lint scripts/plugin-lint.py (exit 1 means warnings only and is shown as WARN-OK)
@@ -307,7 +307,8 @@ step_mod() {
   local p="$1" dir="$REPO/plugins/$1"
   want "mod:$p" || return 0
   if [ "$NO_MODS" = 1 ]; then add_row "mod:$p" SKIP "--no-mods"; return 0; fi
-  if [ ! -f "$dir/hooks/register.ts" ]; then add_row "mod:$p" SKIP "no hooks/register.ts"; return 0; fi
+  # A mod's module is register.ts or register.tsx (a mod that draws JSX); either one is a mod to test.
+  if [ ! -f "$dir/hooks/register.ts" ] && [ ! -f "$dir/hooks/register.tsx" ]; then add_row "mod:$p" SKIP "no hooks/register.ts(x)"; return 0; fi
   if [ -n "$CLAUDE_REASON" ]; then add_row "mod:$p" ERROR "$CLAUDE_REASON"; return 0; fi
   local log="$TMP/mod-$p.log"
   ( cd "$REPO" && env CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 "$CLAUDE_BIN" plugin test "$dir" ) >"$log" 2>&1
