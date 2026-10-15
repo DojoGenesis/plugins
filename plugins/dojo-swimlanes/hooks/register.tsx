@@ -2,7 +2,7 @@ import { atom, read, update } from 'claude-code'
 import type { EngineInterface, Register } from 'claude-code'
 
 import type { Call, LaneAgent, LaneStatus, Timeline } from '../types'
-import { MAX_AGENTS, MAX_CALLS, MAX_DENY, buildLanesSvg, clip, headerLine, isLive, kindOf, svgAlt, targetOf, termRows, textForm, viewOf } from './model'
+import { MAX_AGENTS, MAX_CALLS, MAX_DENY, buildLanesSvg, detailRows, svgSize, clip, headerLine, isLive, kindOf, svgAlt, targetOf, termRows, textForm, viewOf } from './model'
 
 // dojo-swimlanes mod (early access). A subagent fan-out as a timeline: one lane per agent, time left to right, a
 // mark per tool call. /swimlanes opens the pane: an interactive SVG where the surface has Svg, rows of text where
@@ -243,10 +243,22 @@ export const register: Register = (on, options) => {
       // it, so the pane blinked once a second. While any lane is live the chart is a plain image the surface
       // swaps in place; once the wave settles it stops changing and becomes interactive, tooltips included.
       const isSettled = !view.agents.some(isLive)
+      const size = svgSize(e.props.bodyColumns, view.agents.length)
       return (
         <Box flexDirection="column">
           <Text bold>{head}</Text>
-          <Svg source={buildLanesSvg(view, now, e.props.bodyColumns)} alt={svgAlt(view, now)} isInteractive={isSettled} />
+          <Svg source={buildLanesSvg(view, now, e.props.bodyColumns)} alt={svgAlt(view, now)} width={size.width} height={size.height} isInteractive={isSettled} />
+          <Box flexDirection="column" marginTop={1}>
+            {detailRows(view, now).map(row => (
+              <Box key={`row:${row.id}`} flexDirection="row" gap={1}>
+                <Text color={row.tone}>{row.glyph}</Text>
+                <Box flexDirection="column">
+                  <Text bold wrap="truncate-end">{row.title}</Text>
+                  <Text dimColor wrap="truncate-end">{row.facts}</Text>
+                </Box>
+              </Box>
+            ))}
+          </Box>
           {toggleButton}
         </Box>
       )

@@ -80,8 +80,11 @@ export const register: Register = (on, options) => {
     return ran
   }).catch(($, e, next) => next(e))
 
+  // The terminal draws a standalone row's error in its ToolResult block, so the card goes there. Other surfaces
+  // leave this block to the ToolUse hook below (the desktop never raises a ToolResult at all), so no surface draws
+  // a refusal twice.
   on('ui.render', { component: 'ToolResult' }, async ($, e, next) => {
-    if (!e.props.isErrored) return next(e)
+    if (!e.props.isErrored || e.surface !== 'terminal') return next(e)
     if (await standDown($)) return next(e)
     if (await read($, offAtom)) return next(e)
     const refusal = parseRefusal(textOf(e.props.output))
@@ -102,9 +105,12 @@ export const register: Register = (on, options) => {
     return next({ ...e, props: { ...e.props, isExpanded: true } })
   }).catch(($, e, next) => next(e))
 
-  // Only rows this mod unfolded: a standalone row's refusal is drawn once, by its ToolResult block.
+  // On the terminal, only rows this mod unfolded: a standalone row's refusal is drawn once, by its ToolResult block.
+  // Elsewhere every refused row: a census of the desktop (2026-10-15, 123 draws) found no ToolResult site, and the
+  // refusal arrived on a standalone ToolUse row with the guard's text in `output`.
   on('ui.render', { component: 'ToolUse' }, async ($, e, next) => {
-    if (!e.props.isErrored || !unfolded.has(e.props.tool_use_id)) return next(e)
+    if (!e.props.isErrored) return next(e)
+    if (e.surface === 'terminal' && !unfolded.has(e.props.tool_use_id)) return next(e)
     if (await standDown($)) return next(e)
     if (await read($, offAtom)) return next(e)
     const refusal = parseRefusal(textOf(e.props.output))

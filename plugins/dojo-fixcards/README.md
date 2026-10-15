@@ -54,7 +54,7 @@ Every surface gets the same card (a bordered box with text and code). For a dojo
 ## Honest limits
 
 - In the terminal a folded tool group that holds a refusal is unfolded, and the raw refusal text still shows above the card (the engine ignored a rewrite of it).
-- In the desktop app, tool calls sit inside a collapsed step row and the card is drawn with them, so it can only show once that row is expanded. The card has been seen in the terminal; on the desktop it is not yet confirmed.
+- In the desktop app, tool calls sit inside a collapsed step row, and the card is drawn with the refused call there: expand the row to see it. The desktop draws no separate result block, so the card goes under the tool row itself (confirmed by a census of what the desktop draws).
 - A subagent's refusal draws in that agent's own transcript.
 - It reads dojo-gates and dojo-lanes refusal text; an unknown guard still gets a card with its reason.
 

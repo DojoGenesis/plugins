@@ -39,7 +39,7 @@ What it shows:
 - **The band above the prompt**, while any agent is in play: one chip per agent (number, name, age, last
   tool or why it looks stalled, files written), then the counts, then **Open** and **Hide**. It wraps
   whatever else draws there instead of replacing it.
-- **The Fleet pane** (`/fleet`, or **Open**): every agent of the session as a table, the most urgent first.
+- **The Fleet pane** (`/fleet`, or **Open**, or by itself when a fan-out starts): every agent of the session, the most urgent first. The terminal draws aligned rows; the desktop app, VS Code and mobile draw a card per agent in its state's colour, with what it is doing now and its Steer, Nudge and Stop buttons on the card.
   It opens with the keyboard in it; Enter on a row shows that agent's brief, its last answer, a **Steer**
   field and **Nudge**, **Stop** and **Close**.
 - **The agent bar**: with an agent's transcript open, the band shows that agent's row with **Nudge**,
@@ -76,6 +76,7 @@ All four run at once, even while a turn is in flight.
 | `stall_minutes` | `10` | minutes before an agent is flagged stalled; `0` turns stall checks off |
 | `show_band` | `true` | draw the band above the prompt |
 | `stall_toast` | `true` | one toast when an agent first looks stalled |
+| `auto_open` | `true` | open the Fleet pane by itself when two agents run at once, once per wave, without taking the keyboard |
 
 `DOJO_FLEET_STALL_MINUTES` overrides `stall_minutes` where settings cannot reach the plugin (headless runs,
 tests).

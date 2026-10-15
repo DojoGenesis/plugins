@@ -134,34 +134,179 @@ export function headerLine(view: View, now: number): string {
   if (done > 0) parts.push(`${done} done`)
   if (failed > 0) parts.push(`${failed} failed`)
   if (aborted > 0) parts.push(`${aborted} aborted`)
-  const span = spanOf(agents, now)
-  parts.push(fmtDuration(span.end - span.start).replace(/(\d)\.\d+s$/, '$1s'))
+  // Across several waves the wall-clock span is mostly idle time (the chart folds it), so say how many waves.
+  if (view.isAll && view.waveNo > 1) {
+    parts.push(plural(view.waveNo, 'wave'))
+  } else {
+    const span = spanOf(agents, now)
+    parts.push(fmtDuration(span.end - span.start).replace(/(\d)\.\d+s$/, '$1s'))
+  }
   return parts.join(' · ')
+}
+
+// ------------------------------------------------------------------------------------------------ detail rows
+
+export type Tone = 'claude' | 'warning' | 'success' | 'error' | 'subtle'
+export type DetailRow = { id: string; glyph: string; tone: Tone; title: string; facts: string }
+
+// One line per agent in view, for the native text under the chart: the numbers read at the surface's own type size
+// and stay crisp, where the chart's are drawn inside an image.
+export function detailRows(view: View, now: number): DetailRow[] {
+  return view.agents.map(agent => {
+    const writes = agent.calls.filter(call => call.kind === 'write' && call.deny === undefined && call.ok !== false).length
+    const refused = agent.calls.filter(call => call.deny !== undefined).length
+    const end = isLive(agent) ? now : (agent.endedAt ?? agent.spawnedAt)
+    const look: Record<LaneStatus, [string, Tone]> = {
+      running: ['●', 'claude'],
+      waiting: ['◐', 'warning'],
+      returned: ['✓', 'success'],
+      failed: ['✗', 'error'],
+      aborted: ['■', 'subtle'],
+    }
+    const [glyph, tone] = look[agent.status]
+    const facts = [
+      shortModel(agent.model),
+      agent.status,
+      fmtDuration(Math.max(0, end - agent.spawnedAt)).replace(/(\d)\.\d+s$/, '$1s'),
+      plural(agent.calls.length, 'tool call'),
+      writes > 0 ? plural(writes, 'write') : '',
+      refused > 0 ? `${refused} refused or failed` : '',
+    ].filter(part => part !== '')
+    return { id: agent.id, glyph, tone, title: `#${agent.n} ${agent.label}`, facts: facts.join(' · ') }
+  })
 }
 
 // ------------------------------------------------------------------------------------------------ time axis
 
-const STEPS_S = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600]
+// Seen live: the steps stopped at 10m, so a 12-hour span drew some seventy overlapping labels. They run to a day
+// now, and past that the step grows in whole days, so no span puts more than `maxTicks` labels on the axis.
+const STEPS_S = [1, 2, 5, 10, 15, 30, 60, 120, 300, 600, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400]
 
-// The smallest nice step that puts no more than 8 ticks on the span.
-export function niceStep(spanMs: number): number {
-  for (const step of STEPS_S) if (Math.floor(spanMs / (step * 1000)) <= 8) return step * 1000
-  return 600000
+// The smallest nice step that puts no more than `maxTicks` ticks on the span.
+export function niceStep(spanMs: number, maxTicks = 8): number {
+  const most = Math.max(1, maxTicks)
+  for (const step of STEPS_S) if (Math.floor(spanMs / (step * 1000)) <= most) return step * 1000
+  return Math.ceil(spanMs / most / 86400000) * 86400000
 }
 
 export function tickLabel(ms: number): string {
   const secs = Math.round(ms / 1000)
   if (secs < 60) return `${secs}s`
-  const minutes = Math.floor(secs / 60)
-  const rest = secs % 60
-  return rest === 0 ? `${minutes}m` : `${minutes}m${rest}s`
+  if (secs < 3600) {
+    const minutes = Math.floor(secs / 60)
+    const rest = secs % 60
+    return rest === 0 ? `${minutes}m` : `${minutes}m${rest}s`
+  }
+  const hours = Math.floor(secs / 3600)
+  const minutes = Math.floor((secs % 3600) / 60)
+  return minutes === 0 ? `${hours}h` : `${hours}h${minutes}m`
 }
 
-export function ticksOf(spanMs: number): number[] {
-  const step = niceStep(spanMs)
+export function ticksOf(spanMs: number, maxTicks = 8): number[] {
+  const step = niceStep(spanMs, maxTicks)
   const out: number[] = []
   for (let t = 0; t <= spanMs; t += step) out.push(t)
   return out
+}
+
+// ------------------------------------------------------------------------------------------------ busy segments
+
+// Idle stretches longer than this, when no agent in view is alive, are drawn as a fixed-width break instead of to
+// scale. Seen live: "All waves" over half a day left each wave a sliver at either end of a 12-hour axis.
+export const GAP_MIN_MS = 20000
+export const BREAK_PX = 36
+
+export type Segment = { t0: number; t1: number }
+
+// The busy stretches of the view, in time order: the union of each agent's life (to now while it is alive), with
+// stretches closer than GAP_MIN_MS merged. The gaps between them are what the drawing folds.
+export function segmentsOf(agents: readonly LaneAgent[], now: number): Segment[] {
+  const lives = agents
+    .map(agent => {
+      let end = isLive(agent) ? now : (agent.endedAt ?? agent.spawnedAt)
+      for (const call of agent.calls) end = Math.max(end, call.t1 ?? call.t0)
+      return { t0: agent.spawnedAt, t1: Math.max(end, agent.spawnedAt) }
+    })
+    .sort((a, b) => a.t0 - b.t0)
+  const out: Segment[] = []
+  for (const life of lives) {
+    const last = out[out.length - 1]
+    if (last !== undefined && life.t0 - last.t1 <= GAP_MIN_MS) last.t1 = Math.max(last.t1, life.t1)
+    else out.push({ ...life })
+  }
+  return out
+}
+
+// A time-to-x map over the busy segments: each segment gets width in proportion to its length, each gap between
+// two segments a fixed BREAK_PX. A time inside a gap lands in the middle of its break.
+export type Scale = { x: (t: number) => number; segs: { seg: Segment; x0: number; x1: number }[]; breaks: { gap: Segment; x0: number; x1: number }[] }
+
+export function scaleOf(segs: readonly Segment[], px0: number, px1: number): Scale {
+  const list = segs.length > 0 ? segs : [{ t0: 0, t1: 1000 }]
+  const lengths = list.map(seg => Math.max(1000, seg.t1 - seg.t0))
+  const total = lengths.reduce((a, b) => a + b, 0)
+  const room = Math.max(40, px1 - px0 - BREAK_PX * (list.length - 1))
+  const placed: Scale['segs'] = []
+  const breaks: Scale['breaks'] = []
+  let cursor = px0
+  list.forEach((seg, i) => {
+    if (i > 0) {
+      const prev = list[i - 1] as Segment
+      breaks.push({ gap: { t0: prev.t1, t1: seg.t0 }, x0: cursor, x1: cursor + BREAK_PX })
+      cursor += BREAK_PX
+    }
+    const width = ((lengths[i] as number) / total) * room
+    placed.push({ seg, x0: cursor, x1: cursor + width })
+    cursor += width
+  })
+  const x = (t: number): number => {
+    for (let i = 0; i < placed.length; i++) {
+      const one = placed[i] as Scale['segs'][number]
+      if (t < one.seg.t0) {
+        // Inside the gap before this segment: the middle of that break (before the first: its left edge).
+        const gap = breaks[i - 1]
+        return gap === undefined ? one.x0 : (gap.x0 + gap.x1) / 2
+      }
+      if (t <= one.seg.t1 || i === placed.length - 1) {
+        const len = Math.max(1000, one.seg.t1 - one.seg.t0)
+        return one.x0 + ((Math.min(t, one.seg.t0 + len) - one.seg.t0) / len) * (one.x1 - one.x0)
+      }
+    }
+    return px1
+  }
+  return { x, segs: placed, breaks }
+}
+
+// The largest unit only, rounded, for a gap label that must fit its break: "+12h", "+2m", "+29s". The exact
+// length is the break's tooltip.
+export function compactGap(ms: number): string {
+  const secs = Math.round(ms / 1000)
+  if (secs >= 86400) return `+${Math.round(secs / 86400)}d`
+  if (secs >= 3600) return `+${Math.round(secs / 3600)}h`
+  if (secs >= 60) return `+${Math.round(secs / 60)}m`
+  return `+${secs}s`
+}
+
+export type AxisLabel = { x: number; text: string; kind: 'gap' | 'tick' }
+
+const labelHalf = (text: string): number => text.length * 3.7 + 5
+
+// Axis labels that do not overlap, in drawing order: every gap label first, then each segment's ticks.
+export function axisLabels(scale: Scale): AxisLabel[] {
+  const wanted: AxisLabel[] = []
+  for (const { gap, x0, x1 } of scale.breaks) wanted.push({ x: (x0 + x1) / 2, text: compactGap(gap.t1 - gap.t0), kind: 'gap' })
+  for (const { seg, x0, x1 } of scale.segs) {
+    const len = Math.max(1000, seg.t1 - seg.t0)
+    for (const t of ticksOf(len, Math.floor((x1 - x0) / 64))) {
+      wanted.push({ x: x0 + (t / len) * (x1 - x0), text: tickLabel(t), kind: 'tick' })
+    }
+  }
+  const placed: AxisLabel[] = []
+  for (const one of wanted) {
+    const clash = placed.some(other => Math.abs(other.x - one.x) < labelHalf(other.text) + labelHalf(one.text))
+    if (!clash) placed.push(one)
+  }
+  return placed
 }
 
 // ------------------------------------------------------------------------------------------------ SVG
@@ -174,98 +319,126 @@ export function callTitle(agent: LaneAgent, call: Call, now: number): string {
 
 const kindColor = (kind: CallKind): string => COLORS[kind === 'other' ? 'cloud' : kind]
 
+// The drawing's size in CSS pixels. The pane hands the Svg this width and height explicitly: seen live, a desktop
+// with no `width` drew the image at its own pixel size in device pixels, half size on a 2x screen.
 export function svgSize(bodyColumns: number, lanes: number): { width: number; height: number } {
-  return { width: Math.max(480, bodyColumns * 8), height: 28 * lanes + 64 }
+  const width = Math.max(480, bodyColumns * 8)
+  return { width, height: LANE_H * lanes + 56 + LEGEND_ROW * legendRows(width) }
 }
+
+const LEGEND_ROW = 20
+
+// The legend's rows at this width: all seven items need about 600px on one line.
+export function legendRows(width: number): number {
+  return width < 620 ? 2 : 1
+}
+
+// Seen live: at 30px lanes and 10-12px type the chart read poorly in a docked desktop pane. Lanes are 38px now and
+// the type a size or two larger; the exact numbers live in the native table under the chart.
+const LANE_H = 38
 
 function buildSvg(view: View, now: number, bodyColumns: number, perLane: number): string {
   const { agents } = view
   const { width, height } = svgSize(bodyColumns, agents.length)
-  const labelW = 172
+  // The label column takes about a third of the drawing, so a narrow pane keeps room for the lanes.
+  const labelW = Math.round(Math.min(220, Math.max(150, width * 0.34)))
+  const labelChars = Math.max(10, Math.floor((labelW - 14) / 8.6))
   const px0 = labelW + 8
   const px1 = width - 22
-  const pw = Math.max(40, px1 - px0)
-  const span = spanOf(agents, now)
-  const dur = Math.max(1000, span.end - span.start)
-  const x = (t: number): number => px0 + (Math.min(Math.max(t, span.start), span.start + dur) - span.start) / dur * pw
+  const scale = scaleOf(segmentsOf(agents, now), px0, px1)
+  const x = scale.x
   const f = (n: number): string => (Math.round(n * 10) / 10).toString()
   const anyLive = agents.some(isLive)
-  const top = 32
+  const top = 38
+  const bottom = top + LANE_H * agents.length
   const out: string[] = []
   out.push(
     `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" font-family="${FONT}">`,
     `<rect width="${width}" height="${height}" fill="${COLORS.bg}"/>`,
   )
-  // time axis and grid
-  for (const t of ticksOf(dur)) {
-    const gx = f(x(span.start + t))
+  // Folded idle gaps: a dashed band; the exact length is its tooltip.
+  for (const { gap, x0, x1 } of scale.breaks) {
+    const full = `+${fmtDuration(gap.t1 - gap.t0).replace(/(\d)\.\d+s$/, '$1s')}`
     out.push(
-      `<line x1="${gx}" y1="22" x2="${gx}" y2="${top + 28 * agents.length}" stroke="${COLORS.grid}" stroke-opacity="0.35"/>`,
-      `<text x="${gx}" y="15" font-size="10" fill="${COLORS.soft}" text-anchor="middle">${esc(tickLabel(t))}</text>`,
+      `<rect x="${f(x0 + 4)}" y="24" width="${f(x1 - x0 - 8)}" height="${f(bottom - 24)}" fill="${COLORS.bg}" stroke="${COLORS.grid}" stroke-opacity="0.6" stroke-dasharray="2 3"><title>${esc(`${full} with no agent running (folded)`)}</title></rect>`,
     )
   }
+  // Axis labels. Seen live: six waves in one pane put every segment's ticks and every gap label on top of each
+  // other. Candidates are placed best first (gap labels, then each segment's ticks), and one that would overlap a
+  // placed label is dropped with its grid line.
+  for (const label of axisLabels(scale)) {
+    const gx = f(label.x)
+    if (label.kind === 'tick') out.push(`<line x1="${gx}" y1="24" x2="${gx}" y2="${bottom}" stroke="${COLORS.grid}" stroke-opacity="0.35"/>`)
+    out.push(`<text x="${gx}" y="18" font-size="${label.kind === 'gap' ? 12 : 12}" fill="${label.kind === 'gap' ? COLORS.agent : COLORS.soft}" text-anchor="middle">${esc(label.text)}</text>`)
+  }
   agents.forEach((agent, i) => {
-    const y = top + 28 * i
-    const label = clip(`#${agent.n} ${agent.label}`, 22)
+    const y = top + LANE_H * i
+    const label = clip(`#${agent.n} ${agent.label}`, labelChars)
     const model = shortModel(agent.model)
     out.push(
       `<g><title>${esc(`#${agent.n} ${agent.label} · ${agent.type} · ${agent.status}`)}</title>`,
-      `<text x="8" y="${y + 12}" font-size="11" fill="${COLORS.ink}">${esc(label)}</text>`,
-      `<text x="8" y="${y + 23}" font-size="9" fill="${COLORS.soft}">${esc(clip(model, 26))}</text></g>`,
-      `<line x1="0" y1="${y + 28}" x2="${width}" y2="${y + 28}" stroke="${COLORS.grid}" stroke-opacity="0.2"/>`,
+      `<text x="8" y="${y + 17}" font-size="14" font-weight="600" fill="${COLORS.ink}">${esc(label)}</text>`,
+      `<text x="8" y="${y + 31}" font-size="12" fill="${COLORS.soft}">${esc(clip(model, labelChars))}</text></g>`,
+      `<line x1="0" y1="${y + LANE_H}" x2="${width}" y2="${y + LANE_H}" stroke="${COLORS.grid}" stroke-opacity="0.2"/>`,
     )
     const live = isLive(agent)
     const settledEnd = agent.endedAt ?? agent.spawnedAt
     const bandEnd = agent.status === 'running' ? now : settledEnd
     const bx0 = x(agent.spawnedAt)
     const bx1 = Math.max(bx0 + 3, x(bandEnd))
-    out.push(`<rect x="${f(bx0)}" y="${y + 4}" width="${f(bx1 - bx0)}" height="20" rx="3" fill="${COLORS.panel}" stroke="${COLORS.grid}" stroke-opacity="0.5"/>`)
+    out.push(`<rect x="${f(bx0)}" y="${y + 5}" width="${f(bx1 - bx0)}" height="28" rx="4" fill="${COLORS.panel}" stroke="${COLORS.grid}" stroke-opacity="0.5"/>`)
     if (agent.status === 'waiting') {
       const tx1 = Math.max(bx1 + 3, x(now))
-      out.push(`<line x1="${f(bx1)}" y1="${y + 14}" x2="${f(tx1)}" y2="${y + 14}" stroke="${COLORS.agent}" stroke-width="2" stroke-dasharray="4 3"><title>${esc(`#${agent.n} waiting`)}</title></line>`)
+      out.push(`<line x1="${f(bx1)}" y1="${y + 19}" x2="${f(tx1)}" y2="${y + 19}" stroke="${COLORS.agent}" stroke-width="2" stroke-dasharray="4 3"><title>${esc(`#${agent.n} waiting`)}</title></line>`)
     }
     for (const call of agent.calls.slice(-perLane)) {
       const cx0 = x(call.t0)
       const cx1 = x(call.t1 ?? (live ? now : call.t0))
       const title = `<title>${esc(callTitle(agent, call, now))}</title>`
       if (call.deny !== undefined) {
-        out.push(`<g>${title}<text x="${f(cx0 + 1)}" y="${y + 19}" font-size="13" font-weight="bold" fill="${COLORS.deny}">✗</text></g>`)
+        out.push(`<g>${title}<text x="${f(cx0 + 1)}" y="${y + 25}" font-size="17" font-weight="bold" fill="${COLORS.deny}">✗</text></g>`)
       } else {
-        out.push(`<rect x="${f(cx0)}" y="${y + 8}" width="${f(Math.max(3, cx1 - cx0))}" height="12" rx="1" fill="${kindColor(call.kind)}">${title}</rect>`)
+        out.push(`<rect x="${f(cx0)}" y="${y + 10}" width="${f(Math.max(4, cx1 - cx0))}" height="18" rx="2" fill="${kindColor(call.kind)}">${title}</rect>`)
       }
     }
     if (!live) {
       const glyph = agent.status === 'returned' ? '✓' : agent.status === 'failed' ? '✗' : '■'
       const color = agent.status === 'returned' ? COLORS.bash : agent.status === 'failed' ? COLORS.deny : COLORS.cloud
-      out.push(`<text x="${f(bx1 + 4)}" y="${y + 19}" font-size="12" fill="${color}"><title>${esc(`#${agent.n} ${agent.status}`)}</title>${glyph}</text>`)
+      out.push(`<text x="${f(bx1 + 5)}" y="${y + 25}" font-size="16" fill="${color}"><title>${esc(`#${agent.n} ${agent.status}`)}</title>${glyph}</text>`)
     }
   })
   if (anyLive) {
     const nx = f(x(now))
     out.push(
-      `<line x1="${nx}" y1="22" x2="${nx}" y2="${top + 28 * agents.length}" stroke="${COLORS.ink}" stroke-width="1.5" stroke-dasharray="3 3"/>`,
-      `<text x="${nx}" y="29" font-size="9" fill="${COLORS.ink}" text-anchor="middle">now</text>`,
+      `<line x1="${nx}" y1="24" x2="${nx}" y2="${bottom}" stroke="${COLORS.ink}" stroke-width="1.5" stroke-dasharray="3 3"/>`,
+      `<text x="${nx}" y="34" font-size="11" fill="${COLORS.ink}" text-anchor="middle">now</text>`,
     )
   }
-  // legend
-  const ly = height - 14
-  const items: [string, string][] = [
-    ['read', COLORS.read],
-    ['write', COLORS.write],
-    ['bash', COLORS.bash],
-    ['agent', COLORS.agent],
-    ['other', COLORS.cloud],
+  // legend, wrapped onto a second row when the drawing is too narrow for one (legendRows decides the height)
+  const swatch = (color: string) => (lx: number, ly: number) => `<rect x="${f(lx)}" y="${ly - 10}" width="11" height="11" rx="2" fill="${color}"/>`
+  const items: { name: string; mark: (lx: number, ly: number) => string; markW: number }[] = [
+    { name: 'read', mark: swatch(COLORS.read), markW: 15 },
+    { name: 'write', mark: swatch(COLORS.write), markW: 15 },
+    { name: 'bash', mark: swatch(COLORS.bash), markW: 15 },
+    { name: 'agent', mark: swatch(COLORS.agent), markW: 15 },
+    { name: 'other', mark: swatch(COLORS.cloud), markW: 15 },
+    { name: 'refused or failed', mark: (lx, ly) => `<text x="${f(lx)}" y="${ly}" font-size="14" font-weight="bold" fill="${COLORS.deny}">✗</text>`, markW: 14 },
+    { name: 'waiting', mark: (lx, ly) => `<line x1="${f(lx)}" y1="${ly - 4}" x2="${f(lx + 18)}" y2="${ly - 4}" stroke="${COLORS.agent}" stroke-width="2" stroke-dasharray="4 3"/>`, markW: 24 },
   ]
+  const rows = legendRows(width)
+  let ly = height - 16 - LEGEND_ROW * (rows - 1)
   let lx = 8
-  for (const [name, color] of items) {
-    out.push(`<rect x="${lx}" y="${ly - 9}" width="10" height="10" rx="1" fill="${color}"/>`, `<text x="${lx + 14}" y="${ly}" font-size="10" fill="${COLORS.soft}">${name}</text>`)
-    lx += 22 + name.length * 6.2
+  for (const item of items) {
+    const w = item.markW + item.name.length * 7.3 + 12
+    if (lx + w > width - 8 && lx > 8) {
+      ly += LEGEND_ROW
+      lx = 8
+    }
+    out.push(item.mark(lx, ly), `<text x="${f(lx + item.markW)}" y="${ly}" font-size="12" fill="${COLORS.soft}">${item.name}</text>`)
+    lx += w
   }
-  out.push(`<text x="${f(lx)}" y="${ly}" font-size="12" font-weight="bold" fill="${COLORS.deny}">✗</text><text x="${f(lx + 12)}" y="${ly}" font-size="10" fill="${COLORS.soft}">refused or failed</text>`)
-  lx += 22 + 'refused or failed'.length * 6.2
-  out.push(`<line x1="${f(lx)}" y1="${ly - 4}" x2="${f(lx + 18)}" y2="${ly - 4}" stroke="${COLORS.agent}" stroke-width="2" stroke-dasharray="4 3"/><text x="${f(lx + 24)}" y="${ly}" font-size="10" fill="${COLORS.soft}">waiting</text>`)
   if (perLane < MAX_CALLS && agents.some(one => one.calls.length > perLane)) {
-    out.push(`<text x="${width - 8}" y="${ly}" font-size="9" fill="${COLORS.cloud}" text-anchor="end">last ${perLane} calls per lane</text>`)
+    out.push(`<text x="${width - 8}" y="${height - 16}" font-size="11" fill="${COLORS.cloud}" text-anchor="end">last ${perLane} calls per lane</text>`)
   }
   out.push('</svg>')
   return out.join('')

@@ -1,6 +1,6 @@
 {
   "name": "dojo-swimlanes",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "See a fan-out as a timeline: one lane per agent, a mark per tool call, refusals in red, live in a pane.",
   "author": {
     "name": "Dojo Genesis",

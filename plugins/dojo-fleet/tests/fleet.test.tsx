@@ -18,11 +18,13 @@ type World = {
   logs: string[]
   sent: { to: unknown; text: string }[]
   stops: string[]
+  // Panes opened through `$.ui.open`, by id, in order.
+  opens: string[]
   clock: ReturnType<typeof mock.clock>
 }
 
 function world(on: any, env: Record<string, string> = {}): World {
-  const w: World = { listed: [], toasts: [], logs: [], sent: [], stops: [], clock: mock.clock(on, { now: T0 }) }
+  const w: World = { listed: [], toasts: [], logs: [], sent: [], stops: [], opens: [], clock: mock.clock(on, { now: T0 }) }
   let ids = 0
   mock.env(on, env)
   on('ui.toast', (_$: any, e: any) => {
@@ -33,7 +35,10 @@ function world(on: any, env: Record<string, string> = {}): World {
     w.logs.push(String(e.text))
     return { value: undefined }
   })
-  on('ui.open', () => ({ value: { isPlaced: true } }))
+  on('ui.open', (_$: any, e: any) => {
+    w.opens.push(String(e.id))
+    return { value: { isPlaced: true } }
+  })
   on('command.register', (_$: any, e: any) => ({ value: { command: e.name } }))
   on('session.send', (_$: any, e: any) => {
     w.sent.push({ to: e.to, text: e.text })
@@ -388,9 +393,9 @@ test('Stop runs TaskStop on the agent, and its aborted end still reads stopped',
   const w = world(on)
   await start($)
   await spawn($, 'api')
+  // On the desktop the agent's card carries Stop itself: one press, no pick-a-row step.
   const ui = await $.ui.mount({ plugin: 'dojo-fleet', surface: 'desktop', component: 'Pane', requestId: 'dojo-fleet', props: PANE })
-  await ui.press({ key: 'row:ag-1' })
-  await ui.press({ key: 'stop' })
+  await ui.press({ key: 'stop:ag-1' })
   await ui.unmount()
   expect(w.stops).toEqual(['ag-1'])
   await complete($, 'ag-1', '', { reason: 'aborted', isAborted: true })
@@ -527,7 +532,8 @@ test('fitCols: a very narrow pane drops the work column, then truncates; no colu
 test('the pane at 60 columns never wraps a model or an age cell: both are fixed-width and truncate', async ($, on) => {
   const w = world(on)
   await start($)
-  await $.agent.spawn({ prompt: 'Build api. Owned files: src/api.ts', description: 'api', subagentType: 'general-purpose', model: 'claude-haiku-5-5' })
+  // `$` loose, as the spawn helper above: the kit's input asks for engine-stamped fields a test has no use for.
+  await ($ as any).agent.spawn({ prompt: 'Build api. Owned files: src/api.ts', description: 'api', subagentType: 'general-purpose', model: 'claude-haiku-5-5' })
   await w.clock.advance(25_000)
   const props = { ...PANE, bodyColumns: 60 }
   const ui = await $.ui.mount({ plugin: 'dojo-fleet', surface: 'terminal', component: 'Pane', requestId: 'dojo-fleet', props })
@@ -538,4 +544,58 @@ test('the pane at 60 columns never wraps a model or an age cell: both are fixed-
   expect((model as any).props.wrap).toBe('truncate-end')
   expect((age as any).props.wrap).toBe('truncate-end')
   await ui.unmount()
+})
+
+// ------------------------------------------------------------------------------------------------ desktop cards
+
+// Seen live (desktop app, 2026-10-15): the terminal's fixed-width columns read raggedly in proportional type, and
+// Steer, Nudge and Stop waited behind a pick-a-row step. Off the terminal each agent is a card with its actions.
+test('off the terminal each agent is a card with its state, what it is doing, and its actions', async ($, on) => {
+  const w = world(on)
+  await start($)
+  await spawn($, 'api')
+  await spawn($, 'docs')
+  await call($, 'ag-1', 'Write', { file_path: '/w/src/api.ts', content: 'x' })
+  await complete($, 'ag-2', 'Docs written: three pages, all linked.')
+  await w.clock.advance(3000)
+  const ui = await $.ui.mount({ plugin: 'dojo-fleet', surface: 'desktop', component: 'Pane', requestId: 'dojo-fleet', props: PANE })
+  expect(await ui.find({ type: 'Text', text: '#1 api' })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: /sonnet 5\.5 · .* · 1 tool · 1 write/ })).toBeDefined()
+  expect(await ui.find({ type: 'Text', text: 'last Write' })).toBeDefined()
+  expect(await ui.find({ type: 'Button', key: 'nudge:ag-1' })).toBeDefined()
+  expect(await ui.find({ type: 'Button', key: 'stop:ag-1' })).toBeDefined()
+  // a settled agent shows its answer and offers no actions
+  expect(await ui.find({ type: 'Text', text: /Docs written: three pages/ })).toBeDefined()
+  expect(await ui.find({ type: 'Button', key: 'stop:ag-2' })).toBeUndefined()
+  // Steer opens the field on that card; Send delivers into the agent's loop
+  await ui.press({ key: 'steer:ag-1' })
+  expect(await ui.find({ type: 'Input', key: 'steer-input:ag-1' })).toBeDefined()
+  await ui.unmount()
+  // the terminal keeps its aligned rows
+  const term = await $.ui.mount({ plugin: 'dojo-fleet', surface: 'terminal', component: 'Pane', requestId: 'dojo-fleet', props: PANE })
+  expect(await term.find({ type: 'Button', key: 'row:ag-1' })).toBeDefined()
+  expect(await term.find({ type: 'Button', key: 'nudge:ag-1' })).toBeUndefined()
+  await term.unmount()
+})
+
+// Seen live: the pane went unseen unless /fleet was typed. A fan-out opens it once per wave, without the keyboard.
+test('a fan-out opens the pane once per wave; one agent alone does not', async ($, on) => {
+  const w = world(on)
+  await start($)
+  await spawn($, 'solo')
+  expect(w.opens).toEqual([])
+  await complete($, 'ag-1', 'done')
+  await w.clock.advance(3000)
+  await spawn($, 'api')
+  await spawn($, 'docs')
+  await spawn($, 'tests')
+  expect(w.opens).toEqual(['dojo-fleet'])
+})
+
+test('auto_open off leaves the pane closed on a fan-out', { options: { auto_open: false } }, async ($, on) => {
+  const w = world(on)
+  await start($)
+  await spawn($, 'api')
+  await spawn($, 'docs')
+  expect(w.opens).toEqual([])
 })

@@ -142,6 +142,90 @@ export function renderPane(ui: FleetUi, view: PaneView, act: FleetActions) {
   )
 }
 
+// ------------------------------------------------------------------------------------------------ desktop cards
+
+export type PaneCard = {
+  id: string
+  n: number
+  glyph: string
+  tone: Tone
+  title: string
+  status: string
+  meta: string
+  doing?: string
+  stallLine?: string
+  answer?: string
+  isSelected: boolean
+  canSteer: boolean
+  canNudge: boolean
+  canStop: boolean
+}
+
+export type CardsView = { title: string; threshold: string; isEmpty: boolean; cards: PaneCard[]; more: number }
+
+// The pane on surfaces that draw proportional type (the desktop app, VS Code, mobile). Seen live: the terminal's
+// fixed-width columns read raggedly there, and the actions waited behind a pick-a-row step. Each agent is a card
+// in its state's colour with what it is doing now, and its actions on the card.
+export function renderPaneCards(ui: FleetUi, view: CardsView, act: FleetActions) {
+  const { Box, Text, Button, Input } = ui
+  return (
+    <Box flexDirection="column" gap={1}>
+      <Box flexDirection="column">
+        <Text bold>{view.title}</Text>
+        <Text dimColor>{view.threshold}</Text>
+      </Box>
+      {view.isEmpty && <Text dimColor>No subagent yet. Dispatch a fan-out and each agent shows here, live.</Text>}
+      {view.cards.map((card, i) => (
+        <Box key={`card:${card.id}`} flexDirection="column" borderStyle="round" borderColor={card.tone} paddingX={1}>
+          <Box flexDirection="row" gap={1}>
+            <Text color={card.tone}>{card.glyph}</Text>
+            <Box flexGrow={1} flexShrink={1}>
+              <Text bold wrap="truncate-end">
+                {card.title}
+              </Text>
+            </Box>
+            <Text color={card.tone}>{card.status}</Text>
+          </Box>
+          <Text dimColor wrap="truncate-end">
+            {card.meta}
+          </Text>
+          {card.doing !== undefined && <Text wrap="truncate-end">{card.doing}</Text>}
+          {card.stallLine !== undefined && <Text color="warning">{card.stallLine}</Text>}
+          {card.answer !== undefined && (
+            <Text dimColor wrap="truncate-end">
+              {card.answer}
+            </Text>
+          )}
+          {(card.canSteer || card.canNudge || card.canStop) && (
+            <Box flexDirection="row" gap={1}>
+              {card.canSteer && (
+                <Button
+                  key={`steer:${card.id}`}
+                  label={card.isSelected ? 'Cancel' : 'Steer'}
+                  autoFocus={i === 0 ? true : undefined}
+                  onPress={() => (card.isSelected ? act.close() : act.select(card.id))}
+                />
+              )}
+              {card.canNudge && <Button key={`nudge:${card.id}`} label="Nudge" onPress={() => act.nudge(card.id)} />}
+              {card.canStop && <Button key={`stop:${card.id}`} label="Stop" onPress={() => act.stop(card.id)} />}
+            </Box>
+          )}
+          {card.isSelected && card.canSteer && Input !== undefined && (
+            <Input
+              key={`steer-input:${card.id}`}
+              label="Steer"
+              placeholder={`message for #${card.n}; Enter sends it into its loop`}
+              submitLabel="Send"
+              onSubmit={(value: string) => act.steer(card.id, value)}
+            />
+          )}
+        </Box>
+      ))}
+      {view.more > 0 && <Text dimColor>{`+${view.more} more (oldest settled)`}</Text>}
+    </Box>
+  )
+}
+
 export type AgentBarView = { id: string; glyph: string; tone: Tone; text: string; canNudge: boolean; canStop: boolean }
 
 // With an agent's transcript open: the prompt below already messages that agent, so the band shows what the engine

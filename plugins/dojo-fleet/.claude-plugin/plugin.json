@@ -1,6 +1,6 @@
 {
   "name": "dojo-fleet",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "See every subagent of a fan-out live, steer one mid-flight, and catch stalls by their writes, not their word.",
   "author": {
     "name": "Dojo Genesis",
@@ -37,6 +37,12 @@
       "type": "boolean",
       "title": "Toast on stall",
       "description": "Raise one toast when an agent first looks stalled.",
+      "default": true
+    },
+    "auto_open": {
+      "type": "boolean",
+      "title": "Open the pane on a fan-out",
+      "description": "When two agents run at once, open the Fleet pane by itself, once per wave, without taking the keyboard. It shows where there is room (a docked pane, a wide terminal); elsewhere /fleet opens it.",
       "default": true
     }
   }
