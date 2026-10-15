@@ -3,7 +3,7 @@
 // global: nothing in this file may declare, import or take as a parameter a name that shadows it (the engine then
 // logs "hook was skipped" and draws nothing). tests/test_plugin_shape.py checks for that.
 
-import type { RowParts } from './model'
+import type { Cols, RowParts } from './model'
 
 // The element table `$.ui.resolve(e)` returns; `Input` is absent where the surface draws no field (mobile).
 export type FleetUi = { Box: any; Text: any; Button: any; Input?: any }
@@ -40,7 +40,7 @@ export type PaneView = {
   threshold: string
   isEmpty: boolean
   rows: PaneRow[]
-  cols: { id: number; label: number; model: number; age: number; work: number }
+  cols: Cols
   more: number
   detail?: PaneDetail
 }
@@ -67,30 +67,40 @@ export function renderPane(ui: FleetUi, view: PaneView, act: FleetActions) {
       {view.isEmpty && <Text dimColor>No subagent yet. Dispatch a fan-out and each agent shows here, live.</Text>}
       {view.rows.map(row => (
         // A drawn tree collapses runs of spaces, so the columns are boxes of fixed width, after one Button handle.
+        // A box shrinks with its row by default, and a short cell ("haiku 5.5", "25s") then wraps: every column is
+        // flexShrink 0 and its text truncates, so only the tail (which truncates too) gives way in a narrow pane.
         <Box key={`line:${row.id}`} flexDirection="row" gap={1}>
-          <Button
-            key={`row:${row.id}`}
-            plain
-            autoFocus={row.isFirst && detail === undefined ? true : undefined}
-            onPress={() => act.select(row.id)}
-          >
-            <Text color={row.tone}>{row.glyph}</Text>
-            {` ${row.parts.id.padEnd(view.cols.id)}`}
-          </Button>
-          <Box width={view.cols.label}>
+          <Box flexShrink={0}>
+            <Button
+              key={`row:${row.id}`}
+              plain
+              autoFocus={row.isFirst && detail === undefined ? true : undefined}
+              onPress={() => act.select(row.id)}
+            >
+              <Text color={row.tone}>{row.glyph}</Text>
+              {` ${row.parts.id.padEnd(view.cols.id)}`}
+            </Button>
+          </Box>
+          <Box width={view.cols.label} flexShrink={0}>
             <Text wrap="truncate-end" bold={row.isSelected}>
               {row.parts.label}
             </Text>
           </Box>
-          <Box width={view.cols.model}>
-            <Text dimColor>{row.parts.model}</Text>
+          <Box width={view.cols.model} flexShrink={0}>
+            <Text wrap="truncate-end" dimColor>
+              {row.parts.model}
+            </Text>
           </Box>
-          <Box width={view.cols.age} justifyContent="flex-end">
-            <Text>{row.parts.age}</Text>
+          <Box width={view.cols.age} flexShrink={0} justifyContent="flex-end">
+            <Text wrap="truncate-end">{row.parts.age}</Text>
           </Box>
-          <Box width={view.cols.work}>
-            <Text dimColor>{row.parts.work}</Text>
-          </Box>
+          {view.cols.work > 0 && (
+            <Box width={view.cols.work} flexShrink={0}>
+              <Text wrap="truncate-end" dimColor>
+                {row.parts.work}
+              </Text>
+            </Box>
+          )}
           <Text color={row.isPlain ? undefined : row.tone} wrap="truncate-end">
             {row.parts.tail}
           </Text>

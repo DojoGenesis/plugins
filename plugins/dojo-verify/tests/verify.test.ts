@@ -53,9 +53,11 @@ test('a claim with no check this turn shows UNVERIFIED in the status line and a 
   await edit($)
   await complete($, 'Fixed and deployed.')
   expect(last(ui)).toMatch('UNVERIFIED')
-  expect(last(ui)).toMatch('dojo-verify')
+  // The engine heads the status line and toasts with the plugin's name; a prefix of our own would show twice.
+  expect(last(ui)).not.toMatch('dojo-verify')
   expect(ui.toast.length).toBe(1)
-  expect(ui.toast[0]).toMatch('UNVERIFIED')
+  expect(ui.toast[0]).toMatch(/^UNVERIFIED — "Fixed and deployed\./)
+  expect(ui.toast[0]).not.toMatch('dojo-verify')
 })
 
 test('a passing Bash check before the claim means no UNVERIFIED', async ($, on) => {
@@ -507,6 +509,7 @@ test('the status line is one string: UNVERIFIED and the tally together', async (
   await complete($, 'Fixed.')
   expect(last(ui)).toMatch('UNVERIFIED')
   expect(last(ui)).toMatch('dispatched 1 / returned 0 / failed 0')
+  expect(last(ui)).not.toMatch('dojo-verify')
 })
 
 test('settled agents drop out of the count at the next human prompt; running ones carry over', async ($, on) => {

@@ -1,7 +1,7 @@
 import { expect, mock, test } from 'claude-code/testing'
 
 import type { FleetAgent } from '../types'
-import { findAgent, isWriterBrief, nudgeText, parseSteer, stallOf } from '../hooks/model'
+import { findAgent, fitCols, isWriterBrief, nudgeText, parseSteer, rowParts, stallOf } from '../hooks/model'
 
 // Mod kit tests. The hooks a test registers with `on` sit beneath the plugin and stand for the engine: a spawner
 // that hands out agent ids, a tool runner, a message bus that records what was sent, a mocked clock and env.
@@ -480,4 +480,62 @@ test('DOJO_FLEET_OFF stands the mod down', async ($, on) => {
   await ui.unmount()
   await w.clock.advance(60 * MIN)
   expect(w.toasts).toEqual([])
+})
+
+// ------------------------------------------------------------------------------------------------ narrow pane
+
+// The 2026-10-14 field test: at about 60 columns the pane's fixed-width boxes shrank with the row and short cells
+// wrapped ("haiku / 5.5", "25 / s"). The columns are now sized to the pane, and model and age are never wrapped.
+const rowsFor = (...over: Partial<FleetAgent>[]) =>
+  over.map((o, i) => rowParts(agent({ id: `a${i}`, n: i + 1, model: 'claude-haiku-5-5', ...o }), T0 + 25_000, undefined))
+const rowWidth = (c: ReturnType<typeof fitCols>, tail: number) =>
+  2 + c.id + c.label + c.model + c.age + c.work + (c.work > 0 ? 5 : 4) + tail
+
+test('fitCols: a wide pane keeps every column at its natural width', async () => {
+  const parts = rowsFor({ label: 'api-builder', spawnedAt: T0, tools: 12, writes: 3 })
+  const cols = fitCols(parts, 120)
+  expect(cols).toEqual({ id: 2, label: 11, model: 9, age: 3, work: 19 })
+})
+
+test('fitCols: at 58 cells the row fits, the label gives way, and model and age stay whole', async () => {
+  const parts = rowsFor(
+    { label: 'api-builder', spawnedAt: T0, tools: 12, writes: 3 },
+    { label: 'database-migration-author', spawnedAt: T0 - 65_000, tools: 3, writes: 1 },
+  )
+  const cols = fitCols(parts, 58)
+  expect(cols.model).toBe('haiku 5.5'.length) // never shortened while anything else can give
+  expect(cols.age).toBeGreaterThanOrEqual('1m30s'.length)
+  expect(rowWidth(cols, 12)).toBeLessThanOrEqual(58)
+  expect(cols.label).toBeGreaterThanOrEqual(6)
+})
+
+test('fitCols: a very narrow pane drops the work column, then truncates; no column reaches zero', async () => {
+  const parts = rowsFor({ label: 'database-migration-author', spawnedAt: T0 - 3_700_000, tools: 120, writes: 30 })
+  const cols = fitCols(parts, 40)
+  expect(cols.work).toBe(0)
+  expect(cols.id).toBeGreaterThan(0)
+  expect(cols.label).toBeGreaterThanOrEqual(6)
+  expect(cols.model).toBeGreaterThanOrEqual(5)
+  expect(cols.age).toBeGreaterThanOrEqual(3)
+  expect(rowWidth(cols, 12)).toBeLessThanOrEqual(40)
+  const tiny = fitCols(parts, 5) // nothing fits: every column keeps its floor and the tail truncates
+  expect(tiny.label).toBe(6)
+  expect(tiny.model).toBe(5)
+  expect(tiny.age).toBe(3)
+})
+
+test('the pane at 60 columns never wraps a model or an age cell: both are fixed-width and truncate', async ($, on) => {
+  const w = world(on)
+  await start($)
+  await $.agent.spawn({ prompt: 'Build api. Owned files: src/api.ts', description: 'api', subagentType: 'general-purpose', model: 'claude-haiku-5-5' })
+  await w.clock.advance(25_000)
+  const props = { ...PANE, bodyColumns: 60 }
+  const ui = await $.ui.mount({ plugin: 'dojo-fleet', surface: 'terminal', component: 'Pane', requestId: 'dojo-fleet', props })
+  const model = await ui.find({ type: 'Text', text: 'haiku 5.5' })
+  const age = await ui.find({ type: 'Text', text: '25s' })
+  expect(model).toBeDefined()
+  expect(age).toBeDefined()
+  expect((model as any).props.wrap).toBe('truncate-end')
+  expect((age as any).props.wrap).toBe('truncate-end')
+  await ui.unmount()
 })

@@ -8,6 +8,18 @@ export const VECTORS: { comment: string; normalize: [string, string][]; priced: 
       "claude-haiku-4-5"
     ],
     [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+    ],
+    [
+      "claude-haiku-5-5-20260301",
+      "claude-haiku-5-5"
+    ],
+    [
+      "anthropic.claude-haiku-5-5",
+      "claude-haiku-5-5"
+    ],
+    [
       "claude-sonnet-5-5[1m]",
       "claude-sonnet-5-5"
     ],
@@ -134,6 +146,42 @@ export const VECTORS: { comment: string; normalize: [string, string][]; priced: 
       "claude-haiku-4-5"
     ],
     [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+    ],
+    [
+      "claude-haiku-5-5-20260301",
+      "claude-haiku-5-5"
+    ],
+    [
+      "anthropic.claude-haiku-5-5",
+      "claude-haiku-5-5"
+    ],
+    [
+      "claude-haiku-5-5-latest",
+      "claude-haiku-5-5"
+    ],
+    [
+      "claude-haiku-5-5-fast",
+      "claude-haiku-5-5"
+    ],
+    [
+      "claude-haiku-5-5-preview",
+      null
+    ],
+    [
+      "claude-haiku-5-6",
+      null
+    ],
+    [
+      "claude-haiku-5-50",
+      null
+    ],
+    [
+      "claude-haiku-5",
+      null
+    ],
+    [
       "claude-opus-5-5-preview",
       null
     ],
@@ -225,6 +273,10 @@ export const VECTORS: { comment: string; normalize: [string, string][]; priced: 
     ],
     [
       "claude-haiku-4-5-20251001",
+      "haiku"
+    ],
+    [
+      "claude-haiku-5-5",
       "haiku"
     ],
     [

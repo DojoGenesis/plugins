@@ -73,6 +73,11 @@ How it counts:
   `unpriced_tokens` and a `partial` flag.
 - Cache writes are priced at 1.25 times the input price (5-minute TTL), or 2 times when the transcript
   records that a write was 1-hour TTL.
+- A model with a `long_context` card in `scripts/pricing.json` is priced per request on prompt length. Today
+  that is Haiku 5.5: $0.10 / $0.50 per million input / output tokens (cache read $0.01) while a request's
+  prompt is up to 100,000 tokens, and $0.50 / $2.50 (cache read $0.05) beyond that. The prompt is that
+  one request's input, cache reads and cache writes together; requests are never summed. The report prints the
+  longer ones as a second row marked `>100k`, and `--json` rows carry `long_prompt`.
 - The report never prints a project folder name or a path.
 
 ## Mod tier: early access

@@ -1064,12 +1064,13 @@ function refresh($: StatusUi, show: boolean, s: State): void {
   const parts: string[] = []
   if (s.unverified !== undefined) parts.push(s.unverified)
   if (s.dispatched.size > 0) parts.push(tally(s))
-  $.ui.status(parts.length > 0 ? 'dojo-verify: ' + parts.join(' · ') : undefined)
+  // The engine heads the status line and toasts with the plugin's name: no "dojo-verify: " prefix of our own.
+  $.ui.status(parts.length > 0 ? parts.join(' · ') : undefined)
 }
 
 function warnUnverified($: ToastUi, claim: Claim): void {
   $.ui.toast(
-    `dojo-verify: UNVERIFIED — "${quote(claim.sentence)}" with no passing check since the last change. Run the check, or say plainly it is unverified in the same sentence.`,
+    `UNVERIFIED — "${quote(claim.sentence)}" with no passing check since the last change. Run the check, or say plainly it is unverified in the same sentence.`,
     { timeoutMs: 8000 },
   )
 }

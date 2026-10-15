@@ -88,6 +88,66 @@ test('one model id in two spellings is one row, and the context is the last main
   expect(text).toContain('ctx 1.1k (0%)') // the main request only: 10 + 1000 + 90
 })
 
+test('a Haiku 5.5 turn is priced, never unpriced or partial', async ($, on) => {
+  const w = world(on)
+  // The 2026-10-14 field test: no claude-haiku-5-5 row read "unpriced" and made every total "(partial)".
+  await step($, w, usageOf('claude-haiku-5-5', { input: 50000, output: 20000 })) // 0.005 + 0.010 = $0.015
+  const text = await bandText($)
+  expect(text).toContain('haiku $0.02')
+  expect(text).toContain('≈ $0.02')
+  expect(text).not.toContain('unpriced')
+  expect(text).not.toContain('partial')
+})
+
+test('claude-haiku-5-5 is priced on its published cards: $0.10 / $0.50 / $0.01 read up to 100k, then $0.50 / $2.50 / $0.05', async () => {
+  const ledger: Ledger = new Map()
+  addUsage(ledger, 'main', usageOf('claude-haiku-5-5', { input: 100000, output: M, read: 0, write: 0 }))
+  // 100,000 prompt tokens is still the standard card: 0.10 x 0.1 + 0.50 = 0.51
+  expect(estimateUsd(ledger).total).toBe(Math.round(0.51 * 1e10))
+  const each: Ledger = new Map()
+  addUsage(each, 'main', usageOf('claude-haiku-5-5', { input: 40000, output: 0, read: 40000, write: 20000 }))
+  // input 0.10, read 0.01, write 0.10 x 1.25: 0.004 + 0.0004 + 0.0025 = 0.0069
+  expect(estimateUsd(each).total).toBe(Math.round(0.0069 * 1e10))
+  expect(priceFor('claude-haiku-5-5')?.input).toBe(0.1)
+  expect(priceFor('claude-haiku-5-5')?.output).toBe(0.5)
+  expect(priceFor('claude-haiku-5-5')?.cache_read).toBe(0.01)
+  expect(priceFor('claude-haiku-5-5', true)).toEqual({ over_tokens: 100000, input: 0.5, output: 2.5, cache_read: 0.05 })
+})
+
+test('a request over 100k prompt tokens pays the long card, judged per request and counting cache tokens', async () => {
+  const isLong = (counts: { input?: number; read?: number; write?: number }): boolean => {
+    const ledger: Ledger = new Map()
+    addUsage(ledger, 'main', usageOf('claude-haiku-5-5', counts))
+    const [row] = [...ledger.values()]
+    return row.long === true
+  }
+  expect(isLong({ input: 100000 })).toBe(false)
+  expect(isLong({ input: 100001 })).toBe(true)
+  expect(isLong({ input: 1, read: 99999 })).toBe(false)
+  expect(isLong({ input: 1, read: 100000 })).toBe(true) // cache reads count toward the prompt
+  expect(isLong({ input: 1, write: 100000 })).toBe(true) // and so do cache writes
+  const long: Ledger = new Map()
+  addUsage(long, 'main', usageOf('claude-haiku-5-5', { input: 200000, output: 1000, read: 0, write: 0 }))
+  // long card: 200000 x 0.50 + 1000 x 2.50 = 0.10 + 0.0025 = 0.1025
+  expect(estimateUsd(long).total).toBe(Math.round(0.1025 * 1e10))
+  // Three 60k requests are three standard requests; their 180k sum never makes them long.
+  const three: Ledger = new Map()
+  for (let i = 0; i < 3; i++) addUsage(three, 'main', usageOf('claude-haiku-5-5', { input: 60000 }))
+  expect([...three.values()].some(row => row.long === true)).toBe(false)
+  expect(estimateUsd(three).total).toBe(Math.round(0.018 * 1e10))
+  // A session with both sizes keeps two rows, each on its own card.
+  const both: Ledger = new Map()
+  addUsage(both, 'main', usageOf('claude-haiku-5-5', { input: 1000 }))
+  addUsage(both, 'main', usageOf('claude-haiku-5-5', { input: 200000 }))
+  expect(both.size).toBe(2)
+  expect(estimateUsd(both).total).toBe(Math.round((0.0001 + 0.1) * 1e10))
+  // A model with no long card is never long, however big the prompt.
+  const big: Ledger = new Map()
+  addUsage(big, 'main', usageOf('claude-haiku-4-5', { input: 900000 }))
+  expect([...big.values()][0].long).toBeUndefined()
+  expect(estimateUsd(big).total).toBe(Math.round(0.9 * 1e10))
+})
+
 test('an unknown model is unpriced, never zero', async ($, on) => {
   const w = world(on)
   await step($, w, usageOf('claude-future-9', { input: M, output: M }))

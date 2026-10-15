@@ -322,7 +322,7 @@ dojo search-skills "specification"
 
 ## Version
 
-**2.1.1** — (unreleased) dojo-tally 0.1.1: `/tally refute <n>` reaches the judge whoever holds the bare `/refute` name. **2.1.0** added four orchestration mods to the companions: dojo-fleet, dojo-lanes, dojo-tally and dojo-brief. 114 first-party skills across 24 plugins, with 12 semantic clusters as metadata. **2.0.0** put the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) first, then the library and the companions; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
+**2.1.2** — (unreleased) field-test fixes at 0.1.1 for dojo-meter (Haiku 5.5 priced, on both of its prompt-length cards), dojo-router and dojo-verify (no doubled name in the status line and toasts) and dojo-fleet (the pane's columns hold at 60 columns). **2.1.1** shipped dojo-tally 0.1.1: `/tally refute <n>` reaches the judge whoever holds the bare `/refute` name. **2.1.0** added four orchestration mods to the companions: dojo-fleet, dojo-lanes, dojo-tally and dojo-brief. 114 first-party skills across 24 plugins, with 12 semantic clusters as metadata. **2.0.0** put the Dojo protocol suite (eight plugins and the `dojo-suite` install bundle) first, then the library and the companions; no library plugin was removed, and cluster membership never moves a skill between plugins (invoke-name stability). Counts here are checked against disk by `scripts/face-parity.py`.
 
 Semantic versioning:
 - **Patch** (x.x.1): typo fixes, minor clarifications

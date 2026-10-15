@@ -22,7 +22,8 @@ TARGETS = [
     # (source, destination, exported const, type annotation)
     ("scripts/pricing.json", "hooks/pricing.ts", "PRICING",
      "{ source: string; unit: string; cache_write_5m_multiplier: number; cache_write_1h_multiplier: number;"
-     " models: Record<string, { input: number; output: number; cache_read: number }> }"),
+     " models: Record<string, { input: number; output: number; cache_read: number;"
+     " long_context?: { over_tokens: number; input: number; output: number; cache_read: number } }> }"),
     ("tests/model_vectors.json", "tests/vectors.ts", "VECTORS",
      "{ comment: string; normalize: [string, string][]; priced: [string, string | null][]; tiers: [string, string][] }"),
 ]
