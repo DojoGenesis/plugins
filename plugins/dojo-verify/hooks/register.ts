@@ -36,6 +36,13 @@ const TOKEN = /[\w']+/g
 const FENCE = /```[\s\S]*?```/g
 const STRAY_FENCE = /```[^\n]*/g
 const INLINE_CODE = /`[^`\n]*`/g
+const BLOCKQUOTE = /^[ \t]*>.*$/gm
+const DOUBLE_QUOTED = /"[^"\n]*"/g
+const SINGLE_QUOTED = /(?<![\w])'[^'\n]*\s[^'\n]*'(?![\w])/g
+const BOLD = /\*\*|__/g
+const LIST_ITEM = /^[ \t]*(?:[-*+]|\d+[.)])[ \t]+/
+const NO_INTERJECTION = /^\s*no\s*[,!.]/i
+const NOUN_LIKE = /^\s*([a-z][a-z'-]*)\b/
 const REDIRECT_FD = /\d*>&\d+/g
 const REDIRECT_ERR = /(?<![\w])2>>?\s*[^\s;&|<>]+/g
 const REDIRECT_OUT = /(?:&>>?|\d*>>?\|?)\s*([^\s;&|<>]+)/g
@@ -127,11 +134,43 @@ const REFUSED = new RegExp(MUTATE.refused_markers, 'i')
 const NOT_FOUND = new RegExp(MUTATE.not_found_re, 'gi')
 const NOT_FOUND_SKIP = new Set<string>(MUTATE.not_found_skip)
 const INTERP_WRITE = new RegExp(MUTATE.interp_write_re)
+const NOTES_PATH_RE = new RegExp(MUTATE.notes_path_re)
+const NOTES_MENTION_RE = new RegExp(MUTATE.notes_mention_re)
+const NOTES_WRITE_PROGRAMS = new Set<string>(MUTATE.notes_write_programs)
+const IMAGE_READ_RE = new RegExp(CHECK.image_read_re, 'i')
+const NEGATIVE_LEADS = new Set<string>(P.negative_leads)
+const NEGATIVE_BREAKS = new Set<string>(P.negative_scope_breaks)
+const ATTRIBUTION_WORDS = new Set<string>(P.attribution_words)
+const ATTR_NEXT_STOP = new Set<string>(P.attributive_next_stop)
+const ATTR_SUBJECTS = new Set<string>(P.attributive_subjects)
+const REPORTED_LEAD = new RegExp(P.reported_lead, 'i')
+const PASS_CS = new RegExp(P.pass_output.markers, 'm')
+const PASS_CI = new RegExp(P.pass_output.markers_ci, 'mi')
+const INERT_PROGRAMS = new Set<string>(P.pass_output.inert_programs)
 
 // ------------------------------------------------------------------------------------------------ claims
 
+// Blank the list items that a lead-in line ('It says three things:', 'Tim wrote:') gives as someone's words.
+function dropReported(text: string): string {
+  const out: string[] = []
+  let dropping = false
+  for (const line of text.split('\n')) {
+    if (dropping) {
+      if (line.trim() === '' || LIST_ITEM.test(line)) {
+        out.push('')
+        continue
+      }
+      dropping = false
+    }
+    out.push(line)
+    if (REPORTED_LEAD.test(line)) dropping = true
+  }
+  return out.join('\n')
+}
+
+// Drop code, straighten curly quotes, and drop someone else's words: blockquotes, quoted spans, reported lists.
 function normalizeText(text: string): string {
-  return text
+  const t = text
     .replace(FENCE, ' ')
     .replace(STRAY_FENCE, ' ') // an unclosed fence hides only its own line, not the rest of the message
     .replace(INLINE_CODE, ' ')
@@ -139,6 +178,8 @@ function normalizeText(text: string): string {
     .replace(/‘/g, "'")
     .replace(/“/g, '"')
     .replace(/”/g, '"')
+    .replace(BLOCKQUOTE, '')
+  return dropReported(t).replace(DOUBLE_QUOTED, ' ').replace(SINGLE_QUOTED, ' ').replace(BOLD, '')
 }
 
 function splitSentences(text: string): Array<[string, string]> {
@@ -172,7 +213,30 @@ function words(text: string): string[] {
   return text.toLowerCase().match(TOKEN) ?? []
 }
 
+// 'Nothing is committed, pushed or deployed': a sentence, or the part after a colon, that opens with a negative
+// denies every verb in its list until 'and', 'but', 'so' or a contrast starts a new clause. 'No, it's fixed' opens
+// with an answer, not a negative.
+function negativeScope(prefix: string): boolean {
+  let cut = -1
+  for (const c of ':;\u2014\u2013(') cut = Math.max(cut, prefix.lastIndexOf(c))
+  const part = cut >= 0 ? prefix.slice(cut + 1) : prefix
+  if (NO_INTERJECTION.test(part)) return false
+  const ws = words(part)
+  return ws.length > 0 && NEGATIVE_LEADS.has(ws[0] as string) && !ws.slice(1).some(w => NEGATIVE_BREAKS.has(w))
+}
+
+// 'a fixed seed', 'a paid verified review', 'Fixed scope and price': the word describes the noun after it. It does
+// after a determiner, or at the start of a clause, when no subject or helper verb comes before it.
+function attributive(sentence: string, index: number, matched: string, ws: string[]): boolean {
+  if (ws.length > 0 && ATTRIBUTIVE_BEFORE.has(ws[ws.length - 1] as string)) return true
+  const nxt = NOUN_LIKE.exec(sentence.slice(index + matched.length))
+  if (nxt === null || ATTR_NEXT_STOP.has(nxt[1] as string)) return false
+  if (ws.length > 0 && ATTR_SUBJECTS.has(ws[ws.length - 1] as string)) return false
+  return ws.length === 0 || ws.slice(-2).some(w => ATTRIBUTIVE_BEFORE.has(w))
+}
+
 function guarded(sentence: string, index: number, matched: string, tier: string): boolean {
+  if (negativeScope(sentence.slice(0, index))) return true
   let prefix = sentence.slice(0, index)
   let cut = -1
   for (const c of CUT_CHARS) cut = Math.max(cut, prefix.lastIndexOf(c))
@@ -188,9 +252,10 @@ function guarded(sentence: string, index: number, matched: string, tier: string)
   const near = ws.slice(-P.future_window)
   for (const w of near) if (FUTURE.has(w) || w.endsWith("'ll")) return true
   for (let i = 0; i < near.length - 1; i++) if (FUTURE_PHRASES.has((near[i] as string) + ' ' + (near[i + 1] as string))) return true // "yet to be deployed"
+  if (ws.some(w => ATTRIBUTION_WORDS.has(w))) return true // "the builder reports 1737 passed": theirs, given as theirs
   if (tier === 'weak') {
     for (const w of ws.slice(-P.weak_skip_before.window)) if (WEAK_SKIP.has(w)) return true
-  } else if (ws.length > 0 && ATTRIBUTIVE_BEFORE.has(ws[ws.length - 1] as string) && ATTRIBUTIVE_WORDS.has(matched.toLowerCase())) {
+  } else if (ATTRIBUTIVE_WORDS.has(matched.toLowerCase()) && attributive(sentence, index, matched, ws)) {
     return true // "a fixed seed", "the deployed copy": the word describes a noun, it does not claim anything
   }
   const after = /^\s*([\w']+)/.exec(sentence.slice(index + matched.length))
@@ -996,11 +1061,42 @@ function missingPrograms(text: string): Set<string> {
 
 // The ledger is the session's, not the turn's: `mutated` once anything has changed files, `ok` while a clean
 // check has run since the last change. A change clears `ok`; a clean check sets it.
+// True when the command runs something besides readers and printers: 'cat results.txt' or 'echo PASS' checks nothing.
+function runsProgram(cmd: string): boolean {
+  const [body] = splitHeredocs(cmd)
+  for (const [text] of splitSegments(body)) {
+    const u = unwrap(tokens(text))
+    if (u !== null && !INERT_PROGRAMS.has(programName(u[0]))) return true
+  }
+  return false
+}
+
+// Output that reports a passing check: PASS or ok lines, 'N passed', 'N/N pass', 'ALL PASS', '0 failed'.
+function showsPass(output: string): boolean {
+  const head = output.slice(0, 200000)
+  return PASS_CS.test(head) || PASS_CI.test(head)
+}
+
+// True when a command writes only the agent's own memory or notes: it names a notes location, and its writes are
+// redirections, interpreter code or tee/mkdir/touch, never git, mv, rm, a formatter or an install.
+function notesOnlyWrite(cmd: string): boolean {
+  if (!NOTES_MENTION_RE.test(cmd)) return false
+  const [body] = splitHeredocs(cmd)
+  for (const [text] of splitSegments(body)) {
+    const toks = tokens(text)
+    const u = unwrap(toks)
+    if (u === null) continue
+    const kind = classify(toks)
+    if (kind !== null && kind.kind === 'mut' && !NOTES_WRITE_PROGRAMS.has(programName(u[0]))) return false
+  }
+  return true
+}
+
 function record(s: State, tool: string, input: Record<string, unknown>, r: { deny?: unknown; isError?: unknown; text?: unknown }): void {
   if (MUT_TOOLS.has(tool)) {
     const path = typeof input.file_path === 'string' ? input.file_path : input.notebook_path
     // a refused edit changed nothing, and a scratch file in the temp directory is not the project
-    if (r.deny === undefined && r.isError !== true && !(typeof path === 'string' && isTemp(path))) {
+    if (r.deny === undefined && r.isError !== true && !(typeof path === 'string' && (isTemp(path) || NOTES_PATH_RE.test(path)))) {
       s.ledger.mutated = true
       s.ledger.ok = false
     }
@@ -1016,17 +1112,25 @@ function record(s: State, tool: string, input: Record<string, unknown>, r: { den
     // a background run has not finished, so nothing it printed is evidence yet
     const clean = !failed && input.run_in_background !== true && !text.startsWith('Exit code') && !FAILURE.test(text.slice(0, 200000))
     const cmd = typeof input.command === 'string' ? input.command : ''
+    const notesOnly = notesOnlyWrite(cmd) // the agent's own memory and notes are not the project
+    let ok = false
     for (const [kind, level, phrase] of commandEvents(cmd, 0, missing)) {
       if (kind === 'mut') {
-        if (!notRun) {
+        if (!notRun && !notesOnly) {
           s.ledger.mutated = true
           s.ledger.ok = false
         }
       } else if (clean && checkCounts(level, phrase, text)) {
         s.ledger.ok = true
+        ok = true
       }
     }
+    // a script or runner it does not know by name, printing a passing result
+    if (clean && !ok && runsProgram(cmd) && showsPass(text)) s.ledger.ok = true
   } else if (BROWSER_RE.test(tool)) {
+    if (r.deny === undefined && r.isError !== true) s.ledger.ok = true
+  } else if (tool === 'Read' && typeof input.file_path === 'string' && IMAGE_READ_RE.test(input.file_path)) {
+    // looking at a rendered image or page is how a visual change is checked
     if (r.deny === undefined && r.isError !== true) s.ledger.ok = true
   }
 }

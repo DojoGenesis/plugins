@@ -24,14 +24,15 @@
     "(?:typecheck|type-check|lint|linting)(?:\\s+and\\s+(?:typecheck|type-check|lint|linting))?\\s+(?:(?:is|are|now)\\s+){0,3}(?:clean|green|passing|passes|passed)"
   ],
   "weak": [
-    "done",
-    "works(?!\\s+(?:on|with|by|as)\\b)",
+    "(?<!\\bto\\s)(?<!\\bas\\s)(?<!\\bclick\\s)(?<!\\bmarked\\s)done",
+    "works(?!\\s+(?:on|with|by|as|in|at|for|best|when|if|only|because|like)\\b)",
     "(?:is|are)\\s+working",
     "builds(?!\\s+(?:a|an|the|your|its|their|this|that|on|from|up|out|and|with|all|every)\\b)"
   ],
   "weak_skip_before": {
     "words": [
-      "how"
+      "how",
+      "why"
     ],
     "window": 4
   },
@@ -231,6 +232,11 @@
         "plugin test",
         "plugin validate"
       ],
+      "gh": [
+        "pr checks",
+        "run view",
+        "run watch"
+      ],
       "pre-commit": [
         "run"
       ],
@@ -381,6 +387,7 @@
     "python_re": "^python(?:3(?:\\.\\d+)?)?$",
     "errexit_re": "(?:^|[\\s;&(])set\\s+(?:-[A-Za-z]*e[A-Za-z]*|-o\\s+errexit)(?![\\w-])",
     "pipefail_re": "pipefail",
+    "image_read_re": "\\.(?:png|jpe?g|gif|webp|pdf)$",
     "browser_tool_re": "(?:playwright|browser|in[-_]chrome).*(?:navigate|screenshot|snapshot|get_page_text|read_page|test)",
     "noop_flags": [
       "--version",
@@ -658,6 +665,9 @@
       "$TMP/",
       "$TEMP/"
     ],
+    "notes_mention_re": "\\.claude/projects/[^/\\s'\"]+/memory\\b|\\.claude/(?:plans|todos)\\b|side-session-notes|[\\w.-]*memory/[^\\s'\"]*\\.md\\b|\\bMEMORY\\.md\\b",
+    "notes_write_programs": ["tee", "mkdir", "touch"],
+    "notes_path_re": "(?:^|/)\\.claude/(?:projects/[^/]+/memory|plans|todos)/|/side-session-notes/|(?:^|/)[\\w.-]*memory/(?:[^/]+/)*[^/]+\\.md$",
     "refused_markers": "has been denied|was denied|hook blocked|blocked by (?:a )?hook|doesn't want to proceed",
     "not_found_re": "command not found:\\s+(\\S+)|([^\\s:]+):\\s+command not found(?!:\\s*\\S)|([^\\s:]+):\\s+not found",
     "not_found_skip": ["zsh", "bash", "sh", "dash", "ksh", "fish", "eval", "(eval)", "line", "error", "fatal"],
@@ -671,6 +681,13 @@
     "hard_boundary": "[,;:—–]|\\s-+\\s",
     "asserting": "\\b(?:now\\s+that|given(?:\\s+that)?|seeing\\s+(?:as|that)|considering\\s+that|since|because|(?<!soon\\s)(?<!long\\s)(?<!well\\s)(?<!many\\s)(?<!much\\s)(?<!far\\s)(?<!early\\s)(?<!late\\s)as(?=\\s+(?:the|a|an|all|both|every|everything|it|its|this|that|these|those|they|we|i|you|there|my|our|your|their|no|tests?|ci|build|lint|typecheck|checks?|suite)\\b))\\b"
   },
+  "negative_leads": ["nothing", "none", "neither", "no", "not", "never", "nobody", "nor"],
+  "negative_scope_breaks": ["and", "but", "so", "then", "however", "though", "although", "yet", "except", "while", "whereas", "because"],
+  "attribution_words": ["reports", "reported", "says", "said", "claims", "claimed", "writes", "wrote", "according"],
+  "attributive_next_stop": ["to", "in", "on", "at", "by", "for", "with", "from", "into", "onto", "as", "via", "against", "under", "over", "after", "before", "since", "through", "across", "within", "without", "upon", "the", "a", "an", "this", "that", "these", "those", "it", "its", "them", "him", "her", "all", "both", "each", "every", "my", "our", "your", "their", "his", "any", "some", "and", "or", "but", "so", "yet", "nor", "now", "again", "already", "too", "also", "locally", "successfully", "correctly", "properly", "here", "there", "end", "fully", "live", "today", "then", "once", "is", "are", "was", "were", "be", "been", "has", "have", "had", "not", "just", "only", "everything", "nothing", "something", "anything", "upstream", "manually", "automatically", "cleanly", "if", "when", "where", "which", "who", "what", "why", "how"],
+  "attributive_subjects": ["i", "we", "you", "he", "she", "they", "it", "is", "are", "was", "were", "be", "been", "being", "has", "have", "had", "get", "got", "gets", "and", "or", "just", "now", "also", "then", "finally", "already"],
+  "reported_lead": "\\b(?:says|said|reads|asks|asked|tells|told|states|stated|writes|wrote|replies|replied|quotes|quoted|proposes|proposed|covers|argues|adds|claims|reports)\\b[^\\n]*:\\s*$",
+  "pass_output": {"markers": "^[ \\t]*\\[?[ \\t]*(?:PASS(?:ED)?|OK)\\b|^ok [0-9]+\\b|^[ \\t]*[\u2713\u2714]|\\b([0-9]+)/\\1[ \\t]+(?:tests?[ \\t]+|checks?[ \\t]+)?(?:PASS(?:ED)?|pass(?:ed)?|ok|OK)\\b|\\bALL[ \\t]+(?:[0-9]+[ \\t]+)?(?:TESTS?[ \\t]+|CHECKS?[ \\t]+)?PASS(?:ED)?\\b", "markers_ci": "\\b[1-9][0-9]*[ \\t]+(?:tests?[ \\t]+|checks?[ \\t]+|specs?[ \\t]+)?passed\\b|\\ball[ \\t]+(?:[0-9]+[ \\t]+)?(?:tests?|checks?)[ \\t]+(?:have[ \\t]+)?passed\\b|\\b0[ \\t]+(?:failed|failures)\\b", "inert_programs": ["cat", "bat", "head", "tail", "less", "more", "nl", "tac", "echo", "printf", "print", "grep", "egrep", "fgrep", "rg", "ag", "sed", "awk", "jq", "yq", "ls", "wc", "sort", "uniq", "cut", "tr", "column", "find", "fd", "tree", "cd", "pushd", "popd", "export", "set", "true", "false", "test", "[", "sleep", "basename", "dirname", "date", "pwd", "git", "for", "read", "tee", "xargs", "diff", "stat", "file"]},
   "limits": {
     "raw_head": 4000,
     "raw_tail": 12000,

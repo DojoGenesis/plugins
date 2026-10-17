@@ -73,6 +73,16 @@ class Patterns(object):
         self.q_hard = re.compile(q["hard_boundary"], flags)
         self.q_asserting = re.compile(q["asserting"], flags)
         self.clause_break = re.compile(raw["clause_break"], flags)
+        self.negative_leads = set(raw["negative_leads"])
+        self.negative_breaks = set(raw["negative_scope_breaks"])
+        self.attribution_words = set(raw["attribution_words"])
+        self.attr_next_stop = set(raw["attributive_next_stop"])
+        self.attr_subjects = set(raw["attributive_subjects"])
+        self.reported_lead = re.compile(raw["reported_lead"], flags)
+        po = raw["pass_output"]
+        self.pass_cs = re.compile(po["markers"], re.M)
+        self.pass_ci = re.compile(po["markers_ci"], re.M | re.IGNORECASE)
+        self.inert_programs = set(po["inert_programs"])
         lim = raw["limits"]
         self.raw_head = int(lim["raw_head"])
         self.raw_tail = int(lim["raw_tail"])
@@ -99,6 +109,7 @@ class Patterns(object):
         self.errexit_re = re.compile(chk["errexit_re"], re.ASCII)
         self.pipefail_re = re.compile(chk["pipefail_re"], re.ASCII)
         self.browser_re = re.compile(chk["browser_tool_re"], re.IGNORECASE | re.ASCII)
+        self.image_read_re = re.compile(chk["image_read_re"], re.IGNORECASE)
         self.noop_flags = set(chk["noop_flags"])
         self.task_noop_flags = set(chk["task_noop_flags"])
         self.var_suffixes = list(chk["var_program_suffixes"])
@@ -126,6 +137,9 @@ class Patterns(object):
         self.not_found_re = re.compile(mut["not_found_re"], re.IGNORECASE | re.ASCII)
         self.not_found_skip = set(mut["not_found_skip"])
         self.interp_write_re = re.compile(mut["interp_write_re"], re.ASCII)
+        self.notes_path_re = re.compile(mut["notes_path_re"])
+        self.notes_mention_re = re.compile(mut["notes_mention_re"])
+        self.notes_write_programs = set(mut["notes_write_programs"])
 
 
 def patterns():
@@ -141,16 +155,42 @@ def patterns():
 FENCE = re.compile(r"```.*?```", re.S)
 STRAY_FENCE = re.compile(r"```[^\n]*")
 INLINE_CODE = re.compile(r"`[^`\n]*`")
+BLOCKQUOTE = re.compile(r"^[ \t]*>.*$", re.M)
+DOUBLE_QUOTED = re.compile(r'"[^"\n]*"')
+SINGLE_QUOTED = re.compile(r"(?<![\w])'[^'\n]*\s[^'\n]*'(?![\w])", re.ASCII)
+BOLD = re.compile(r"\*\*|__")
+LIST_ITEM = re.compile(r"^[ \t]*(?:[-*+]|\d+[.)])[ \t]+")
+
+
+def _drop_reported(text, p):
+    """Blank the list items that a lead-in line ('It says three things:', 'Tim wrote:') gives as someone's words."""
+    out = []
+    dropping = False
+    for line in text.split("\n"):
+        if dropping:
+            if not line.strip() or LIST_ITEM.match(line):
+                out.append("")
+                continue
+            dropping = False
+        out.append(line)
+        if p.reported_lead.search(line):
+            dropping = True
+    return "\n".join(out)
 
 
 def normalize_text(text):
-    """Drop code (closed fenced blocks, a stray fence line, inline spans) and straighten curly quotes."""
+    """Drop code (closed fenced blocks, a stray fence line, inline spans), straighten curly quotes, and drop what
+    is someone else's words: blockquotes, quoted spans, and list items a 'says:' or 'wrote:' line introduces."""
     text = FENCE.sub(" ", text)
     text = STRAY_FENCE.sub(" ", text)  # an unclosed fence hides only its own line, not the rest of the message
     text = INLINE_CODE.sub(" ", text)
     for src, dst in (("’", "'"), ("‘", "'"), ("“", '"'), ("”", '"')):
         text = text.replace(src, dst)
-    return text
+    text = BLOCKQUOTE.sub("", text)
+    text = _drop_reported(text, patterns())
+    text = DOUBLE_QUOTED.sub(" ", text)
+    text = SINGLE_QUOTED.sub(" ", text)
+    return BOLD.sub("", text)
 
 
 def split_sentences(text):
@@ -182,8 +222,40 @@ def split_sentences(text):
     return out
 
 
+NO_INTERJECTION = re.compile(r"\s*no\s*[,!.]", re.I)
+NOUN_LIKE = re.compile(r"\s*([a-z][a-z'-]*)\b")
+
+
+def _negative_scope(prefix, p):
+    """'Nothing is committed, pushed or deployed': a sentence, or the part after a colon, that opens with a
+    negative ('nothing', 'none', 'not', 'no') denies every verb in its list, until 'and', 'but', 'so' or a
+    contrast starts a new clause. 'No, it's fixed' opens with an answer, not a negative."""
+    cut = max(prefix.rfind(c) for c in ":;\u2014\u2013(")
+    part = prefix[cut + 1:] if cut >= 0 else prefix
+    if NO_INTERJECTION.match(part):
+        return False
+    words = TOKEN.findall(part.lower())
+    return bool(words) and words[0] in p.negative_leads and not any(w in p.negative_breaks for w in words[1:])
+
+
+def _attributive(sentence, match, words, p):
+    """'a fixed seed', 'a paid verified review', 'Fixed scope and price': the word describes the noun after it.
+    It does after a determiner, or at the start of a clause, when no subject or helper verb comes before it."""
+    if words and words[-1] in p.attributive_before:
+        return True
+    nxt = NOUN_LIKE.match(sentence[match.end():])
+    if not nxt or nxt.group(1) in p.attr_next_stop:
+        return False
+    if words and words[-1] in p.attr_subjects:
+        return False
+    return not words or any(w in p.attributive_before for w in words[-2:])
+
+
 def _guarded(sentence, match, tier, p):
-    """True when this match is not a claim: negated, future or conditional, or 'how it works'."""
+    """True when this match is not a claim: negated, future or conditional, attributed to someone else, an
+    adjective, or 'how it works'."""
+    if _negative_scope(sentence[:match.start()], p):
+        return True
     prefix = sentence[:match.start()]
     cut = max(prefix.rfind(c) for c in p.negation_cut_chars)
     if cut >= 0:
@@ -203,11 +275,13 @@ def _guarded(sentence, match, tier, p):
     for i in range(len(near) - 1):
         if (near[i], near[i + 1]) in p.future_phrases:  # "yet to be deployed"
             return True
+    if any(w in p.attribution_words for w in words):
+        return True  # "the builder reports 1737 passed": someone else's claim, given as theirs
     if tier == "weak":
         for w in words[-p.weak_skip_window:]:
             if w in p.weak_skip_words:
                 return True
-    elif words and words[-1] in p.attributive_before and match.group(0).lower() in p.attributive_words:
+    elif match.group(0).lower() in p.attributive_words and _attributive(sentence, match, words, p):
         return True  # "a fixed seed", "the deployed copy": the word describes a noun, it does not claim anything
     after = re.match(r"\s*([\w']+)", sentence[match.end():], re.ASCII)
     if after and after.group(1).lower() in p.negated_after:
@@ -1037,6 +1111,40 @@ def command_events(cmd, depth=0, missing=None):
     return found
 
 
+def _runs_program(cmd, p):
+    """True when the command runs something besides readers and printers: 'cat results.txt' or 'echo PASS' shows
+    text, it checks nothing."""
+    body, _bodies = split_heredocs(cmd)
+    for text, _op in split_segments(body):
+        u = _unwrap(_tokens(text))
+        if u is not None and _program_name(u[0]) not in p.inert_programs:
+            return True
+    return False
+
+
+def _notes_only_write(cmd, p):
+    """True when a command writes only the agent's own memory or notes: it names a notes location, and its writes
+    are redirections, interpreter code or tee/mkdir/touch, never git, mv, rm, a formatter or an install."""
+    if not p.notes_mention_re.search(cmd):
+        return False
+    body, _bodies = split_heredocs(cmd)
+    for text, _op in split_segments(body):
+        toks = _tokens(text)
+        u = _unwrap(toks)
+        if u is None:
+            continue
+        kind = _classify(toks)
+        if kind is not None and kind[0] == "mut" and _program_name(u[0]) not in p.notes_write_programs:
+            return False
+    return True
+
+
+def _shows_pass(output, p):
+    """Output that reports a passing check: PASS or ok lines, 'N passed', 'N/N pass', 'ALL PASS', '0 failed'."""
+    head = output[:200000]
+    return bool(p.pass_cs.search(head) or p.pass_ci.search(head))
+
+
 def _check_counts(level, phrase, output):
     """Does a check of this level count, given the output the command showed?"""
     if level == 0:
@@ -1191,7 +1299,9 @@ def _use_events(use, results, bg_done):
         if res is not None and res["error"]:
             return []  # the edit was refused: nothing changed
         path = inp.get("file_path") if isinstance(inp.get("file_path"), str) else inp.get("notebook_path")
-        return [] if isinstance(path, str) and _is_temp(path) else ["mut"]  # a scratch file is not the project
+        if isinstance(path, str) and (_is_temp(path) or p.notes_path_re.search(path)):
+            return []  # a scratch file, or the agent's own memory and notes, is not the project
+        return ["mut"]
     if name == "Bash":
         cmd = inp.get("command")
         out = []
@@ -1214,16 +1324,22 @@ def _use_events(use, results, bg_done):
         clean = (res is not None and not res["error"] and not res["interrupted"]
                  and not res["text"].startswith("Exit code")
                  and not p.failure.search(res["text"][:200000]))
+        notes_only = isinstance(cmd, str) and _notes_only_write(cmd, p)
         for kind, level, phrase in events:
             if kind == "mut":
-                if not refused:
+                if not refused and not notes_only:
                     out.append("mut")
             elif clean and _check_counts(level, phrase, res["text"]):
                 out.append("ok")
+        if clean and "ok" not in out and isinstance(cmd, str) and _runs_program(cmd, p) and _shows_pass(res["text"], p):
+            out.append("ok")  # a script or runner it does not know by name, printing a passing result
         return out
     if isinstance(name, str) and p.browser_re.search(name):
         if res is not None and not res["error"] and not res["interrupted"]:
             return ["ok"]
+    if name == "Read" and isinstance(inp.get("file_path"), str) and p.image_read_re.search(inp["file_path"]):
+        if res is not None and not res["error"]:
+            return ["ok"]  # looking at a rendered image or page is how a visual change is checked
     return []
 
 

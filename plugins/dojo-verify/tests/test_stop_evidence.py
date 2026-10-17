@@ -947,6 +947,11 @@ class TestSequenceTable(Base):
                 entries += [h.tool_use(tid, "Read", {"file_path": "/tmp/x"}), h.tool_result(tid, "x = 1")]
             elif kind == "agent":
                 entries += [h.tool_use(tid, "Agent", {"prompt": "do it"}), h.tool_result(tid, "done")]
+            elif kind == "memo":
+                entries += [h.tool_use(tid, "Write", {"file_path": "/Users/x/.claude/projects/-Users-x/memory/note.md",
+                                                      "content": "x"}), h.tool_result(tid, "ok")]
+            elif kind == "view":
+                entries += [h.tool_use(tid, "Read", {"file_path": "/work/out/logo.png"}), h.tool_result(tid, "image")]
             else:
                 raise AssertionError(kind)
         return entries + [h.assistant_text(text)]
