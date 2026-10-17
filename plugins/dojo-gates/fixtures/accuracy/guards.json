@@ -1,0 +1,45 @@
+{
+  "hook": "dojo-gates/secret-print",
+  "about": "PreToolUse guards that stop a command before it runs. Each case names its guard in \"hook\". A guard should fire only when the condition it names is real: a secret value would reach the conversation, the whole tree would be staged, GNU timeout would run on a Mac without it, a large file would be read whole, a pushed commit would be rewritten, or a check's exit code would be masked before a commit. Text is synthetic; token-shaped values are placeholders.",
+  "cases": [
+    {"id": "fire-cat-env", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "cat .env"},
+    {"id": "fire-bare-env", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "env"},
+    {"id": "fire-env-sorted", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "env | sort"},
+    {"id": "fire-echo-token", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "echo $GITHUB_TOKEN"},
+    {"id": "fire-grep-env-value", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "grep ^API_KEY= .env"},
+    {"id": "fire-printenv-values", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "printenv | cut -d= -f2"},
+    {"id": "fire-echo-substitution", "hook": "dojo-gates/secret-print", "expect": "fire", "source": "synthetic", "command": "echo \"token: $(grep ^API_KEY= .env)\""},
+    {"id": "silent-captured-for-a-client", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class (22 of 22 labeled wrong), paraphrased",
+     "command": "TOK=$(VAULT_TOKEN=$(grep '^VAULT_TOKEN=' ~/.config/app/.env | cut -d= -f2-) vault-cli secret list -o json | python3 -c \"import sys,json; print(json.load(sys.stdin)[0]['value'])\")\n[ -n \"$TOK\" ] && echo \"token retrieved (not printed)\""},
+    {"id": "silent-names-only", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "printenv | cut -d= -f1 | grep -i '^CLAUDE'"},
+    {"id": "silent-masked", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "env | grep '^GIT_SSH' | sed 's/=.*/=<set>/'"},
+    {"id": "silent-discarded", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "printenv VAULT_TOKEN >/dev/null 2>&1 && echo set || echo unset"},
+    {"id": "silent-counted", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "env | grep -c -E '^(GH_|GITHUB_)TOKEN'"},
+    {"id": "silent-length-only", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "grep '^DB_PASSWORD=' .env | cut -d= -f2 | wc -c"},
+    {"id": "silent-env-file-written", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "umask 077 && cat > config/.env <<EOF\nexport APP_NAME=five\nEOF"},
+    {"id": "silent-literal-loop-variable", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "for pat in \"25,000 per return\" \"4137\"; do echo \"== $pat\"; grep -h -F \"$pat\" notes.md | head -2; done"},
+    {"id": "silent-quiet-grep-substitution", "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class, paraphrased", "command": "grep -qF \"$(printf %s \"$DB_PASSWORD\")\" dump.sql && echo LEAK || echo clean"},
+    {"id": "silent-envrc-masked-known-miss", "known_miss": true, "hook": "dojo-gates/secret-print", "expect": "silent", "source": "field class (still misfires), paraphrased",
+     "note": "Only the URL scheme is printed and the user is masked; the guard does not read this sed as a mask.",
+     "command": "grep -o 'postgres://[^@]*@' .envrc | sed -E 's#//[^:]+:#//***:#'"},
+
+    {"id": "fire-add-all", "hook": "dojo-gates/staging", "expect": "fire", "source": "synthetic", "command": "git add -A && git commit -m wip"},
+    {"id": "fire-add-dot", "hook": "dojo-gates/staging", "expect": "fire", "source": "synthetic", "command": "git add ."},
+    {"id": "fire-commit-a", "hook": "dojo-gates/staging", "expect": "fire", "source": "field class, paraphrased", "command": "git commit -am 'fix: header'"},
+    {"id": "silent-add-paths", "hook": "dojo-gates/staging", "expect": "silent", "source": "synthetic", "command": "git add src/a.py src/b.py"},
+    {"id": "silent-intent-to-add", "hook": "dojo-gates/staging", "expect": "silent", "source": "field class, paraphrased", "command": "git add -N . && git commit -m 'docs' README.md CHANGELOG.md"},
+
+    {"id": "fire-timeout-on-mac", "hook": "dojo-gates/mac-timeout", "expect": "fire", "requires": "darwin-no-timeout", "source": "field class (22 of 22 labeled correct), paraphrased", "command": "timeout 30 pytest -q"},
+    {"id": "silent-timeout-flag", "hook": "dojo-gates/mac-timeout", "expect": "silent", "requires": "darwin-no-timeout", "source": "synthetic", "command": "curl --max-time 30 https://example.com"},
+
+    {"id": "fire-big-read", "hook": "dojo-gates/big-read", "expect": "fire", "source": "field class (7 of 7 labeled correct), paraphrased", "file_path": "build.log", "setup": {"file_kb": 436}},
+    {"id": "silent-small-read", "hook": "dojo-gates/big-read", "expect": "silent", "source": "synthetic", "file_path": "notes.md", "setup": {"file_kb": 12}},
+    {"id": "silent-ranged-read", "hook": "dojo-gates/big-read", "expect": "silent", "source": "synthetic", "file_path": "build.log", "setup": {"file_kb": 436}, "read_args": {"offset": 100, "limit": 50}},
+
+    {"id": "fire-amend-pushed", "hook": "dojo-gates/pushed-rewrite", "expect": "fire", "source": "synthetic", "setup": {"git": "pushed"}, "command": "git commit --amend -m 'better message'"},
+    {"id": "silent-amend-unpushed", "hook": "dojo-gates/pushed-rewrite", "expect": "silent", "source": "synthetic", "setup": {"git": "unpushed"}, "command": "git commit --amend -m 'better message'"},
+
+    {"id": "fire-masked-check-then-commit", "hook": "dojo-gates/masked-exit", "expect": "fire", "source": "field class, paraphrased", "command": "pytest -q | tail -1 && git commit -qm 'fix'"},
+    {"id": "silent-pipefail-then-commit", "hook": "dojo-gates/masked-exit", "expect": "silent", "source": "synthetic", "command": "set -o pipefail; pytest -q | tail -1 && git commit -qm 'fix'"}
+  ]
+}

@@ -1,5 +1,44 @@
 # Changelog — dojo-genesis
 
+## Unreleased — 2.4.0 — hooks with measured accuracy
+
+Every firing of a suite hook in one maintainer's sessions (2–17 October, 382 firings) was labeled right or wrong
+against a written rubric by an independent labeler, with a second labeler on 30% (95% agreement). Before these
+fixes, dojo-verify's Stop block was right 3% of the time, config-first 30% and secret-print never. The fixes were
+made against half the firings and scored once on the other half. `ACCURACY.md` has the method, the rubric and both
+tables. It started from five misfires reported from one session on 2026-10-16.
+
+### Added
+
+- **A fixture suite for the hooks** — `scripts/hook_accuracy.py` runs each hook script on fixtures with known
+  answers (`plugins/<plugin>/fixtures/accuracy/`) and prints precision and recall per hook with 95% intervals;
+  `--hooks-from` measures another checkout against the same fixtures. Fixtures marked `known_miss` record errors the
+  hooks still make: they count, but don't fail the run.
+
+### Fixed
+
+- **`dojo-verify` 0.2.0** — counts the checks people actually run: a program that exits clean and prints PASS or ok
+  lines, `N passed`, `N/N pass`, `ALL PASS` or `0 failed`; `gh pr checks` and `gh run view/watch`; opening a rendered
+  image after a visual change. The agent's own memory and notes (a Write or Edit there, or a Bash write that names
+  them) no longer reset the evidence. Reads claims as the writer meant them: a leading negative covers its list
+  ("Nothing is committed, pushed or deployed"); blockquotes, quoted spans and list items under a "says:" or "wrote:"
+  line are someone else's words; "a paid verified review" and "Fixed scope" are adjectives; "works in", "Why it
+  works", "go to Done" and "Click Done" are other senses; "the builder reports 1737 passed" is attributed. The mod
+  mirrors every rule. On unseen sessions this removes 58% of its misfires and keeps every real catch; it is still
+  right only about one time in twelve.
+- **`dojo-gates` 0.2.0, config-first** — a line counts only when a program this command ran reports its own failure
+  in a known shape (`bash: x: command not found`, `cat: x: No such file or directory`, git's `fatal:` and
+  `warning:` path lines, `HTTP/1.1 401`, `connect ECONNREFUSED`), so printed docs, logs and source no longer fire it.
+  `ls`, `stat` and `test` answering whether a path exists, a missing path after a code error, an unsplit variable
+  run as a command, and a loop trying candidate programs are not configuration failures. A `cat` of a missing
+  config file now fires, where it was skipped before.
+- **`dojo-gates` 0.2.0, secret-print** — follows where the output goes: a value captured by `$(...)` for an
+  assignment or a program that doesn't print it, piped into `grep -c`, `wc`, `cut -d= -f1`, a `sed 's/=.*/…/'` mask
+  or `/dev/null`, an env file being written (`cat > .env`), and a loop variable bound to literal words no longer
+  deny. The shell parser records each substitution's parent segment so the guard can tell.
+- **`dojo-gates` 0.2.0, staging** — `git add -N` (intent to add) and `git add -n` (dry run) stage no content and no
+  longer deny.
+
 ## Unreleased — 2.3.0 — the desktop pass
 
 Found by running the mods in the Claude desktop app and recording what it draws (a census of every `ui.render` site it raised).

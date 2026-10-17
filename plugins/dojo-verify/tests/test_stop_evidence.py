@@ -948,7 +948,7 @@ class TestSequenceTable(Base):
             elif kind == "agent":
                 entries += [h.tool_use(tid, "Agent", {"prompt": "do it"}), h.tool_result(tid, "done")]
             elif kind == "memo":
-                entries += [h.tool_use(tid, "Write", {"file_path": "/Users/x/.claude/projects/-Users-x/memory/note.md",
+                entries += [h.tool_use(tid, "Write", {"file_path": "/srv/agent/.claude/projects/-srv-agent/memory/note.md",
                                                       "content": "x"}), h.tool_result(tid, "ok")]
             elif kind == "view":
                 entries += [h.tool_use(tid, "Read", {"file_path": "/work/out/logo.png"}), h.tool_result(tid, "image")]

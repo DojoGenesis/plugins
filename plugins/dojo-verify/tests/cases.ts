@@ -1862,7 +1862,7 @@ export const CASES: any = (
       "claim": false
     },
     {
-      "text": "OTH-143 goes to Done once both land.",
+      "text": "Issue 143 goes to Done once both land.",
       "mutated": true,
       "claim": false
     },
@@ -2997,7 +2997,7 @@ export const CASES: any = (
         ],
         [
           "run",
-          "cat >> ~/.claude/projects/-Users-x/memory/note.md <<'EOF'\n- learned\nEOF",
+          "cat >> ~/.claude/projects/-srv-agent/memory/note.md <<'EOF'\n- learned\nEOF",
           ""
         ]
       ],
@@ -3017,7 +3017,7 @@ export const CASES: any = (
         ],
         [
           "run",
-          "cat >> ~/.claude/projects/-Users-x/memory/note.md <<'EOF'\n- learned\nEOF\nsed -i '' s/a/b/ src/app.py",
+          "cat >> ~/.claude/projects/-srv-agent/memory/note.md <<'EOF'\n- learned\nEOF\nsed -i '' s/a/b/ src/app.py",
           ""
         ]
       ],
