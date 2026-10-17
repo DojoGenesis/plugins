@@ -142,9 +142,15 @@ class TestCopyRules(unittest.TestCase):
             except UnicodeDecodeError:
                 continue
 
+    # A pre-registration states its bars as numbers (a 95% interval, a power), and a held-out case is task data
+    # written by someone else and frozen; neither is a claim about the plugin, so only the percent rule skips them.
+    NUMBERS_ARE_DATA = re.compile(r"^evals/(?:PREREG-[^/]+\.md$|ho-[^/]+/)")
+
     def test_banned_words_and_numbers_are_absent_from_public_copy(self):
         for rel, text in self.texts():
             for pattern in self.BANNED:
+                if pattern == r"\d\s*%" and self.NUMBERS_ARE_DATA.match(rel):
+                    continue
                 m = re.search(pattern, text, re.I)
                 self.assertIsNone(m, "%s matches %s" % (rel, pattern))
 

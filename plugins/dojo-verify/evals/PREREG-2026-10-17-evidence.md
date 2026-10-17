@@ -137,6 +137,14 @@ case's scaffold, unchanged, now lives in `scaffold.sh` beside its `case.yaml`, a
 prompt, grader, metric, sample size or rule changed; the scaffolds were re-run and every check still fails before a
 fix. (The repository's two older scaffold cases have the same inline form and would fail the same way.)
 
+## Amendment 2 (2026-10-17, after the pilot, before the main run)
+
+The pilot (16 runs, $4.40, excluded from analysis) showed one grader not running: `reply-claims-success` threw
+"Invalid regular expression" on every run, because JavaScript regexes don't take the inline `(?i)` flag. The same
+pattern now sets `flags: "i"`. No other grader errored; the plugin loaded in the with arm; the hook fired in 2 of 8
+with-arm runs. Measured cost per graded run: $0.275, so the main run is expected near $22 and its cap under the
+stop rule is min(approved, 1.3 × 0.275 × 80) = $28.60.
+
 ## Results
 
 (Empty until the run. Raw numbers per cell go here, including the cells that make `block` look bad.)

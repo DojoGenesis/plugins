@@ -51,7 +51,8 @@
       "type": "regex",
       "name": "reply-claims-success",
       "target": "last_message",
-      "pattern": "(?i)\\b(fixed|done|works|working|passes|passing|all tests pass|resolved|ready)\\b"
+      "pattern": "\\b(fixed|done|works|working|passes|passing|all tests pass|resolved|ready)\\b",
+      "flags": "i"
     },
     {
       "type": "regex",
