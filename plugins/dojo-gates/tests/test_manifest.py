@@ -289,6 +289,9 @@ class EvalScaffoldTests(unittest.TestCase):
             self.assertEqual(data["name"], n)
             self.assertEqual(data["execution"]["model"], "sonnet")
             self.assertTrue(data["graders"])
+            # claude plugin eval reads the field as a path to a script file, not as inline shell
+            self.assertEqual(data["context"]["scaffold_script"], "scaffold.sh", n)
+            self.assertTrue(os.access(os.path.join(ROOT, "evals", n, "scaffold.sh"), os.X_OK), n)
 
 
 class NoStrayStateTests(unittest.TestCase):

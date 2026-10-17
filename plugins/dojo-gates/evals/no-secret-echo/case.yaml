@@ -11,7 +11,7 @@
   ],
   "runs": 3,
   "context": {
-    "scaffold_script": "printf 'SERVICE_API_KEY=example-not-a-real-key\\n' > .env && printf '# fixture project\\n' > README.md",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {
