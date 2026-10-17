@@ -33,9 +33,12 @@ class Word(object):
 class Seg(object):
     """stdin: the text of expanding heredoc bodies fed to this command (the part
     a shell would expand). opens/closes: how many `(` subshell groups start
-    before this segment and how many end after it."""
+    before this segment and how many end after it. captured: this segment runs
+    inside a command substitution (`$(...)` or backticks), so the shell captures
+    what it prints; parent: the segment that substitution belongs to."""
 
-    __slots__ = ("words", "op_before", "op_after", "nested", "depth", "stdin", "opens", "closes")
+    __slots__ = ("words", "op_before", "op_after", "nested", "depth", "stdin", "opens", "closes",
+                 "captured", "parent")
 
     def __init__(self, words, op_before="", op_after="", nested=False, depth=0):
         self.words = words
@@ -46,6 +49,8 @@ class Seg(object):
         self.stdin = ""
         self.opens = 0
         self.closes = 0
+        self.captured = False
+        self.parent = None
 
 
 _PLAIN = re.compile(r"[^\s'\"\\$`|&;()<>#]+")
@@ -240,6 +245,7 @@ class _Lexer(object):
         self.pending = []
         self.opens = 0
         self.skip_close = 0
+        self.open_subs = []
 
     # -- word and segment bookkeeping ------------------------------------
     def _begin(self, pos):
@@ -263,6 +269,9 @@ class _Lexer(object):
     def _end_seg(self, op):
         if self.words:
             seg = Seg(self.words, self.last_op, op, self.nested, self.depth)
+            for sub in self.open_subs:
+                sub.parent = seg
+            self.open_subs = []
             seg.opens = self.opens
             self.opens = 0
             if op == ")":
@@ -285,9 +294,20 @@ class _Lexer(object):
                 self.segs[-1].op_after = op
             self.last_op = op
 
-    def _sub(self, inner):
+    def _sub(self, inner, owner=None, captured=True):
+        """Lex a substitution's command. Its own segments get `parent`: the heredoc's owner when given, else the
+        segment being lexed (set when that segment ends). A process substitution (`<(...)`) is not captured: its
+        output becomes a file the parent reads."""
         if self.depth < _MAX_NEST and inner.strip():
-            self.extras.extend(tokenize_safe(inner, True, self.depth + 1))
+            segs = tokenize_safe(inner, True, self.depth + 1)
+            for sub in segs:
+                if sub.parent is None:
+                    sub.captured = captured
+                    if owner is not None:
+                        sub.parent = owner
+                    else:
+                        self.open_subs.append(sub)
+            self.extras.extend(segs)
 
     # -- quoted regions ---------------------------------------------------
     def _dq(self):
@@ -366,7 +386,7 @@ class _Lexer(object):
                     if k < 0:
                         break
                     j = _match_paren(blob, k + 2)
-                    self._sub(blob[k + 2:j])
+                    self._sub(blob[k + 2:j], self.segs[owner] if owner < len(self.segs) else None)
                     k = j + 1
                 k = 0
                 while True:
@@ -376,7 +396,7 @@ class _Lexer(object):
                     j = blob.find("`", k + 1)
                     if j < 0:
                         j = len(blob)
-                    self._sub(blob[k + 1:j])
+                    self._sub(blob[k + 1:j], self.segs[owner] if owner < len(self.segs) else None)
                     k = j + 1
         self.pending = []
         return i
@@ -390,7 +410,7 @@ class _Lexer(object):
             # process substitution
             self._begin(i)
             j = _match_paren(s, i + 2)
-            self._sub(s[i + 2:j])
+            self._sub(s[i + 2:j], captured=False)
             self.t.append(s[i:j + 1])
             self.l.append(s[i:j + 1])
             return j + 1

@@ -127,6 +127,9 @@ class StagingTests(GuardCase):
         "$(true) $(true) git commit -am x",
     ]
     ALLOW = [
+        "git add -N .",
+        "git add --intent-to-add .",
+        "git add -n .",
         "git stage src/a.py",
         "git add :/src",
         "git add ':(top)src'",
@@ -537,6 +540,13 @@ class SecretPrintTests(GuardCase):
         "printf '%s\\n' \"$STRIPE_SECRET\"",
         "printenv AWS_SECRET_ACCESS_KEY",
         "echo $PUBLIC_KEY_SECRET",
+        # a value that still reaches the conversation through a pipe, a substitution or a heredoc
+        "env | sort",
+        "env | grep TOKEN",
+        "printenv | cut -d= -f2",
+        'echo "token: $(grep ^API_KEY= .env)"',
+        "cat <<EOF\n$(printenv)\nEOF",
+        "grep ^API_KEY= .env | cut -d= -f2-",
     ]
     ALLOW = [
         "echo ${API_KEY:+set}",
@@ -599,6 +609,18 @@ class SecretPrintTests(GuardCase):
         "echo KEY_NAME",
         "cat README.md",
         "ls | head",
+        # field misfires (22 of 22 labeled wrong): the value is captured, counted, masked, discarded or never read
+        "TOK=$(grep '^BWS_ACCESS_TOKEN=' ~/.hermes/.env | cut -d= -f2-) bws secret list -o json",
+        'T="$(BWS_ACCESS_TOKEN="$(grep ^BWS_ACCESS_TOKEN= .env | cut -d= -f2-)" bws secret get x)" npx wrangler deploy',
+        "printenv | cut -d= -f1 | grep -i '^CLAUDE'",
+        "env | grep '^GIT_SSH' | sed 's/=.*/=<set>/'",
+        "printenv BWS_ACCESS_TOKEN >/dev/null 2>&1 && echo set || echo unset",
+        "env | grep -c -E '^(GH_|GITHUB_)TOKEN'",
+        "grep '^PW=' .env | cut -d= -f2 | wc -c",
+        "cat > config/.env <<EOF\nexport APP=1\nEOF",
+        'for pat in "25,000 per return" "4137"; do echo "== $pat"; grep -h -F "$pat" notes.md; done',
+        '[ -n "$(grep ^API_KEY= .env)" ] && echo present',
+        "env | awk -F= '{print $1}'",
     ]
 
     def test_deny(self):

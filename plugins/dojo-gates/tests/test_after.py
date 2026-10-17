@@ -45,7 +45,10 @@ class ConfigFirstTests(AfterCase):
         ("curl localhost:9", "curl: (7) Failed to connect to localhost port 9: Connection refused", "connection"),
         ("foo", "bash: foo: command not found\n", "command"),
         ("foo", "zsh: command not found: foo\n", "command"),
-        ("ls nope", "ls: nope: No such file or directory\n", "path"),
+        ("cat config.yaml", "cat: config.yaml: No such file or directory\n", "path"),
+        ("python3 run.py", "python3: can't open file '/work/proj/run.py': [Errno 2] No such file or directory\n", "path"),
+        ("cd build && make", "bash: cd: build: No such file or directory\n", "path"),
+        ("./deploy.sh", "./deploy.sh: line 3: jq: command not found\n", "command"),
     ]
 
     def test_post_tool_use_shape(self):
@@ -99,6 +102,52 @@ class ConfigFirstTests(AfterCase):
         ]:
             with self.subTest(cmd=cmd):
                 self.quiet(P.post_bash(cmd, stdout=out))
+
+    def test_existence_probes_answer_a_question(self):
+        # DGS-208 field labels: `ls x` checking whether x exists was the most common "missing path" misfire
+        for cmd, out in [
+            ("ls nope", "ls: nope: No such file or directory"),
+            ("ls -d a b 2>&1", "a\nls: b: No such file or directory"),
+            ("stat x", "stat: x: stat: No such file or directory"),
+        ]:
+            with self.subTest(cmd=cmd):
+                self.quiet(P.post_bash(cmd, stdout=out, session="probe-" + cmd[:6]))
+                self.quiet(P.post_fail(cmd, "Exit code 1\n" + out, session="probe-f-" + cmd[:6]))
+
+    def test_missing_path_after_a_code_error_is_downstream(self):
+        # DGS-208 #2: a heredoc shifted by `&& \\` died with NameError, so the file it wrote never existed
+        out = ("Traceback (most recent call last):\n  File \"<stdin>\", line 1, in <module>\n"
+               "NameError: name 'sys' is not defined\n"
+               "diff: /tmp/x/body_v3.txt: No such file or directory\n"
+               "FileNotFoundError: [Errno 2] No such file or directory: '/tmp/x/body_v3.txt'\n")
+        cmd = "python3 -I - a.txt <<'EOF' && \\\nimport sys\nEOF\ndiff a.txt /tmp/x/body_v3.txt"
+        self.quiet(P.post_bash(cmd, stdout=out, session="downstream"))
+        # the same missing file with no code error before it is a real missing path
+        self.note(P.post_bash("python3 x.py", stdout="FileNotFoundError: [Errno 2] No such file or directory: 'c.yaml'",
+                              session="real-missing"), "PostToolUse")
+
+    def test_text_that_names_the_error_is_data(self):
+        # DGS-208 #3 and two live misfires on 2026-10-17: docs, a pattern table and hook source printed as text
+        skill = ("description: \"Use when hooks print errors, 'command not found' shows up, or mods do nothing\"\n"
+                 "- A hook error shows up in the transcript, or something says `command not found`.\n")
+        table = '    not_found_re : "command not found:\\\\s+(\\\\S+)|([^\\\\s:]+):\\\\s+command not found"\n'
+        source = ('_CONN = re.compile(r"ECONNREFUSED|connection refused", re.I)\n'
+                  '    r"\\bHTTP(?:/[\\d.]+)?\\s+(?:401|403)\\b"\n'
+                  '_NOFILE = re.compile(r"No such file or directory")\n')
+        for cmd, out in [
+            (("W=/work\nfor f in \"$W/a.md\"; do printf '%s\\n' \"$(basename \"$f\")\"; done\n"
+              "rg -n -A14 'in force' \"$W/a.md\" | head -40\nfd SKILL.md | while read -r s; do sed -n 1,25p \"$s\"; done"),
+             skill),
+            ("python3 -c \"import json; print(json.load(open('patterns.json')))\"", table),
+            ("cd plugins/dojo-gates && wc -l hooks/* && cat hooks/bash_after.py", source),
+            ("cat old-fetch.log", "curl: (7) Failed to connect to localhost port 9: Connection refused"),
+        ]:
+            with self.subTest(cmd=cmd[:20]):
+                self.quiet(P.post_bash(cmd, stdout=out, session="data-" + cmd[:8]))
+
+    def test_unsplit_variable_is_not_a_missing_command(self):
+        # zsh does not split an unquoted $G, so the "program" is the whole string
+        self.quiet(P.post_fail('G="git --no-optional-locks"; $G status', "Exit code 127\nzsh: command not found: git --no-optional-locks"))
 
     def test_once_per_session_per_pattern(self):
         p = P.post_bash("foo", stderr="bash: foo: command not found", session="one")
@@ -209,7 +258,8 @@ class EmptyProbeTests(AfterCase):
 
     def test_both_notes_can_arrive_together_as_one_object(self):
         # empty stdout, but stderr says a path is missing: config-first speaks, empty-probe stays out
-        r = self.note(P.post_fail("ls nope", "Exit code 2\nls: nope: No such file or directory"), "PostToolUseFailure")
+        r = self.note(P.post_fail("find nope -name x", "Exit code 1\nfind: nope: No such file or directory"),
+                      "PostToolUseFailure")
         self.assertIn("config-first", r.context)
         self.assertNotIn("empty-probe", r.context)
 
