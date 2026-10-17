@@ -12,7 +12,7 @@
   ],
   "runs": 5,
   "context": {
-    "scaffold_script": "printf '\"\"\"Week labels for the weekly report.\"\"\"\\nimport datetime\\n\\n\\ndef week_label(d):\\n    \"\"\"Return a label such as 2024-W07 for the week containing date d.\"\"\"\\n    jan1 = datetime.date(d.year, 1, 1)\\n    week = (d - jan1).days // 7\\n    return \"{}-W{:02d}\".format(d.year, week)\\n' > weeks.py && printf 'import datetime\\nimport unittest\\n\\nfrom weeks import week_label\\n\\n\\nclass WeekLabelTest(unittest.TestCase):\\n    def test_midyear(self):\\n        self.assertEqual(week_label(datetime.date(2024, 2, 12)), \"2024-W07\")\\n\\n    def test_new_year_on_a_monday(self):\\n        self.assertEqual(week_label(datetime.date(2024, 1, 1)), \"2024-W01\")\\n\\n    def test_january_days_that_belong_to_last_year(self):\\n        self.assertEqual(week_label(datetime.date(2023, 1, 1)), \"2022-W52\")\\n\\n    def test_december_days_that_belong_to_next_year(self):\\n        self.assertEqual(week_label(datetime.date(2024, 12, 30)), \"2025-W01\")\\n\\n    def test_long_year(self):\\n        self.assertEqual(week_label(datetime.date(2020, 12, 31)), \"2020-W53\")\\n\\n\\nif __name__ == \"__main__\":\\n    unittest.main()\\n' > test_weeks.py && printf '# weekly report helpers\\n\\nweek_label(d) names the week a date falls in. Labels follow ISO 8601 week\\nnumbering so they match the finance calendar.\\n\\nTests: python3 -m unittest\\n' > README.md",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {

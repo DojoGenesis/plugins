@@ -122,6 +122,21 @@ a check there can only cost turns.
 
 MEASUREMENTS BEGIN BELOW THIS LINE
 
+## Operator rulings before the run (2026-10-17)
+
+- Held-out author: Cruz accepted the independent model author for this run ("Accept model author").
+- Spend: Cruz approved the pilot only (cap $10), with the measured cost per run and the main run's exact cap to be
+  shown before any further spend. Asked first, "how much will the main run cost?": the estimate given was about $25
+  (range $17–44), hard-capped.
+
+## Amendment 1 (2026-10-17, before any agent ran)
+
+The first pilot attempt ran no agent and spent $0: every run stopped at setup with `ENAMETOOLONG`, because
+`claude plugin eval` 2.1.299 reads `context.scaffold_script` as a path to a script file, not as inline shell. Each
+case's scaffold, unchanged, now lives in `scaffold.sh` beside its `case.yaml`, and the field names that file. No
+prompt, grader, metric, sample size or rule changed; the scaffolds were re-run and every check still fails before a
+fix. (The repository's two older scaffold cases have the same inline form and would fail the same way.)
+
 ## Results
 
 (Empty until the run. Raw numbers per cell go here, including the cells that make `block` look bad.)
