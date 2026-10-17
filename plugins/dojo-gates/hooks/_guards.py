@@ -16,6 +16,7 @@ from _common import message, override
 from _shell import (
     base,
     git_of,
+    redirect_arity,
     unwrap,
     verb,
 )
@@ -69,7 +70,15 @@ _WHOLE_TREE = (".", "./", ":/", ":/.", ":(top)", ":(top).", ":(top)/", ":(top)/.
 
 
 def parse_add(rest):
-    """True when `git add` arguments stage everything: -A, --all, `.`, `:/`."""
+    """True when `git add` arguments stage everything: -A, --all, `.`, `:/`. An intent-to-add (-N) or a dry run
+    (-n) stages no content."""
+    for w in rest:
+        t = w.text
+        if t == "--":
+            break
+        if t in ("--intent-to-add", "--dry-run") or (t.startswith("-") and not t.startswith("--") and
+                                                      ("N" in t[1:] or "n" in t[1:])):
+            return False
     after_dd = False
     for w in rest:
         t = w.text
@@ -592,27 +601,13 @@ def is_secret_name(name):
 _HERESTRING = re.compile(r"^\d*<<<$")
 
 
-def _plain_args(words):
-    """The segment's words without the text of a here-string."""
-    out = []
-    skip = False
-    for x in words:
-        if skip:
-            skip = False
-            continue
-        if _HERESTRING.match(x.text):
-            skip = True
-            continue
-        out.append(x)
-    return out
-
-
-def _secret_expansion(live):
-    """True when `live` expands a secret-shaped variable to its value."""
+def _secret_expansion(live, exclude=frozenset()):
+    """True when `live` expands a secret-shaped variable to its value. Names in `exclude` are loop variables
+    bound to literal words, whose values the command itself already shows."""
     for m in _EXPAND.finditer(live):
         name = m.group(1) or m.group(3)
         rest = m.group(2) or ""
-        if not is_secret_name(name):
+        if name in exclude or not is_secret_name(name):
             continue
         if m.group(1) and (rest.startswith("+") or rest.startswith(":+")):
             continue  # ${NAME:+word} yields the word, not the value
@@ -620,15 +615,119 @@ def _secret_expansion(live):
     return False
 
 
-def _stdin_secret(seg):
+def _stdin_secret(seg, exclude=frozenset()):
     """True when a here-string or an expanding heredoc feeds this command a secret's value."""
-    if _secret_expansion(seg.stdin):
+    if _secret_expansion(seg.stdin, exclude):
         return True
     ws = seg.words
     for k, x in enumerate(ws):
-        if _HERESTRING.match(x.text) and k + 1 < len(ws) and _secret_expansion(ws[k + 1].live):
+        if _HERESTRING.match(x.text) and k + 1 < len(ws) and _secret_expansion(ws[k + 1].live, exclude):
             return True
     return False
+
+
+def _read_args(words):
+    """The words a program reads: its arguments and input redirections (`cat < .env`), without output
+    redirections and their targets (`cat > .env` writes the file, it does not read it) or here-string text."""
+    out = []
+    skip = 0
+    for x in words:
+        if skip:
+            skip -= 1
+            continue
+        if _HERESTRING.match(x.text):
+            skip = 1
+            continue
+        ar = redirect_arity(x.text)
+        if ar is not None and ">" in x.text:
+            skip = ar
+            continue
+        out.append(x)
+    return out
+
+
+def _stdout_target(words):
+    """Where this segment's stdout is redirected: a path ('/dev/null' included), or None when it is shown."""
+    target = None
+    for k, x in enumerate(words):
+        t = x.text
+        ar = redirect_arity(t)
+        if ar is None:
+            continue
+        m = re.match(r"^(\d*)(&?)(?:>>|>\||>)", t)
+        if not m or (m.group(1) not in ("", "1") and not m.group(2)):
+            continue  # input, or stderr only (2>file)
+        if ar == 0:
+            continue  # >&2: still shown
+        if k + 1 < len(words):
+            target = words[k + 1].text
+    return target
+
+
+_MASK_SED = re.compile(r"^s(.)=\.\*\1")
+_HASHERS = frozenset(["wc", "md5", "md5sum", "shasum", "sha1sum", "sha256sum", "sha512sum", "cksum", "true", ":"])
+
+
+def _sanitizes(seg):
+    """True when this pipeline stage keeps values from being shown: a count, a hash, names only (`cut -d= -f1`,
+    `awk -F= '{print $1}'`), a mask (`sed 's/=.*/=<set>/'`), a quiet grep, or /dev/null."""
+    if _stdout_target(seg.words) == "/dev/null":
+        return True
+    w = unwrap(seg.words)
+    if not w:
+        return False
+    b = base(w[0].text)
+    args = [x.text for x in _read_args(w[1:])]
+    if b in _HASHERS:
+        return True
+    if b in _GREPS:
+        return _quiet_grep(w[1:])
+    joined = " ".join(args)
+    if b == "cut":
+        return bool(re.search(r"-d\s*=", joined)) and bool(re.search(r"-f\s*1(?![\d,-])", joined))
+    if b == "sed":
+        return any(_MASK_SED.match(a) for a in args)
+    if b in ("awk", "gawk"):
+        return bool(re.search(r"-F\s*=", joined)) and bool(re.search(r"print\s+\$1\s*[;}]", joined))
+    return False
+
+
+def _sanitized_downstream(segs, i):
+    """True when a later stage of the pipeline segment i sits in sanitizes what it prints."""
+    j = i
+    while j + 1 < len(segs) and segs[j].op_after in ("|", "|&") and segs[j + 1].op_before in ("|", "|&"):
+        j += 1
+        if _sanitizes(segs[j]):
+            return True
+    return False
+
+
+def _shown(seg):
+    """False when what this segment prints never reaches the conversation: it goes to /dev/null, or a command
+    substitution captures it for an assignment or a program that does not print it. A substitution inside an
+    echo or printf argument (or a heredoc a reader prints) is shown when that parent is."""
+    if _stdout_target(seg.words) == "/dev/null":
+        return False
+    if not seg.captured or seg.parent is None:
+        return True
+    pw = unwrap(seg.parent.words)
+    if not pw:
+        return False  # VAR=$(...): an assignment
+    pb = base(pw[0].text)
+    if pb in _OUTPUT_VERBS or pb in _STDIN_PRINTERS:
+        return _shown(seg.parent)
+    return False
+
+
+def _literal_loop_vars(segs):
+    """Names a `for x in ...` loop binds to literal words: their values are already written in the command."""
+    out = set()
+    for seg in segs:
+        w = seg.words
+        if (len(w) >= 3 and w[0].text == "for" and w[2].text == "in"
+                and all("$" not in x.live and "`" not in x.live for x in w[3:])):
+            out.add(w[1].text)
+    return frozenset(out)
 
 
 def _is_envfile(arg):
@@ -686,22 +785,25 @@ def secret_print(ctx):
         "Check that it's set without showing it: `[ -n \"$NAME\" ] && echo set`. "
         + override("secret-print")
     )
-    for seg in ctx.segs:
+    literal = _literal_loop_vars(ctx.segs)
+    for idx, seg in enumerate(ctx.segs):
         if not seg.words:
             continue
+        if not _shown(seg) or _sanitized_downstream(ctx.segs, idx):
+            continue  # captured, discarded, counted or masked before anything is shown
         w = unwrap(seg.words, stop_at=("env",))
         if not w:
             continue
         b = base(w[0].text)
         # the ${NAME:+..}${NAME:-..} idiom run as a command: the shell prints the value
-        if _secret_expansion(w[0].live):
+        if _secret_expansion(w[0].live, literal):
             return ("deny", message("secret-print", "expanding a secret-shaped variable as a command makes the shell echo its value", how))
         # a secret on stdin, handed to a program that writes its input back out
         if b in _STDIN_PRINTERS or b.startswith("python") or any(base(x.text) == "xargs" for x in seg.words):
-            if _stdin_secret(seg) and not (b in _GREPS and _quiet_grep(w[1:])):
+            if _stdin_secret(seg, literal) and not (b in _GREPS and _quiet_grep(w[1:])):
                 return ("deny", message("secret-print", "`%s` would write a secret fed to it on stdin back out, into the conversation" % b, how))
         if b in _OUTPUT_VERBS:
-            if any(_secret_expansion(x.live) for x in w[1:]):
+            if any(_secret_expansion(x.live, literal) for x in w[1:]):
                 # a file or a clipboard is no exception: the next command reads it back
                 return (
                     "deny",
@@ -722,12 +824,12 @@ def secret_print(ctx):
                 return ("deny", message("secret-print", "`env` on its own lists every variable, secrets included", "Name the one you need (`printenv PATH`). " + override("secret-print")))
             continue
         if b in _READERS:
-            for x in _plain_args(seg.words):
+            for x in _read_args(seg.words):
                 if not x.text.startswith("-") and _is_envfile(x.text):
                     return ("deny", message("secret-print", "reading a .env file %s" % why, "Read the `.env.example` instead, or check one variable with `[ -n \"$NAME\" ] && echo set`. " + override("secret-print")))
             continue
         if b in _GREPS:
-            files = [x for x in _plain_args(seg.words) if not x.text.startswith("-") and _is_envfile(x.text)]
+            files = [x for x in _read_args(seg.words) if not x.text.startswith("-") and _is_envfile(x.text)]
             if files and not _quiet_grep(w[1:]):
                 return ("deny", message("secret-print", "searching a .env file prints the matching line, value included", "Use `grep -q` or `grep -c` to test for presence. " + override("secret-print")))
     return None
