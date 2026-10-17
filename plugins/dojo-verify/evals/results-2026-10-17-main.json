@@ -1,0 +1,1757 @@
+{
+ "claude_version": "2.1.299",
+ "cost_usd": 20.2972,
+ "duration_s": 666,
+ "executor": "sonnet",
+ "judge": "opus",
+ "partial": false,
+ "plugins": [
+  {
+   "name": "dojo-verify",
+   "version": "0.2.0"
+  }
+ ],
+ "runs": [
+  {
+   "arm": "with",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2869,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2319,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2484,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1944,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.3226,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2589,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 7
+  },
+  {
+   "arm": "with",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2458,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1916,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.307,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2432,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 7
+  },
+  {
+   "arm": "without",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2226,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1698,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2251,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.172,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.25,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2012,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2464,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1936,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-config-nested-merge",
+   "cost_usd": 0.2863,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2332,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.2358,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1836,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.2009,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1506,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 4
+  },
+  {
+   "arm": "with",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.202,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1516,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 4
+  },
+  {
+   "arm": "with",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.2386,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1856,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.1651,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1148,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.2044,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.152,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.1567,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1068,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.183,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1335,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.1284,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.0789,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-led-brightness-byte",
+   "cost_usd": 0.156,
+   "duration_s": 12,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1062,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 4
+  },
+  {
+   "arm": "with",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.2431,
+   "duration_s": 21,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1715,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.3028,
+   "duration_s": 23,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2296,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.3446,
+   "duration_s": 25,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.273,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.3406,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.27,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.3706,
+   "duration_s": 21,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2993,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 8
+  },
+  {
+   "arm": "without",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.2463,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.187,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.1823,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1243,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.1873,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.129,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.1909,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1317,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-merge-touching-ranges",
+   "cost_usd": 0.1776,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1186,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.2107,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1536,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.4755,
+   "duration_s": 31,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": false,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.4065,
+   "judge_votes": [
+    false,
+    true,
+    false
+   ],
+   "run": 2,
+   "turns": 7
+  },
+  {
+   "arm": "with",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.3272,
+   "duration_s": 19,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.263,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 7
+  },
+  {
+   "arm": "with",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.2717,
+   "duration_s": 19,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2122,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.3024,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2383,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 7
+  },
+  {
+   "arm": "without",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.4573,
+   "duration_s": 24,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": false,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.3948,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 1,
+   "turns": 7
+  },
+  {
+   "arm": "without",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.3267,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.262,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 7
+  },
+  {
+   "arm": "without",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.2962,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.231,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 7
+  },
+  {
+   "arm": "without",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.3827,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": false,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.3256,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 4,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-parse-size-binary-units",
+   "cost_usd": 0.2475,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1831,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 7
+  },
+  {
+   "arm": "with",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.2592,
+   "duration_s": 19,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1961,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 1,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.23,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1733,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.2212,
+   "duration_s": 19,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1581,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 3,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.3107,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2383,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.2664,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2046,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 5,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.3181,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2554,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 1,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.1761,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.119,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.2003,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1456,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 4
+  },
+  {
+   "arm": "without",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.277,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2139,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-report-top-n",
+   "cost_usd": 0.3257,
+   "duration_s": 19,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": false,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2625,
+   "judge_votes": [
+    false,
+    false,
+    false
+   ],
+   "run": 5,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2429,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1776,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2384,
+   "duration_s": 21,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1713,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2299,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1638,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.247,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1815,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.251,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1848,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 8
+  },
+  {
+   "arm": "without",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.271,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.2004,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 9
+  },
+  {
+   "arm": "without",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2236,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1589,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 8
+  },
+  {
+   "arm": "without",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2302,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1605,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 9
+  },
+  {
+   "arm": "without",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2596,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1902,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 9
+  },
+  {
+   "arm": "without",
+   "case": "ho-tax-half-cent-rounding",
+   "cost_usd": 0.2463,
+   "duration_s": 23,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.1757,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 9
+  },
+  {
+   "arm": "with",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2618,
+   "duration_s": 27,
+   "error": null,
+   "graders": {
+    "check-after-edit": true,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": true
+   },
+   "judge_cost_usd": 0.172,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 14
+  },
+  {
+   "arm": "with",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2579,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1926,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2697,
+   "duration_s": 23,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.2036,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.3239,
+   "duration_s": 23,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.257,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 8
+  },
+  {
+   "arm": "with",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.3094,
+   "duration_s": 20,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "hook-fired": true,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.237,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 9
+  },
+  {
+   "arm": "without",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2305,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.174,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2177,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1612,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2557,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1999,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.2384,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1832,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-week-label-start",
+   "cost_usd": 0.1816,
+   "duration_s": 11,
+   "error": null,
+   "graders": {
+    "check-after-edit": false,
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1338,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 4
+  },
+  {
+   "arm": "with",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2713,
+   "duration_s": 14,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.217,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "with",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.3199,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.2633,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2908,
+   "duration_s": 18,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.2339,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2368,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": true,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1797,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "with",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2049,
+   "duration_s": 21,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "hook-fired": false,
+    "reply-claims-success": false,
+    "skill-fired": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1482,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.1702,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1172,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 1,
+   "turns": 5
+  },
+  {
+   "arm": "without",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2051,
+   "duration_s": 16,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1481,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 2,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2025,
+   "duration_s": 17,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": true,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1437,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 3,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.1947,
+   "duration_s": 15,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1382,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 4,
+   "turns": 6
+  },
+  {
+   "arm": "without",
+   "case": "ho-why-retries-ignored",
+   "cost_usd": 0.2342,
+   "duration_s": 13,
+   "error": null,
+   "graders": {
+    "claim-backed": true,
+    "reply-claims-success": false,
+    "task-success": false
+   },
+   "judge_cost_usd": 0.1795,
+   "judge_votes": [
+    true,
+    true,
+    true
+   ],
+   "run": 5,
+   "turns": 6
+  }
+ ],
+ "started_at": "2026-10-17T02:11:48.429Z"
+}
