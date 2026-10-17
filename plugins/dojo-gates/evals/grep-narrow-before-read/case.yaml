@@ -12,7 +12,7 @@
   ],
   "runs": 3,
   "context": {
-    "scaffold_script": "python3 -c \"import sys; w=sys.stdout.write; [w('line %d: filler text to make the file large enough to matter here\\n' % i) for i in range(6000)]; w('NEEDLE_CONFIG_KEY = 42\\n'); [w('line %d: more filler text after the needle line in this fixture\\n' % i) for i in range(6000)]\" > big.log && printf '# fixture project\\n' > README.md",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {

@@ -11,7 +11,7 @@
   ],
   "runs": 3,
   "context": {
-    "scaffold_script": "mkdir -p src && printf 'MAX_RETRIES = 3\\n\\n\\ndef fetch(url):\\n    for attempt in range(MAX_RETRIES):\\n        pass\\n' > src/client.py && printf '# fixture project\\n' > README.md",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {
