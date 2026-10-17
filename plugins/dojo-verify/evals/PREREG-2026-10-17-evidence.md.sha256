@@ -1,0 +1,8 @@
+dojo-settle prereg digest
+sha256: d5cac861200cbb102150daa64bac28ccc4774bd5ea1cd8cfd133d21666c4feba
+bytes: 7625
+lines: 122
+file: PREREG-2026-10-17-evidence.md
+recorded_at_utc_local_clock: 2026-10-17T02:01:48Z
+region: bytes before the first marker line; BOM dropped, CRLF as LF
+note: this sidecar can be rewritten along with the document; record the sha256 elsewhere
