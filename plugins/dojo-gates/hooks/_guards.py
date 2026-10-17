@@ -713,6 +713,8 @@ def _shown(seg):
     pw = unwrap(seg.parent.words)
     if not pw:
         return False  # VAR=$(...): an assignment
+    if _sanitizes(seg.parent):
+        return False  # grep -q "$(...)", wc -c <<< "$(...)": the parent shows nothing of it
     pb = base(pw[0].text)
     if pb in _OUTPUT_VERBS or pb in _STDIN_PRINTERS:
         return _shown(seg.parent)

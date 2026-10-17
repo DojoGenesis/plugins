@@ -621,6 +621,7 @@ class SecretPrintTests(GuardCase):
         'for pat in "25,000 per return" "4137"; do echo "== $pat"; grep -h -F "$pat" notes.md; done',
         '[ -n "$(grep ^API_KEY= .env)" ] && echo present',
         "env | awk -F= '{print $1}'",
+        'grep -qF "$(printf %s "$DB_PASSWORD")" dump.sql && echo LEAK || echo clean',
     ]
 
     def test_deny(self):

@@ -49,6 +49,7 @@ class ConfigFirstTests(AfterCase):
         ("python3 run.py", "python3: can't open file '/work/proj/run.py': [Errno 2] No such file or directory\n", "path"),
         ("cd build && make", "bash: cd: build: No such file or directory\n", "path"),
         ("./deploy.sh", "./deploy.sh: line 3: jq: command not found\n", "command"),
+        ("git -C .. status lines/worlds", "warning: could not open directory 'lines/lines/': No such file or directory\n", "path"),
     ]
 
     def test_post_tool_use_shape(self):

@@ -62,7 +62,7 @@ _NOFILE_SHAPES = (
     re.compile(r"^(?P<who>\S*python[\d.]*): can't open file '[^']*': \[Errno 2\] No such file or directory"),
     re.compile(r"^(?P<who>FileNotFoundError|IOError|OSError): \[Errno 2\] No such file or directory"),
     re.compile(r"(?P<who>ENOENT): no such file or directory\b"),
-    re.compile(r"(?:^|\s)(?P<who>fatal|error): .*No such file or directory\s*$", re.IGNORECASE),
+    re.compile(r"(?:^|\s)(?P<who>fatal|error|warning): .*No such file or directory\s*$", re.IGNORECASE),
     re.compile(r"^(?P<who>[^\s:]+)(?::\s*line\s+\d+)?(?::\s*[\w.-]+)?: .+?: No such file or directory\s*$"),
     re.compile(r"^(?P<who>[^\s:]+)(?::\d+)?: no such file or directory: \S.*$"),
 )
@@ -193,7 +193,7 @@ def _missing_path(line, progs, active):
         if not m:
             continue
         who = os.path.basename(m.group("who").lstrip("-"))
-        if who.lower() in ("fatal", "error"):
+        if who.lower() in ("fatal", "error", "warning"):
             who = who.lower()
         if who in _EXISTENCE_PROBES:
             return False  # `ls x` answering whether x exists
@@ -201,7 +201,9 @@ def _missing_path(line, progs, active):
             return True
         if who in ("FileNotFoundError", "IOError", "OSError"):
             return any(_PY_RUNNERS.match(p) for p in progs)
-        if who in ("ENOENT", "fatal", "error"):
+        if who in ("fatal", "error", "warning"):
+            return active or "git" in progs  # git reports its own path failures this way, even status
+        if who == "ENOENT":
             return active
         return who in progs
     return False
