@@ -1,0 +1,36 @@
+{
+ "about": "Hand-derived answers for sessions/: one main session of four turns and one subagent transcript. Derived from the fixture's design, not by running the report.",
+ "counters": {
+  "bash_results": 5,
+  "big_reads": 0,
+  "claims_unbacked": 1,
+  "config_first": 1,
+  "dispatches": 2,
+  "empty_probe": 1,
+  "failed": 1,
+  "fan_outs": 1,
+  "irreversible": 1,
+  "irreversible_sends": 0,
+  "pre_denied_recorded": 0,
+  "pre_static": 1,
+  "probes_run": 2,
+  "reads": 1,
+  "returned": 1,
+  "silent": 0,
+  "turns_judged": 4,
+  "turns_with_change": 4,
+  "unpinned": 1,
+  "writes": 2,
+  "writes_unread": 1
+ },
+ "findings_by_detector": {
+  "dojo-gates/config-first:path": 1,
+  "dojo-gates/empty-probe": 1,
+  "dojo-gates/staging": 1,
+  "dojo-router/unpinned": 1,
+  "dojo-tally/failed": 1,
+  "dojo-verify/stop": 1,
+  "irreversible": 1,
+  "write over an unread file": 1
+ }
+}
