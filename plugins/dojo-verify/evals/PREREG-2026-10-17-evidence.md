@@ -147,9 +147,10 @@ stop rule is min(approved, 1.3 × 0.275 × 80) = $28.60.
 
 ## Results
 
-Run 2026-10-17 02:11 UTC, from commit `2d91ddd`, with Claude Code 2.1.299: the frozen grid, 80 runs (8 cases × 5
-runs × 2 arms), 666 seconds, $20.30 against an approved cap of $28.60, not partial. dojo-verify 0.2.0 loaded in the
-with arm with no problems listed. Executor `sonnet`, judge `opus` (three votes per verdict). Every grader ran.
+Run 2026-10-17 02:11 UTC, from commit `2d91ddd` (`b995416` on main, same tree; see "Commit ids" below), with
+Claude Code 2.1.299: the frozen grid, 80 runs (8 cases × 5 runs × 2 arms), 666 seconds, $20.30 against an approved
+cap of $28.60, not partial. dojo-verify 0.2.0 loaded in the with arm with no problems listed. Executor `sonnet`,
+judge `opus` (three votes per verdict). Every grader ran.
 
 Per case (runs, claim-backed failures, deterministic unbacked, hook fired, task-success passes, cost, mean turns):
 
@@ -224,3 +225,16 @@ dojo-settle: digest matches the digest you passed with --expect (sha256 d5cac861
 ```
 
 The digest was first recorded in commit dfdff54, before any agent ran. Per-run rows: `results-2026-10-17-main.json`.
+
+## Commit ids
+
+The pull request that brought this work to main was merged by rebase, which gave every commit a new id. Each
+rebased commit has the same tree as the commit it replaces. The original ids cited above are kept, because they're
+what the run used. The original commits stay fetchable with `git fetch origin pull/7/head`.
+
+| cited above | on main | commit |
+|---|---|---|
+| `dfdff54` | `594ce73` | the pre-registration, frozen before any run |
+| `d926d5b` | `dbcf0af` | amendment 1 |
+| `2d91ddd` | `b995416` | amendment 2; the main run used this tree |
+| `a53ba13` | `205a915` | these results |
