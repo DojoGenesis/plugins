@@ -18,9 +18,9 @@ cleared) and records what it did. Nothing is mocked and nothing leaves the machi
 checkout's hooks against the same fixtures, which is how the "before" column below was made. Two runs on the same
 tree give the same JSON (`--json`); a test checks that.
 
-Fixtures come from three places, and each says which in its `source` field: the five misfires reported from one session on 2026-10-16, the misfire
-classes found in the field sample (paraphrased, every private detail removed), and synthetic cases written to test a
-rule. A fixture marked `known_miss` records an error the hooks still make; it counts in the table but doesn't fail
+Fixtures come from three places, and each says which in its `source` field: the eight misfires reported from one
+session on 2026-10-16, the misfire classes found in the field sample (paraphrased, every private detail removed), and
+synthetic cases written to test a rule. A fixture marked `known_miss` records an error the hooks still make; it counts in the table but doesn't fail
 the run, so the suite is a gate for new disagreements and an honest list of old ones.
 
 Read this table for what it is. The fixtures were written from the misfire classes while the fixes were being made,
@@ -29,7 +29,7 @@ do on work nobody has seen. Section 2 has that number.
 
 | hook | fixtures | before: precision / recall | after: precision / recall |
 |---|---|---|---|
-| dojo-verify (Stop) | 34 | 36% / 100% | 71% / 100% |
+| dojo-verify (Stop) | 37 | 32% / 100% | 62% / 100% |
 | config-first: auth | 28 | 75% / 100% | 100% / 100% |
 | config-first: cmd | 28 | 33% / 100% | 100% / 100% |
 | config-first: conn | 28 | 50% / 100% | 67% / 100% |
@@ -79,6 +79,10 @@ The held-out half, replayed through the old and the new hooks:
 | config-first: auth | 6 / 1 | 6 / 0 | 86% → 100% (61–100) |
 | config-first: cmd | 0 / 2 | 0 / 0 | — |
 | secret-print | 0 / 11 | 0 / 2 | 0% → 0% |
+
+Two dojo-gates changes came after this replay was scored, prompted by what it showed: config-first now counts git's
+own `warning:` line about a missing path, and secret-print ignores a value printed inside `$(...)` that only feeds
+`grep -q`. The held-out figures are from before those two changes, so only the fixture suite tests them.
 
 What that says:
 
@@ -135,7 +139,7 @@ measured the rule's effect. "Field" figures are from section 2; "fixtures" from 
 | 2. Scout before you touch | Claude Code itself (Edit refuses a file not read in the session); the `scout-first` skill and scout agent advise | Not a hook of ours, not measured | No eval run; scaffolds in dojo-protocol |
 | 3. Keep context small | dojo-gates big-read (denies a whole read over 256 KB) | Field 7 of 7 right (95% CI 65–100%); fixtures 100% / 100% | No eval run; scaffolds in dojo-gates and dojo-protocol |
 | 4. Contract before fan-out | dojo-flow's `dag-plan` refuses tracks that share a file or claim the contract file (a script run before a build, not a hook); the `contract` skill advises | Not measured | No eval run; scaffold `build-refuses-overlap` |
-| 5. Done means verified | dojo-verify Stop hook (blocks by default) and its evidence skill; dojo-tally flags agent reports that cite a check they never ran | Field 3% before the fixes (7 of 215); held-out 8% after (4 of 48, CI 3–20%), every real catch kept; fixtures 71% / 100% | **Measured once:** pre-registered with/without eval, 30 runs per arm. No benefit detected (unbacked claims 5/30 without, 4/30 with; difference CI −16 to +22 points), extra cost on controls (×1.29). The hook missed all four unbacked claims in the with arm |
+| 5. Done means verified | dojo-verify Stop hook (blocks by default) and its evidence skill; dojo-tally flags agent reports that cite a check they never ran | Field 3% before the fixes (7 of 215); held-out 8% after (4 of 48, CI 3–20%), every real catch kept; fixtures 62% / 100% | **Measured once:** pre-registered with/without eval, 30 runs per arm. No benefit detected (unbacked claims 5/30 without, 4/30 with; difference CI −16 to +22 points), extra cost on controls (×1.29). The hook missed all four unbacked claims in the with arm |
 | 6. Count returns, not dispatches | dojo-tally mod (dispatched, returned, failed, silent, unchecked); dojo-flow's scorecard | Not measured | No eval run; scaffold `scorecard-counts-dead-agent` |
 | 7. Debug by disproof | Nothing at runtime; skill guidance only | n/a | No eval |
 | 8. Config before code | dojo-gates config-first (adds context after a boundary failure) | Field 30% before (22 of 73); held-out after: auth 6 of 6, path 3 of 6, cmd no firings; fixtures path 86% / 75%, conn 67% / 100%, auth and cmd 100% / 100% | No eval |
