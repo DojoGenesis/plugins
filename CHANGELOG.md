@@ -2,11 +2,11 @@
 
 ## Unreleased — 2.4.0 — hooks with measured accuracy
 
-Every firing of a suite hook in one maintainer's sessions (2–17 October, 382 firings) was labeled right or wrong
-against a written rubric by an independent labeler, with a second labeler on 30% (95% agreement). Before these
-fixes, dojo-verify's Stop block was right 3% of the time, config-first 30% and secret-print never. The fixes were
-made against half the firings and scored once on the other half. `ACCURACY.md` has the method, the rubric and both
-tables. It started from five misfires reported from one session on 2026-10-16.
+Every firing of a dojo-verify or dojo-gates hook in one maintainer's sessions (2–17 October UTC, 382 firings) was
+labeled right or wrong against a written rubric by an independent labeler, with a second labeler on 30% (95%
+agreement). Before these fixes, dojo-verify's Stop block was right 3% of the time, config-first 30% and secret-print
+never. The fixes were made against half the firings and scored once on the other half. `ACCURACY.md` has the
+method, the rubric and the tables. It started from five misfires reported from one session on 2026-10-16.
 
 ### Added
 
@@ -14,6 +14,15 @@ tables. It started from five misfires reported from one session on 2026-10-16.
   answers (`plugins/<plugin>/fixtures/accuracy/`) and prints precision and recall per hook with 95% intervals;
   `--hooks-from` measures another checkout against the same fixtures. Fixtures marked `known_miss` record errors the
   hooks still make: they count, but don't fail the run.
+- **A pre-registered with/without eval of dojo-verify's Stop block** —
+  `plugins/dojo-verify/evals/PREREG-2026-10-17-evidence.md`, frozen before any run, with eight held-out cases. Its
+  result, below the marker: no benefit detected, and its rule says the default should be `warn`. The default stays
+  `block` until that is decided.
+- **A runtime health report** — `scripts/health_report.py` replays local Claude Code transcripts through the suite's
+  own detector code and reports, per rule, what it counted and out of how many, with each finding's evidence and
+  each detector's measured accuracy beside it. The same input gives byte-identical output.
+- **A rule-by-rule table** in `ACCURACY.md`: for each of the ten rules, what checks it at runtime, how accurate that
+  check is, and what has measured the rule's effect.
 
 ### Fixed
 
