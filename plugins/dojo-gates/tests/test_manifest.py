@@ -57,7 +57,7 @@ class PluginJsonTests(unittest.TestCase):
     def test_fields(self):
         pj = self.pj
         self.assertEqual(pj["name"], "dojo-gates")
-        self.assertEqual(pj["version"], "0.1.0")
+        self.assertEqual(pj["version"], "0.2.0")
         self.assertEqual(pj["description"], PROMISE)
         self.assertLessEqual(len(pj["description"]), 200)
         self.assertEqual(pj["author"], {"name": "Dojo Genesis", "email": "cruz@trespiesdesign.com"})

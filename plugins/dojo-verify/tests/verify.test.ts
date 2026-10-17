@@ -671,7 +671,7 @@ for (const row of CASES.sequences as Array<{ name: string; steps: string[][]; te
       } else if (kind === 'agent') {
         await $.tool.call({ tool: 'Agent', prompt: 'do it' } as any)
       } else if (kind === 'memo') {
-        await $.tool.call({ tool: 'Write', file_path: '/Users/x/.claude/projects/-Users-x/memory/note.md', content: 'x' } as any)
+        await $.tool.call({ tool: 'Write', file_path: '/srv/agent/.claude/projects/-srv-agent/memory/note.md', content: 'x' } as any)
       } else if (kind === 'view') {
         await $.tool.call({ tool: 'Read', file_path: '/work/out/logo.png' } as any)
       } else {

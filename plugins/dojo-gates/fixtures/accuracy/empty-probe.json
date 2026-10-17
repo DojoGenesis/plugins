@@ -1,0 +1,25 @@
+{
+  "hook": "dojo-gates/empty-probe",
+  "about": "empty-probe should fire when a search, lookup or existence probe printed nothing and showed no known-positive control, so its silence could be read as a negative finding. Text is synthetic.",
+  "cases": [
+    {"id": "fire-grep-nothing", "expect": "fire", "source": "field class, paraphrased",
+     "command": "grep -rniE \"draw, don't place|not placed\" . --include='*.md'", "stdout": ""},
+    {"id": "fire-rg-nothing", "expect": "fire", "source": "synthetic",
+     "command": "rg -n 'registerRoute' src/ --glob '!router.go'", "stdout": ""},
+    {"id": "fire-find-nothing", "expect": "fire", "source": "synthetic",
+     "command": "find . -name '*.orig'", "stdout": ""},
+    {"id": "fire-grep-exit-one", "expect": "fire", "source": "synthetic", "event": "PostToolUseFailure",
+     "command": "grep -n 'script src' search.html", "error": "Exit code 1"},
+    {"id": "silent-quiet-grep", "expect": "silent", "source": "synthetic",
+     "command": "grep -q TODO src/app.py", "stdout": ""},
+    {"id": "silent-grep-with-output", "expect": "silent", "source": "synthetic",
+     "command": "grep -rn TODO src/", "stdout": "src/app.py:12: # TODO handle retries"},
+    {"id": "silent-move-prints-nothing", "expect": "silent", "source": "synthetic",
+     "command": "mv build/out.zip dist/", "stdout": ""},
+    {"id": "silent-output-to-file", "expect": "silent", "source": "synthetic",
+     "command": "grep -rn TODO src/ > /tmp/todos.txt", "stdout": ""},
+    {"id": "borderline-render-then-error-grep", "expect": "fire", "borderline": true, "source": "field class (raters split), paraphrased",
+     "note": "A render piped to an error filter: read as a silent action or as an error search with no control.",
+     "command": "python3 render.py 2>&1 | grep -E 'rror|Traceback'", "stdout": ""}
+  ]
+}

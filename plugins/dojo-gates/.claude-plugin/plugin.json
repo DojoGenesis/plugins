@@ -1,6 +1,6 @@
 {
   "name": "dojo-gates",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Deterministic guards for the mistakes that waste a day: blanket staging, rewriting pushed commits, printing secrets, oversized reads, silent probes.",
   "author": {
     "name": "Dojo Genesis",

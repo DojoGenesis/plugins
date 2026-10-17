@@ -105,7 +105,7 @@ class ConfigFirstTests(AfterCase):
                 self.quiet(P.post_bash(cmd, stdout=out))
 
     def test_existence_probes_answer_a_question(self):
-        # DGS-208 field labels: `ls x` checking whether x exists was the most common "missing path" misfire
+        # field labels from the 2026-10-16 measurement: `ls x` checking whether x exists was the most common "missing path" misfire
         for cmd, out in [
             ("ls nope", "ls: nope: No such file or directory"),
             ("ls -d a b 2>&1", "a\nls: b: No such file or directory"),
@@ -116,7 +116,7 @@ class ConfigFirstTests(AfterCase):
                 self.quiet(P.post_fail(cmd, "Exit code 1\n" + out, session="probe-f-" + cmd[:6]))
 
     def test_missing_path_after_a_code_error_is_downstream(self):
-        # DGS-208 #2: a heredoc shifted by `&& \\` died with NameError, so the file it wrote never existed
+        # 2026-10-16 report, case 2: a heredoc shifted by `&& \\` died with NameError, so the file it wrote never existed
         out = ("Traceback (most recent call last):\n  File \"<stdin>\", line 1, in <module>\n"
                "NameError: name 'sys' is not defined\n"
                "diff: /tmp/x/body_v3.txt: No such file or directory\n"
@@ -128,7 +128,7 @@ class ConfigFirstTests(AfterCase):
                               session="real-missing"), "PostToolUse")
 
     def test_text_that_names_the_error_is_data(self):
-        # DGS-208 #3 and two live misfires on 2026-10-17: docs, a pattern table and hook source printed as text
+        # 2026-10-16 report, case 3, and two live misfires on 2026-10-17: docs, a pattern table and hook source printed as text
         skill = ("description: \"Use when hooks print errors, 'command not found' shows up, or mods do nothing\"\n"
                  "- A hook error shows up in the transcript, or something says `command not found`.\n")
         table = '    not_found_re : "command not found:\\\\s+(\\\\S+)|([^\\\\s:]+):\\\\s+command not found"\n'

@@ -385,7 +385,7 @@
     {"text": "It works when given the full path.", "mutated": true, "claim": false},
     {"text": "It works now.", "mutated": true, "claim": true},
     {"text": "Click **Done**.", "mutated": true, "claim": false},
-    {"text": "OTH-143 goes to Done once both land.", "mutated": true, "claim": false},
+    {"text": "Issue 143 goes to Done once both land.", "mutated": true, "claim": false},
     {"text": "My own suite run is still going (the builder reports 1737 passed).", "mutated": true, "claim": false}
   ],
   "sequences": [
@@ -456,8 +456,8 @@
     {"name": "echo PASS checks nothing", "steps": [["edit"], ["run", "echo PASS", "PASS"]], "text": "Fixed.", "flagged": true},
     {"name": "cat of an old results file checks nothing", "steps": [["edit"], ["run", "cat results.txt", "12 passed"]], "text": "Fixed.", "flagged": true},
     {"name": "a memory note written after the check does not undo it", "steps": [["edit"], ["run", "pytest -q", "3 passed"], ["memo"]], "text": "Fixed. The tests pass.", "flagged": false},
-    {"name": "a notes append in Bash after the check does not undo it", "steps": [["edit"], ["run", "pytest -q", "3 passed"], ["run", "cat >> ~/.claude/projects/-Users-x/memory/note.md <<'EOF'\n- learned\nEOF", ""]], "text": "Fixed. The tests pass.", "flagged": false},
-    {"name": "a notes append that also edits the project still needs a check", "steps": [["edit"], ["run", "pytest -q", "3 passed"], ["run", "cat >> ~/.claude/projects/-Users-x/memory/note.md <<'EOF'\n- learned\nEOF\nsed -i '' s/a/b/ src/app.py", ""]], "text": "Fixed. The tests pass.", "flagged": true},
+    {"name": "a notes append in Bash after the check does not undo it", "steps": [["edit"], ["run", "pytest -q", "3 passed"], ["run", "cat >> ~/.claude/projects/-srv-agent/memory/note.md <<'EOF'\n- learned\nEOF", ""]], "text": "Fixed. The tests pass.", "flagged": false},
+    {"name": "a notes append that also edits the project still needs a check", "steps": [["edit"], ["run", "pytest -q", "3 passed"], ["run", "cat >> ~/.claude/projects/-srv-agent/memory/note.md <<'EOF'\n- learned\nEOF\nsed -i '' s/a/b/ src/app.py", ""]], "text": "Fixed. The tests pass.", "flagged": true},
     {"name": "viewing the rendered image backs a visual change", "steps": [["edit"], ["view"]], "text": "Done: the logo is re-rendered.", "flagged": false},
     {"name": "a reported list is someone's words, not a claim", "steps": [["edit"]], "text": "It says three things:\n\n1. Merging the two drafts works.\n2. The date is open.", "flagged": false}
   ],
