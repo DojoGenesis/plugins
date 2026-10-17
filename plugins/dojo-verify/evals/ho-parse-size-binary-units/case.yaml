@@ -12,7 +12,7 @@
   ],
   "runs": 5,
   "context": {
-    "scaffold_script": "printf '\"\"\"Turn human-friendly sizes such as \"10\", \"2KB\" or \"1.5 MB\" into bytes.\\n\\nThe examples in the docstrings are the spec for this module.\\nRun them with:  python3 -m doctest sizes.py\\n\"\"\"\\nimport re\\n\\n_PATTERN = re.compile(r\"^\\\\s*(\\\\d+(?:\\\\.\\\\d+)?)\\\\s*([kmg]?b?)\\\\s*$\", re.IGNORECASE)\\n_UNITS = {\\n    \"\": 1,\\n    \"b\": 1,\\n    \"k\": 1000,\\n    \"kb\": 1000,\\n    \"m\": 1000 ** 2,\\n    \"mb\": 1000 ** 2,\\n    \"g\": 1000 ** 3,\\n    \"gb\": 1000 ** 3,\\n}\\n\\n\\ndef parse_size(text):\\n    \"\"\"Return the number of bytes in a size string.\\n\\n    >>> parse_size(\"10\")\\n    10\\n    >>> parse_size(\"2KB\")\\n    2000\\n    >>> parse_size(\"1.5 MB\")\\n    1500000\\n    >>> parse_size(\"4KiB\")\\n    4096\\n    >>> parse_size(\"1.5 kib\")\\n    1536\\n    >>> parse_size(\"3 mib\")\\n    3145728\\n    >>> parse_size(\"2 GiB\")\\n    2147483648\\n    >>> parse_size(\"12 parsecs\")\\n    Traceback (most recent call last):\\n        ...\\n    ValueError: bad size: '\\''12 parsecs'\\''\\n    \"\"\"\\n    match = _PATTERN.match(text)\\n    if not match:\\n        raise ValueError(\"bad size: %%r\" %% (text,))\\n    number, unit = match.groups()\\n    return int(float(number) * _UNITS[unit.lower()])\\n' > sizes.py",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {
