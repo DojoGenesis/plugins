@@ -122,3 +122,24 @@ so its silence could be read as a negative finding. Wrong: not a probe, not empt
 **PreToolUse guards.** Right when the named condition is real: a secret value would reach the conversation, the
 whole tree would be staged, GNU `timeout` would run on a Mac that doesn't have it, a large file would be read whole,
 a pushed commit would be rewritten, a check's exit code would be masked before a commit.
+
+## 4. Rule by rule
+
+What checks each of the ten rules while an agent works, how accurate that check is, and whether anything has
+measured the rule's effect. "Field" figures are from section 2; "fixtures" from section 1 (in-sample).
+
+| rule | runtime check | measured accuracy | evidence status |
+|---|---|---|---|
+| 1. Right model, every dispatch | dojo-router hook on Agent, Task and Workflow calls (warns by default); its mod routes unpinned dispatches by role | Not measured: no fixtures yet, and too few field firings to label | No eval run; one scaffold (`unpinned-dispatch-pinned`) |
+| 2. Scout before you touch | Claude Code itself (Edit refuses a file not read in the session); the `scout-first` skill and scout agent advise | Not a hook of ours, not measured | No eval run; scaffolds in dojo-protocol |
+| 3. Keep context small | dojo-gates big-read (denies a whole read over 256 KB) | Field 7 of 7 right (95% CI 65–100%); fixtures 100% / 100% | No eval run; scaffolds in dojo-gates and dojo-protocol |
+| 4. Contract before fan-out | dojo-flow's contract gate, in workflows only; the `contract` skill advises | Not measured | No eval run; scaffold `build-refuses-overlap` |
+| 5. Done means verified | dojo-verify Stop hook (blocks by default) and its evidence skill; dojo-tally flags agent reports that cite a check they never ran | Field 3% before the fixes (7 of 215); held-out 8% after (4 of 48, CI 3–20%), every real catch kept; fixtures 71% / 100% | **Measured once:** pre-registered with/without eval, 30 runs per arm. No benefit detected (unbacked claims 5/30 without, 4/30 with; difference CI −16 to +22 points), extra cost on controls (×1.29). The hook missed all four unbacked claims in the with arm |
+| 6. Count returns, not dispatches | dojo-tally mod (dispatched, returned, failed, silent, unchecked); dojo-flow's scorecard | Not measured | No eval run; scaffold `scorecard-counts-dead-agent` |
+| 7. Debug by disproof | Nothing at runtime; skill guidance only | n/a | No eval |
+| 8. Config before code | dojo-gates config-first (adds context after a boundary failure) | Field 30% before (22 of 73); held-out after: auth 6 of 6, path 3 of 6, cmd no firings; fixtures path 86% / 75%, auth and cmd 100% / 100% | No eval |
+| 9. Silence is not a finding | dojo-gates empty-probe (adds context after an empty probe); mac-timeout (denies GNU `timeout` on macOS, which makes probes silent) | empty-probe field 23 of 23 (CI 86–100%); mac-timeout 22 of 22 (CI 85–100%); recall not measured in the field | No eval |
+| 10. Irreversible needs a yes | dojo-gates staging, pushed-rewrite and masked-exit (deny or warn before the command); secret-print and token-url for secrets; Claude Code's permission prompts | staging 7 of 8; pushed-rewrite 0 of 1; masked-exit 1 of 1; secret-print 0 of 22 before, 9 of 11 held-out misfires removed | No eval run; scaffolds in dojo-gates |
+
+Ten older eval scaffolds (four in dojo-gates, four in dojo-protocol, two in dojo-verify) set `scaffold_script` as
+inline shell. Claude Code 2.1.299 reads that field as a path to a script file, so each would fail at setup if run.
