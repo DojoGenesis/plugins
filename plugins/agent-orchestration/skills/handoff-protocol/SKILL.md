@@ -1,7 +1,7 @@
 ---
 name: handoff-protocol
 model: sonnet
-description: Produces a structured handoff package (markdown document) containing objective, required context file list, task definition, definition of done, constraints, and next steps for the receiving agent. Use when: 'hand off to the next agent', 'prepare this for handoff', 'is this handoff package complete', 'ensure nothing is lost in the transition'.
+description: Writes a handoff package with objective, context files, definition of done and next steps. Use when handing off to another agent.
 category: dispatch-coordinate
 
 inputs:

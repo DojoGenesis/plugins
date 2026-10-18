@@ -1,3 +1,7 @@
+---
+description: Promotes a proven seed into a full skill. Use when a seed has earned skill status.
+---
+
 # /elevate-seed -- Promote a Proven Seed into a Full Skill
 
 **Argument hint:** `<seed name or path>`

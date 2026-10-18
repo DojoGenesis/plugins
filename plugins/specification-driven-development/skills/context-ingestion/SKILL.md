@@ -1,7 +1,7 @@
 ---
 name: context-ingestion
 model: sonnet
-description: "Produces a phased, file-grounded action plan from 1-2 uploaded documents (specs, meeting notes, design docs, or code files) with concrete deliverables and binary success criteria per phase. Use when: 'create a plan from this spec', 'plan the refactoring from these files', 'what are the next steps from these docs'."
+description: Turns 1-2 docs into a phased plan with pass/fail criteria. Use to plan from a doc.
 category: specify-commission
 
 inputs:

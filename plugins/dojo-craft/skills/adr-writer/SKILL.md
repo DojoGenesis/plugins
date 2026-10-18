@@ -2,7 +2,7 @@
 name: adr-writer
 version: "1.0.1"
 model: sonnet
-description: "Produces a numbered Architecture Decision Record with context analysis, route comparison, decision rationale, consequences, and propagation checklist. Use when: 'write an ADR', 'architectural decision', 'record a decision', 'ADR for'."
+description: Produces a numbered ADR with context, routes, decision, consequences and propagation checklist. Use when recording an architectural decision.
 triggers:
   - "write an ADR"
   - "architectural decision"

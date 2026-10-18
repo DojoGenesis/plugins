@@ -1,7 +1,7 @@
 ---
 name: file-management
 model: sonnet
-description: Produces a documented directory structure plan — tree layout diagram, naming convention decision, and organizational philosophy — applying patterns such as feature-domain grouping, temporal prefixes for dated artifacts, numbered directories for ordered sequences, and pointer READMEs for navigating large trees. Use when: "organize this project structure", "plan a file layout", "design a directory hierarchy", "improve folder organization", "create a project structure".
+description: Plans a directory layout with naming conventions and pointer READMEs. Use when organizing a project's file structure.
 category: forge
 
 inputs:

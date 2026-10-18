@@ -1,11 +1,6 @@
 ---
 name: gardener
-description: >
-  Institutional knowledge gardener. Use proactively to capture wisdom from
-  completed work, compress conversation context, extract reusable seeds from
-  experiences, and tend the memory garden. Use proactively after significant
-  work sessions, when insights emerge that should be preserved, or when
-  context needs to be distilled for future sessions.
+description: Captures wisdom from finished work into seeds and memory. Use proactively after significant work sessions.
 tools: Read, Write, Edit, Grep, Glob
 model: haiku
 memory: user

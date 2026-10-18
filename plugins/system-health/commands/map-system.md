@@ -1,3 +1,7 @@
+---
+description: Map a system with semantic clusters.
+---
+
 # /map-system -- Map Behavioral Architecture Using Semantic Clusters
 
 **Argument hint:** `<repository path, URL, or 'this project'>`

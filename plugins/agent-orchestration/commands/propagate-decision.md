@@ -1,3 +1,7 @@
+---
+description: Propagate a decision across affected documents.
+---
+
 # `/propagate-decision` — Propagate a Decision Across the Ecosystem
 
 Record a decision and systematically propagate its effects across all affected documents and systems. **Decisions propagate or they die** — a decision made in one place that doesn't reach other agents might as well not have been made.

@@ -1,6 +1,6 @@
 ---
 name: memory-curator
-description: "Two-tier memory management: write, update, prune, and search memories with semantic deduplication. Maintains MEMORY.md index under 200 lines — maintains the existing index; for writing one new structured entry instead, use full version `wisdom-garden:memory-garden`."
+description: "Writes, updates, prunes and dedupes memories, keeping MEMORY.md under 200 lines (one new entry: wisdom-garden:memory-garden). Use when curating memory."
 triggers:
   - "manage memories"
   - "curate memory"

@@ -1,3 +1,7 @@
+---
+description: Create a peer-to-peer teaching artifact for agents.
+---
+
 # `/teach` — Create a Teaching Artifact for Knowledge Transfer
 
 Create peer-to-peer teaching artifacts that enable knowledge transfer between agents. **Teaching as a peer, not an expert** — creating shared practice rather than hierarchical instruction.

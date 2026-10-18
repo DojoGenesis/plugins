@@ -1,11 +1,6 @@
 ---
 name: health-auditor
-description: >
-  System health auditor. Use when auditing codebase health, mapping behavioral
-  architecture with semantic clusters, checking documentation for drift,
-  generating status reports, or syncing repository context. Use proactively
-  when entering a new codebase or before major releases — briefly signal
-  intent before proceeding.
+description: Audits code health, docs and architecture. Use proactively on new codebases.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 memory: project

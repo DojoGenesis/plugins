@@ -1,3 +1,7 @@
+---
+description: Turns a completed workflow into a reusable skill. Use when capturing a process you just ran.
+---
+
 # /process-to-skill -- Transform a Completed Workflow into a Reusable Skill
 
 **Argument hint:** `<describe the process you want to capture, or point to a transcript/log>`

@@ -1,3 +1,7 @@
+---
+description: Creates a new skill from scratch. Use when a new domain needs a skill.
+---
+
 # /create-skill -- Create a New Skill from Scratch
 
 **Argument hint:** `<skill name or domain to create a skill for>`

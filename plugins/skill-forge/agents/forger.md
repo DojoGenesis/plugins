@@ -1,11 +1,6 @@
 ---
 name: forger
-description: >
-  Skill creation and maintenance specialist. Use when creating new skills
-  from scratch, extracting reusable skills from completed workflows, auditing
-  skill ecosystem health, maintaining existing skills, or elevating proven
-  seeds into full skills. Use proactively when a workflow pattern has been
-  repeated and should be formalized — briefly signal intent before proceeding.
+description: Skill agent for creating, extracting, auditing, maintaining and elevating skills. Use when delegating skill work.
 tools: Read, Write, Edit, Grep, Glob, Bash, WebFetch
 model: sonnet
 memory: user

@@ -1,7 +1,7 @@
 ---
 name: agent-performance-report
 model: sonnet
-description: Produces an aggregated markdown performance report from stored trace data — tool call metrics, token usage, cost, bottlenecks, and numbered recommendations. Use when: "session cost report", "what ran this week", "why did this spike", "end-of-sprint performance review", "budget alert fired".
+description: Reports token and cost metrics from traces. Use for cost reviews.
 category: agent-telemetry
 
 inputs:

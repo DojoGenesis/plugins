@@ -1,3 +1,7 @@
+---
+description: Splits a spec into parallel tracks. Use when one agent cannot do it all.
+---
+
 # /parallel-tracks — Decompose a Spec into Independent Parallel Tracks
 
 **Argument hint:** `<path to specification or description of large task>`

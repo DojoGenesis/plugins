@@ -1,7 +1,7 @@
 ---
 name: parallel-dispatch
 model: opus
-description: Produces a verified multi-track execution by dispatching parallel agents with file manifests, independent verification, and status tracking. Executes an already-planned split — the execution-side counterpart to `specification-driven-development:parallel-tracks`, which plans the phased structure first. Use when: "dispatch agents", "parallel tracks", "multi-track work", "fan out", "divide and conquer".
+description: Executes an already-planned split as parallel agents with file manifests and verification. Use when fanning out planned tracks.
 category: dispatch-coordinate
 
 inputs:

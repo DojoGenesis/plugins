@@ -1,10 +1,6 @@
 ---
 name: researcher
-description: >
-  Research and learning specialist. Use when conducting deep research on
-  focused topics, wide research across landscapes, synthesizing multiple
-  sources into patterns, running post-sprint retrospectives, or exploring
-  unfamiliar projects.
+description: Research agent for deep, wide and synthesis work. Use when delegating research.
 tools: Read, Grep, Glob, WebSearch, WebFetch, Bash
 model: sonnet
 memory: project

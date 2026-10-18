@@ -1,6 +1,6 @@
 ---
 name: wide-research
-description: Conduct broad landscape research — 4 phases from landscape definition to opportunity matrix
+description: Surveys a landscape broadly. Use when scanning a market or domain.
 argument_hint: "<landscape, market, or domain to survey>"
 skill: skills/research-modes/SKILL.md
 ---

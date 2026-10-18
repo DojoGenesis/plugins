@@ -1,3 +1,7 @@
+---
+description: Generate or update a STATUS.md.
+---
+
 # /status-report -- Generate a Project STATUS.md
 
 **Argument hint:** `<project name or path>`
