@@ -1,6 +1,6 @@
 ---
 name: deep-research
-description: Conduct focused, deep research on a specific topic — 5 phases from scope definition to validated recommendation
+description: Runs focused deep research. Use when one question needs depth.
 argument_hint: "<research question or topic>"
 skill: skills/research-modes/SKILL.md
 ---

@@ -1,9 +1,6 @@
 ---
 name: coordinator
-description: >
-  Agent coordination specialist. Use when creating handoff packages for
-  other agents, navigating shared workspaces, teaching knowledge between
-  agents, or propagating decisions across the ecosystem.
+description: Coordinates handoffs, shared workspaces, teaching and decision propagation. Use when work crosses agents.
 tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 memory: project

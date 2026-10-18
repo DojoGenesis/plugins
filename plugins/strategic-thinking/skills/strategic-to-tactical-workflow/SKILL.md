@@ -1,7 +1,7 @@
 ---
 name: strategic-to-tactical-workflow
 model: opus
-description: Produces a complete set of phase-by-phase artifacts for a development cycle — scout document, backend grounding doc, parallel track specifications, implementation prompts, and a post-cycle reflection — by orchestrating the other strategic-thinking skills in sequence. Use when: "walk me through the full workflow", "we're starting a new release cycle", "take me from our strategic question all the way to commissioned implementation prompts", "what did we learn this cycle and what should we formalize".
+description: Orchestrates a full cycle from scout to specs, implementation prompts and reflection. Use when starting a new release cycle.
 category: scout-position
 
 inputs:

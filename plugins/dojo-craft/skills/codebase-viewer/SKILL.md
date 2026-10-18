@@ -1,6 +1,6 @@
 ---
 name: codebase-viewer
-description: "Structured codebase intelligence: directory tree with roles, entry points, dependency graph, test coverage map, and annotated 'here be dragons' warnings. Lean single-file variant — full version (adds a defined reading-order output): `continuous-learning:codebase-cartography`."
+description: "Maps a codebase's structure, entry points, dependencies and risks (lean; full: continuous-learning:codebase-cartography). Use when orienting in a repo."
 triggers:
   - "view codebase"
   - "map the code"

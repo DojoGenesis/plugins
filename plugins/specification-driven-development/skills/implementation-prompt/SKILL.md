@@ -1,7 +1,7 @@
 ---
 name: implementation-prompt
 model: sonnet
-description: Produces a self-contained implementation prompt document with objective, context grounding, numbered requirements, file manifest, binary success criteria, constraints, and backend grounding — ready for autonomous agent execution. Use when 'write an implementation prompt', 'commission this spec', or 'convert spec to prompt'.
+description: Turns one spec into a self-contained agent prompt. Use to commission one spec.
 category: specify-commission
 
 inputs:

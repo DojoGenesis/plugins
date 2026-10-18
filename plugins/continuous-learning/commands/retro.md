@@ -1,6 +1,6 @@
 ---
 name: retro
-description: Run a sprint retrospective — harvest learnings, celebrate wins, identify improvements
+description: Runs a sprint retrospective. Use when a sprint ends.
 argument_hint: "<sprint name, version, or time period>"
 skill: skills/retrospective/SKILL.md
 ---

@@ -1,3 +1,7 @@
+---
+description: Write a daily note and short reflection.
+---
+
 # /tend -- Daily Note and Reflection
 
 **Argument hint:** `<optional: what you worked on today>`

@@ -1,7 +1,7 @@
 ---
 name: codebase-audit-grounding
 model: sonnet
-description: "Produces a quantified current-state report (test count, aria markers, error boundaries, storage usage, dependencies) used to anchor specifications in measured reality rather than assumptions. Use when: 'audit the codebase before speccing', 'ground this spec in reality', 'what does the code actually look like', 'measure before I write the spec'."
+description: Measures code state (tests, a11y, deps) in numbers. Use before speccing.
 category: specify-commission
 
 inputs:

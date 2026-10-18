@@ -1,6 +1,6 @@
 ---
 name: explore-project
-description: Explore a new project to assess collaboration potential — philosophy, architecture, fit, and entry points
+description: Assesses a project's fit and entry points. Use when evaluating a repo.
 argument_hint: "<project repository, docs folder, or description>"
 skill: skills/project-exploration/SKILL.md
 ---

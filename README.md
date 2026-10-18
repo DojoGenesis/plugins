@@ -17,7 +17,7 @@ Genius-level protocol and inexpensive inference go together. Claude Code without
 
 Or pick one at a time, e.g. `/plugin install dojo-gates@dojo-genesis`.
 
-`dojo-suite` installs the eight plugins below and adds nothing of its own: no skills, agents, commands or hooks, so it adds no always-on weight. The marketplace id is `dojo-genesis`; the source repo is `DojoGenesis/plugins`.
+`dojo-suite` installs the eight plugins below and adds nothing of its own: no skills, agents, commands or hooks, so it adds no always-on weight. The suite's eight plugins together add about 1,860 tokens to every session, under a 2,000-token budget; [ALWAYS-ON.md](ALWAYS-ON.md) has every plugin's number and how it is measured. The marketplace id is `dojo-genesis`; the source repo is `DojoGenesis/plugins`.
 
 **Mods are early access.** Enable function hooks with `export CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1` (or add it under `env` in `~/.claude/settings.json`), then install dojo-meter. The classic hooks, skills, agents and commands in every plugin work without that flag; the mods add the live band, status and routing that only the engine can do.
 

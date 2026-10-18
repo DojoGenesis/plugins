@@ -1,9 +1,6 @@
 ---
 name: dispatcher
-description: >
-  Parallel agent dispatch specialist. Use when planning multi-agent parallel
-  work, designing worktree isolation strategies, defining output contracts
-  before dispatch, or building agent swarm execution plans.
+description: Plans parallel agent work, worktree isolation and output contracts. Use before dispatching an agent swarm.
 tools: Read, Write, Grep, Glob
 model: sonnet
 memory: project

@@ -1,6 +1,6 @@
 {
   "name": "specification-driven-development",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "A specification is a contract, not documentation — an act of respect for the builder's time. Write specs grounded in measured reality, transform them into implementation prompts, and commission parallel tracks with pre-flight alignment.",
   "author": {
     "name": "Dojo Genesis"

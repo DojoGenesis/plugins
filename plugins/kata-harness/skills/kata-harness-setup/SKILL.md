@@ -1,6 +1,6 @@
 ---
 name: kata-harness-setup
-description: Set up the kata roll in a project that already runs (or is starting) the bring loop — confirm bring/ exists, explain where the roll's own ledger lives, walk through the opt-in timer, and make the two-plugin coexistence with bring-loop explicit. Use when the user says "set up kata-harness", "install the roll plugin", "add rolls on top of bring-loop", or asks how the timed roll relates to their daily bring.
+description: Sets up the kata roll on top of bring-loop, explaining its ledger and opt-in timer. Use when asked to set up kata-harness.
 model: inherit
 category: govern-publish
 ---

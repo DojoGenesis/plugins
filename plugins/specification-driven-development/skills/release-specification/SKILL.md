@@ -1,7 +1,7 @@
 ---
 name: release-specification
 model: opus
-description: Produces a production-ready release specification document (Full or Lean format) including current-state audit, technical architecture with code examples, implementation plan, and risk assessment. Use when 'write a release spec', 'create a release specification for vX.X.X', or 'ground this spec in the codebase'.
+description: Writes a versioned release spec with audit and plan. Use to specify a release.
 category: specify-commission
 
 inputs:

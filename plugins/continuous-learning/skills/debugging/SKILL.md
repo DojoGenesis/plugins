@@ -1,7 +1,7 @@
 ---
 name: debugging
 model: sonnet
-description: Produces a Debug Report documenting root cause, fix applied, and lessons learned through systematic hypothesis testing. Use when: 'debug this error', 'why is this failing', 'investigate the issue', 'find the root cause', 'fix this bug systematically'.
+description: Finds root cause by hypothesis testing and writes a Debug Report. Use when a failure is unexplained.
 category: learn-research
 
 inputs:

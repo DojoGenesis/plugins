@@ -1,7 +1,7 @@
 ---
 name: observability-dashboard-spec
 model: sonnet
-description: Produces an architectural specification document mapping Gateway SSE events and OTEL spans to named dashboard widgets, a data flow diagram, and an MCP App config — ready to hand to an implementation agent. Use when: "design the observability dashboard", "spec the monitoring app", "map events to widgets", "plan the agent dashboard", "extend the dashboard with new widget types".
+description: Specs which events feed which widgets. Use to design the dashboard.
 license: Complete terms in LICENSE.txt
 category: agent-telemetry
 

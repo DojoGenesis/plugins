@@ -1,7 +1,7 @@
 ---
 name: seed-library
 model: sonnet
-description: Suggests and loads Dojo Seed Patches as reusable thinking modules, producing a ranked seed recommendation with a full application guide. Use when: "which seed applies here", "suggest a seed pattern", "apply a seed to this", "what pattern should we use", "load the seed library".
+description: Recommends and loads the Dojo seed patch that fits a situation. Use when asking which seed applies here.
 category: seed-lifecycle
 
 inputs:

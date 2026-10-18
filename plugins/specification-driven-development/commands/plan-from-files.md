@@ -1,3 +1,7 @@
+---
+description: Plans next steps from uploaded files. Use when you have docs to act on.
+---
+
 # /plan-from-files — Create a Plan from Uploaded Files Using Intent-Based Routing
 
 **Argument hint:** `<planning goal — e.g., 'plan next steps from this spec', 'refactor based on this code', 'create action items from these notes'>`

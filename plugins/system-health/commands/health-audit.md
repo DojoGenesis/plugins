@@ -1,3 +1,7 @@
+---
+description: Run a full repository health audit.
+---
+
 # /health-audit -- Run a Comprehensive Health Audit
 
 **Argument hint:** `<repository path or URL>`

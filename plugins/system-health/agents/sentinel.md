@@ -1,9 +1,6 @@
 ---
 name: sentinel
-description: >
-  Lightweight health monitoring specialist. Use when you need a fast signal
-  on system health — are tests passing, is CI clean, is documentation drifting,
-  are skill files valid — without a full audit.
+description: Checks tests, CI and docs fast. Use instead of a full audit.
 tools: Read, Grep, Glob, Bash
 model: haiku
 memory: project

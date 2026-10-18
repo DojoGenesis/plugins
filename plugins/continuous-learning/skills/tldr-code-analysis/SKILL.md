@@ -1,7 +1,7 @@
 ---
 name: tldr-code-analysis
 model: opus
-description: "5-layer code analysis (AST, Call Graph, CFG, DFG, PDG) that yields 95% token savings over raw file reads. Use when: 'systematically understand an unfamiliar codebase', 'analyze code structure with minimal tokens', 'map call graphs and data flow', 'find dead code and architectural layers', 'trace variable definitions across files'."
+description: Analyzes code via AST, call graph, CFG, DFG and PDG layers. Use when tracing data flow cheaply.
 category: understand-codebase
 
 inputs:

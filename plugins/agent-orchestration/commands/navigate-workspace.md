@@ -1,3 +1,7 @@
+---
+description: Navigate and organize a shared agent workspace.
+---
+
 # `/navigate-workspace` — Navigate and Organize a Shared Agent Workspace
 
 Navigate, organize, and maintain shared agent workspaces. **A workspace is a thinking room, not a file dump** — structure enables clarity, clarity enables collaboration.
