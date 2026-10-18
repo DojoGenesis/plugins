@@ -1,7 +1,7 @@
 ---
 name: documentation-audit
 model: sonnet
-description: Produces a committed audit log file enumerating documentation drift — inaccuracies, broken links, missing sections, and outdated information — with severity ratings and action taken. Use when: "docs seem out of date", "audit the documentation", "is the README accurate", "check for broken links", "before onboarding a new team member".
+description: Logs doc drift and broken links. Use when docs seem stale.
 category: repo-docs-health
 
 inputs:

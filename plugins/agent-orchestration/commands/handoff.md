@@ -1,3 +1,7 @@
+---
+description: Create a structured handoff package for another agent.
+---
+
 # `/handoff` — Create a Structured Handoff Package
 
 Create a self-contained handoff package for transferring work between autonomous agents. **Every handoff is a sacred relay** — the package must be complete, and the receiving agent must be fully equipped to succeed.

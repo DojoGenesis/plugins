@@ -1,7 +1,7 @@
 ---
 name: workflow-router
 model: sonnet
-description: Routes user goals to the appropriate specialist agent workflow with resource allocation confirmation. Use when: the user wants to start a task but hasn't specified a workflow, asks "how should I approach this?", or needs orchestration across research → plan → build → fix stages.
+description: Routes a goal to the right specialist workflow and confirms resources. Use when the user has not picked a workflow.
 category: dispatch-coordinate
 metadata:
   version: "1.1"

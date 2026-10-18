@@ -1,7 +1,7 @@
 ---
 name: skill-audit-upgrade
 model: sonnet
-description: Produces a graded audit report and upgraded SKILL.md files by systematically assessing all skills against an A+ quality framework (8 sections, concrete examples, pitfalls, related skills) and patching gaps. Use when: "audit all the skills", "upgrade skills to A+ standard", "after creating 5+ new skills", "before a major release", "quarterly skills maintenance".
+description: Grades skills against the A+ bar and fixes gaps. Use to upgrade skills.
 category: repo-docs-health
 
 inputs:

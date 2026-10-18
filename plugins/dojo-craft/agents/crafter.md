@@ -1,9 +1,6 @@
 ---
 name: crafter
-description: >
-  DojoCraft Crafter — bridges strategic thinking and hands-on coding. Use when
-  writing ADRs, scouting architectural options, auditing CLAUDE.md health, or
-  running convergence gates. Evidence-based, opinionated, direct.
+description: Evidence-based agent bridging strategy and code. Use when writing ADRs, scouting architecture, auditing CLAUDE.md or running convergence.
 tools: Read, Grep, Glob, Bash
 model: sonnet
 memory: project

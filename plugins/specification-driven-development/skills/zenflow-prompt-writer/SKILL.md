@@ -1,7 +1,7 @@
 ---
 name: zenflow-prompt-writer
 model: sonnet
-description: "Produces a structured Zenflow commission document (Objective, Context & Grounding with pattern files, step-by-step Requirements, File Manifest, binary Success Criteria, and explicit Constraints) from a finalized spec, saved to prompts/vX.X.X/. Use when: 'write a Zenflow prompt', 'commission Zenflow for this spec', 'turn this spec into a Zenflow prompt', 'create the implementation prompt for Zenflow'."
+description: Writes a Zenflow commission doc from a spec. Use when commissioning Zenflow.
 category: specify-commission
 
 inputs:

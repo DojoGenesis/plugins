@@ -24,6 +24,20 @@ method, the rubric and the tables. It started from five misfires reported from o
 - **A rule-by-rule table** in `ACCURACY.md`: for each of the ten rules, what checks it at runtime, how accurate that
   check is, and what has measured the rule's effect.
 
+- **An always-on budget, measured and gated** — `scripts/always_on.py` measures what each marketplace plugin adds
+  to every session (`claude plugin details` for descriptions, plus SessionStart hook text, which that command does
+  not count) and fails when the suite together reaches 2,000 tokens or any other plugin reaches 1,000.
+  `release-check.sh` runs it as the `always-on` row. `ALWAYS-ON.md` has the method and the table.
+
+### Changed
+
+- **Library descriptions cut to one sentence each** — the nine Library plugins added about 15,300 always-on
+  tokens between them; they now add about 6,600, and the whole marketplace about 9,100 (was about 17,900). The
+  suite is unchanged at about 1,860. Only `description:` fields changed (24 commands that had none got one,
+  so their first body line no longer fills the listing); skill bodies are untouched. Versions: agent-orchestration
+  1.0.6, continuous-learning 1.0.5, dojo-craft 1.0.2, kata-harness 0.1.4, skill-forge 1.0.5,
+  specification-driven-development 1.2.2, strategic-thinking 1.1.2, system-health 1.0.5, wisdom-garden 1.1.2.
+
 ### Fixed
 
 - **`dojo-verify` 0.2.0** — counts the checks people actually run: a program that exits clean and prints PASS or ok

@@ -1,6 +1,6 @@
 ---
 name: project-scaffolder
-description: "Bootstrap project structure from proven templates: phases, tracks, decisions, artifacts, commissions directories with README stubs and initial ADR-000 template."
+description: Scaffolds phases, tracks, decisions and commissions directories with README stubs and ADR-000. Use when bootstrapping a new project.
 triggers:
   - "scaffold project"
   - "bootstrap project"

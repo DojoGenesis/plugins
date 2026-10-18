@@ -1,3 +1,7 @@
+---
+description: Writes a backend-grounded frontend spec. Use when speccing UI.
+---
+
 # /frontend-spec — Write a Frontend Spec Grounded in Backend Architecture
 
 **Argument hint:** `<frontend feature to specify>`

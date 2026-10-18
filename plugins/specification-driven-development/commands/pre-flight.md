@@ -1,3 +1,7 @@
+---
+description: Runs the pre-implementation checklist. Use before spec handoff.
+---
+
 # /pre-flight — Run the Pre-Implementation Checklist
 
 **Argument hint:** `<path to specification or prompt>`

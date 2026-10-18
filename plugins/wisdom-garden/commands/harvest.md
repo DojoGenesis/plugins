@@ -1,3 +1,7 @@
+---
+description: Review and curate the memory garden entries.
+---
+
 # /harvest -- Review and Curate the Memory Garden
 
 **Argument hint:** `<optional: specific area or time period to review>`

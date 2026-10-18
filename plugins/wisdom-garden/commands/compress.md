@@ -1,3 +1,7 @@
+---
+description: Compress a session into lasting wisdom artifacts.
+---
+
 # /compress -- Compress a Session into Potent Wisdom Artifacts
 
 **Argument hint:** `<session to compress -- paste transcript, or describe what happened>`

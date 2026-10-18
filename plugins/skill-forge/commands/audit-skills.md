@@ -1,3 +1,7 @@
+---
+description: Audits the health of a whole skills ecosystem. Use when reviewing a skills directory.
+---
+
 # /audit-skills -- Audit the Health of an Entire Skills Ecosystem
 
 **Argument hint:** `<skills directory path>`

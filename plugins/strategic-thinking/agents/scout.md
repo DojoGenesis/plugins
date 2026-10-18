@@ -1,9 +1,6 @@
 ---
 name: scout
-description: >
-  Strategic thinking specialist. Use when exploring tensions, scouting
-  possibilities, positioning products, designing multi-surface strategies,
-  or navigating uncertainty with multiple valid approaches.
+description: Strategic thinking specialist for tensions, routes and positioning. Use when a problem has several valid approaches.
 tools: Read, Grep, Glob, WebSearch, WebFetch
 model: sonnet
 memory: project

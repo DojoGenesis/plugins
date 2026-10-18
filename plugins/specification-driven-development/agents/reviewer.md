@@ -1,9 +1,6 @@
 ---
 name: reviewer
-description: >
-  Specification review specialist. Use when validating a completed spec before
-  commissioning, checking for contradictions or gaps, or verifying a spec is
-  grounded in actual codebase reality.
+description: Spec review agent for gaps and contradictions. Use to validate a spec.
 tools: Read, Grep, Glob
 model: sonnet
 memory: project

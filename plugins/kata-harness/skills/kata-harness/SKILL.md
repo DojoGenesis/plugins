@@ -1,6 +1,6 @@
 ---
 name: kata-harness
-description: Run a bounded kata roll over the project's bring queue — start a session with an explicit target (reps or minutes), surface and stage exactly one bring per tick, log the outcome only on the human's word, then advance. Use when the user says "start a roll", "roll for N reps", "do a 25-minute roll", "tick", "next rep", "resolve this tick", "skip this tick", or "pause/resume/end the roll".
+description: Runs a bounded kata roll over the bring queue, staging one bring per tick and logging on your word. Use when told 'start a roll' or 'tick'.
 model: inherit
 category: govern-publish
 ---

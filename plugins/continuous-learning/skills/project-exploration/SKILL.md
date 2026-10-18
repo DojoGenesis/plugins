@@ -1,7 +1,7 @@
 ---
 name: project-exploration
 model: sonnet
-description: Produces an Exploration Brief rating a project GREEN/YELLOW/RED for collaboration fit, with architecture snapshot, resonance map, and ranked entry points. Use when: 'explore this project', 'assess this codebase', 'should we collaborate on this', 'onboard me to this repo', 'evaluate this project for fit'.
+description: Rates a project's collaboration fit GREEN/YELLOW/RED. Use when deciding whether to join a project.
 category: understand-codebase
 
 inputs:

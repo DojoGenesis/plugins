@@ -1,7 +1,7 @@
 ---
 name: continuity-ledger
 model: sonnet
-description: "Maintains a running decision log and context state across agent sessions, preventing context loss between clears and session boundaries. Use when: 'starting a new session on an ongoing project', 'context is getting heavy', 'preserve state before clearing', 'create a handoff document', 'pick up where I left off'."
+description: Keeps a running decision log so context survives clears and sessions. Use when picking up where you left off.
 category: remember-continue
 
 inputs:

@@ -1,9 +1,6 @@
 ---
 name: tactician
-description: >
-  Strategic-to-tactical conversion specialist. Use when translating a completed
-  scout output into an actionable execution plan, bridging strategic direction
-  to specification-ready work, or decomposing a chosen route into concrete phases.
+description: Turns a completed scout into a phased, spec-ready execution plan. Use when a route is chosen and needs concrete phases.
 tools: Read, Write, Grep, Glob
 model: sonnet
 memory: project

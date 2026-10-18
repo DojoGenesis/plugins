@@ -1,7 +1,7 @@
 ---
 name: process-extraction
 model: sonnet
-description: Produces a complete SKILL.md by extracting and formalizing a workflow that has been executed at least twice, converting implicit procedural knowledge into installable, agent-executable instructions. Use when: "turn this process into a skill", "standardize this workflow", "make this repeatable", "capture this procedure", "formalize this multi-step task".
+description: Formalizes a workflow run at least twice into a SKILL.md. Use when turning a repeated process into a skill.
 category: forge
 
 inputs:
