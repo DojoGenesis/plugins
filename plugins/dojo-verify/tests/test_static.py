@@ -58,7 +58,7 @@ class TestManifest(unittest.TestCase):
             self.assertIn("default", field, key)
             self.assertIn(field["type"], ("string", "number", "boolean", "directory", "file"), key)
             self.assertTrue(field["title"] and field["description"], key)
-        self.assertEqual(cfg["mode"]["default"], "block")
+        self.assertEqual(cfg["mode"]["default"], "warn")
         self.assertEqual(cfg["mode"]["options"], ["block", "warn", "off"])
         self.assertIn(cfg["mode"]["default"], cfg["mode"]["options"])
         self.assertIs(cfg["show_status"]["default"], True)

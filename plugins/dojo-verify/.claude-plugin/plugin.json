@@ -14,8 +14,8 @@
     "mode": {
       "type": "string",
       "title": "Mode",
-      "description": "What the Stop hook does when the final message claims success and no check has passed since the last change: block (default), warn, or off. The mod also goes inert when this is off.",
-      "default": "block",
+      "description": "What the Stop hook does when the final message claims success and no check has passed since the last change: warn (default), block, or off. The mod also goes inert when this is off.",
+      "default": "warn",
       "options": ["block", "warn", "off"]
     },
     "show_status": {

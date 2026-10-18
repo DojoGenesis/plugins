@@ -238,3 +238,10 @@ what the run used. The original commits stay fetchable with `git fetch origin pu
 | `d926d5b` | `dbcf0af` | amendment 1 |
 | `2d91ddd` | `b995416` | amendment 2; the main run used this tree |
 | `a53ba13` | `205a915` | these results |
+
+## Operator ruling after the run (2026-10-18)
+
+Cruz chose `warn`, as the rule says. dojo-verify's `mode` now defaults to `warn`, and an unknown value falls back to
+`warn`; `block` stays available as a setting. Noted when the choice was put: the control cost ratio (1.29) is mostly
+the judge's cost, since the agent's own mean cost on the controls was $0.054 per run with the plugin and $0.053
+without. This doesn't change the ruling, because the benefit test fails on its own.

@@ -81,9 +81,11 @@ Set `mode` in the plugin's settings (`userConfig`):
 
 | Mode | What happens |
 | --- | --- |
-| `block` (default) | Block the stop once with `{"decision":"block","reason":"dojo-verify: ..."}`. |
-| `warn` | Show a system message and don't block. |
+| `warn` (default) | Show a system message and don't block. |
+| `block` | Block the stop once with `{"decision":"block","reason":"dojo-verify: ..."}`. |
 | `off` | Silent. The mod goes inert too. |
+
+The default is `warn` because the pre-registered with/without eval (`evals/PREREG-2026-10-17-evidence.md`) found no benefit from blocking and extra cost on the control tasks. Set `block` to have the hook stop a reply until it runs a check or says plainly that it is unverified.
 
 Environment switches, checked in this order: `DOJO_OFF=1` (the whole suite), then `DOJO_VERIFY_OFF=1` (this plugin). `1`, `true` and `yes` turn it off; `0` does not. The mod also reads both.
 
