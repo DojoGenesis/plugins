@@ -1,9 +1,6 @@
 ---
 name: specifier
-description: >
-  Specification writing specialist. Use when writing release specs, frontend
-  specs grounded in backend architecture, implementation prompts for autonomous
-  agents, pre-implementation checklists, or decomposing work into parallel tracks.
+description: Spec writing agent for specs, prompts and tracks. Use to delegate spec work.
 tools: Read, Grep, Glob, Bash, Write
 model: sonnet
 memory: project

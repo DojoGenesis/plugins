@@ -1,3 +1,7 @@
+---
+description: Audit documentation for drift.
+---
+
 # /audit-docs -- Audit Documentation for Drift
 
 **Argument hint:** `<repository or documentation path>`

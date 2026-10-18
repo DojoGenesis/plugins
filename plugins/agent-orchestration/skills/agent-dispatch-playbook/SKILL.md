@@ -1,7 +1,7 @@
 ---
 name: agent-dispatch-playbook
 model: sonnet
-description: Produces a dispatch plan — isolation model, agent count, sequencing, and model assignments — for multi-agent parallel work. Plans the mechanics once you already know you're doing a parallel dispatch. If unsure which orchestration pattern fits at all, use `orchestration-pattern-selector` first; if the shape is a single conductor coordinating specialists, use `maestro-orchestration` directly. Use when: "dispatch agents in parallel", "run multiple tracks simultaneously", "plan parallel agent strategy", "should this be foreground or background".
+description: Plans isolation, agent count, sequencing and models for a parallel dispatch. Use once you know you are dispatching in parallel.
 triggers:
   - "dispatch agents in parallel"
   - "orchestrate parallel work across repos"

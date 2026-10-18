@@ -1,6 +1,6 @@
 ---
 name: synthesize
-description: Synthesize multiple research files into actionable insights — 5 phases from ingestion to theme-based synthesis
+description: Synthesizes research files into insights. Use when merging sources.
 argument_hint: "<topic or question these files address>"
 skill: skills/research-synthesis/SKILL.md
 ---

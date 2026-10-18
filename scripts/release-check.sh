@@ -15,6 +15,8 @@
 #   self-test   this tooling's own tests, under python3.9
 #   face-parity scripts/face-parity.py
 #   plugin-lint scripts/plugin-lint.py (exit 1 means warnings only and is shown as WARN-OK)
+#   always-on   scripts/always_on.py: every marketplace plugin's always-on tokens against the
+#               budget (suite under 2,000 together, any other plugin under 1,000); needs claude
 #
 # Row status: PASS, WARN (the check passed but part of it did not run, such as skipped
 # tests), WARN-OK (known baseline warnings), FAIL (a check ran and failed), ERROR (a
@@ -355,6 +357,20 @@ step_legacy() {
   esac
 }
 
+step_always_on() {
+  want always-on || return 0
+  if [ "$PYCI_OK" != 1 ]; then add_row always-on ERROR "python3 not on PATH"; return 0; fi
+  if [ -n "$CLAUDE_REASON" ]; then add_row always-on ERROR "$CLAUDE_REASON"; return 0; fi
+  if [ ! -f "$SCRIPT_DIR/always_on.py" ]; then add_row always-on ERROR "always_on.py not found"; return 0; fi
+  local log="$TMP/always-on.log"
+  run_in "$REPO" "$log" env PYTHONDONTWRITEBYTECODE=1 "$PYCI" "$SCRIPT_DIR/always_on.py" --repo "$REPO" --claude "$CLAUDE_BIN"
+  case "$RC" in
+    0) add_row always-on PASS "$(tail_of "$log")" ;;
+    1) add_row always-on FAIL "$(tail_of "$log")" ;;
+    *) add_row always-on ERROR "exit $RC: $(tail_of "$log")" ;;
+  esac
+}
+
 # --------------------------------------------------------------------- run
 
 step_lint
@@ -374,6 +390,7 @@ done
 step_self_test
 step_legacy face-parity scripts/face-parity.py
 step_legacy plugin-lint scripts/plugin-lint.py
+step_always_on
 
 # ------------------------------------------------------------------ report
 

@@ -1,7 +1,7 @@
 ---
 name: gap-audit-then-fix
 model: sonnet
-description: "Spec-to-fix pipeline: audit a codebase against its specification, classify gaps by severity, fix in parallel, track in GAPS.md registry. Use when a spec exists but implementation completeness is unknown."
+description: Audits code against its spec and fixes the gaps. Use when completeness is unknown.
 category: specify-commission
 version: 1.0.0
 tags: [audit, gaps, specification, fix, registry]

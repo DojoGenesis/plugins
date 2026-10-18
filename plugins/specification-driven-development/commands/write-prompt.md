@@ -1,3 +1,7 @@
+---
+description: Turns a spec into an implementation prompt. Use when commissioning.
+---
+
 # /write-prompt — Transform a Spec into an Implementation Prompt
 
 **Argument hint:** `<path to specification file>`

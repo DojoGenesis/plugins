@@ -104,6 +104,7 @@ class RC(unittest.TestCase):
             ("suite_denylist.py", "denylist", "STUB_DENY_RC", "suite_denylist: 0 hit(s); control ok (2 lists)"),
             ("face-parity.py", "face-parity", "STUB_FP_RC", "face-parity stub ran"),
             ("plugin-lint.py", "plugin-lint", "STUB_PL_RC", "plugin-lint stub ran"),
+            ("always_on.py", "always-on", "STUB_AO_RC", "always-on: suite ~1800 tokens, 1 plugin(s), 0 over budget"),
         ):
             H.write(os.path.join(scripts, name), PY_STUB % {"tag": tag, "var": var, "line": line})
         H.write(os.path.join(scripts, "tests_suite", "__init__.py"), "")
@@ -161,7 +162,7 @@ class RC(unittest.TestCase):
         rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha")
         self.assertEqual(rc, 0, out + err)
         self.assertIn("OVERALL: PASS (0 fail, 0 error, 0 warn-ok, 0 warn)", out)
-        for step in ("lint", "denylist", "unittest:dojo-alpha", "validate:dojo-alpha", "mod:dojo-alpha", "self-test", "face-parity", "plugin-lint"):
+        for step in ("lint", "denylist", "unittest:dojo-alpha", "validate:dojo-alpha", "mod:dojo-alpha", "self-test", "face-parity", "plugin-lint", "always-on"):
             self.assertIn(step, rows)
         self.assertRow(rows, "unittest:dojo-alpha", "PASS", "1 tests, 0 skipped")
         self.assertRow(rows, "validate:dojo-alpha", "PASS", "0 errors, 0 warnings")
@@ -193,6 +194,8 @@ class RC(unittest.TestCase):
             ({"STUB_VALIDATE_MODE": "warn"}, "validate:dojo-alpha", "FAIL"),
             ({"STUB_FP_RC": "1"}, "face-parity", "FAIL"),
             ({"STUB_PL_RC": "2"}, "plugin-lint", "FAIL"),
+            ({"STUB_AO_RC": "1"}, "always-on", "FAIL"),
+            ({"STUB_AO_RC": "2"}, "always-on", "ERROR"),
         ]
         for extra, row, status in cases:
             with self.subTest(extra=extra):

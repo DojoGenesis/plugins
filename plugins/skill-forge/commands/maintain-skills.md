@@ -1,3 +1,7 @@
+---
+description: Runs maintenance on an existing skill. Use when a skill is stale or broken.
+---
+
 # /maintain-skills -- Run Maintenance on an Existing Skill
 
 **Argument hint:** `<skill path or name to maintain>`

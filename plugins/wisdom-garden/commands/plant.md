@@ -1,3 +1,7 @@
+---
+description: Plant a seed from an experience or insight.
+---
+
 # /plant -- Plant a Seed from an Experience or Insight
 
 **Argument hint:** `<insight, learning, or experience to capture>`

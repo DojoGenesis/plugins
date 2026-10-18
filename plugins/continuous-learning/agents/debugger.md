@@ -1,9 +1,6 @@
 ---
 name: debugger
-description: >
-  Systematic debugging specialist. Use when diagnosing bugs, tracing root
-  causes, reproducing failures, or investigating unexpected behavior in code
-  or systems.
+description: Debugging agent that traces root causes. Use when delegating a bug investigation.
 tools: Read, Grep, Glob, Bash, WebSearch, WebFetch
 model: sonnet
 memory: project

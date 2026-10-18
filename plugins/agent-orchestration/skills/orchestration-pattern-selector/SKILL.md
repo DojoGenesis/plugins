@@ -1,6 +1,6 @@
 ---
 name: orchestration-pattern-selector
-description: Selects the correct multi-agent orchestration pattern for a task using an 11-signal selection matrix. Use this first, upstream of `agent-dispatch-playbook` (which plans dispatch mechanics once the shape is known) and `maestro-orchestration` (one specific pattern this skill might select). Use when choosing which orchestration pattern fits a multi-agent task.
+description: Picks the right multi-agent pattern with an 11-signal matrix. Use first when unsure which orchestration pattern fits.
 model: opus
 category: dispatch-coordinate
 version: 1.0.1

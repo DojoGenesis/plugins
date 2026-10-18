@@ -1,7 +1,7 @@
 ---
 name: agent-teaching
 model: sonnet
-description: Produces a peer-voiced teaching document (learning guide, letter, reflection, or protocol) that transfers a skill or insight without creating an expert-to-student dynamic. Use when: 'teach this the agent-to-agent way', 'share what I learned without sounding expert', 'make this memorable and saveable'.
+description: Writes a peer-voiced teaching document that transfers a skill without talking down. Use when teaching agent to agent.
 category: dispatch-coordinate
 
 inputs:

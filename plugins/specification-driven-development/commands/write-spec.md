@@ -1,3 +1,7 @@
+---
+description: Writes a release specification. Use when starting a release.
+---
+
 # /write-spec — Write a Production-Ready Release Specification
 
 **Argument hint:** `<feature, release, or version to specify>`

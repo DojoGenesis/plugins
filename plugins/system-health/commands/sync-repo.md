@@ -1,3 +1,7 @@
+---
+description: Extract context from a repository.
+---
+
 # /sync-repo -- Sync and Extract Context from a Repository
 
 **Argument hint:** `<repository URL or path>`

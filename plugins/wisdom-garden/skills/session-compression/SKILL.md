@@ -1,7 +1,7 @@
 ---
 name: session-compression
 model: sonnet
-description: Produces updated memory artifacts by compressing a session's key decisions, changes, and context into the structured memory garden. Routine end-of-session wrap-up; for a long conversation needing the fuller multi-artifact treatment (summaries, seed files, reflections, a dated compression log), use `compression-ritual` instead. Use when: "compress this session", "save context", "end of session", "update memory", "wrap up".
+description: Saves a session's decisions to the memory garden (the routine wrap-up). Use at the end of a session.
 category: remember-continue
 
 inputs:

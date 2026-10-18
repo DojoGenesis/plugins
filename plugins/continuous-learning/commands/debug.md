@@ -1,6 +1,6 @@
 ---
 name: debug
-description: Systematic debugging and troubleshooting — 7-step methodology from reproduction to learning
+description: Runs 7-step systematic debugging. Use when given an error to diagnose.
 argument_hint: "<symptom, error message, or problem description>"
 skill: skills/debugging/SKILL.md
 ---
