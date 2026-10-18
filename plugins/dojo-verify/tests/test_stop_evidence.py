@@ -25,7 +25,14 @@ class Base(unittest.TestCase):
 
 
 class TestKillSwitchesAndModes(Base):
-    def test_default_mode_blocks_with_the_documented_shape(self):
+    def test_default_mode_warns_and_does_not_block(self):
+        r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE=None))
+        self.assertEqual(r.code, 0)
+        data = r.json()
+        self.assertNotIn("decision", data)
+        self.assertTrue(data["systemMessage"].startswith("dojo-verify:"))
+
+    def test_block_mode_blocks_with_the_documented_shape(self):
         r = self.run_hook(self.claim_turn())
         self.assertEqual(r.code, 0)
         self.assertEqual(r.err, "")
@@ -77,9 +84,10 @@ class TestKillSwitchesAndModes(Base):
         r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE="off"))
         self.assertTrue(r.silent)
 
-    def test_unknown_mode_falls_back_to_block(self):
+    def test_unknown_mode_falls_back_to_warn(self):
         r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE="garbage"))
-        self.assertTrue(r.blocked)
+        self.assertNotIn("decision", r.json())
+        self.assertIn("systemMessage", r.json())
 
     def test_stop_hook_active_never_blocks(self):
         r = self.run_hook(self.claim_turn(), stop_hook_active=True)
@@ -1095,7 +1103,7 @@ class TestPortability(Base):
         import subprocess
         self.sb.write(self.claim_turn())
         env_cmd = ["/usr/bin/env", "-i", "PATH=/usr/bin:/bin", "HOME=" + self.sb.home,
-                   "TMPDIR=" + self.sb.tmpdir, h.SYSTEM_PYTHON, h.HOOK]
+                   "TMPDIR=" + self.sb.tmpdir, "CLAUDE_PLUGIN_OPTION_MODE=block", h.SYSTEM_PYTHON, h.HOOK]
         blocked = subprocess.run(env_cmd, input=json.dumps(self.sb.payload()).encode(), stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, timeout=20, cwd=self.sb.project)
         self.assertEqual(blocked.returncode, 0)

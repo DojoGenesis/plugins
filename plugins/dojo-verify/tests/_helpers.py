@@ -158,7 +158,9 @@ class Sandbox(object):
         return p
 
     def env(self, **extra):
-        env = {"PATH": "/usr/bin:/bin", "HOME": self.home, "CLAUDE_PLUGIN_DATA": self.state, "TMPDIR": self.tmpdir}
+        # Most tests exercise the block path, so they set it; the default (warn) is tested with the option absent.
+        env = {"PATH": "/usr/bin:/bin", "HOME": self.home, "CLAUDE_PLUGIN_DATA": self.state, "TMPDIR": self.tmpdir,
+               "CLAUDE_PLUGIN_OPTION_MODE": "block"}
         for k, v in extra.items():
             if v is None:
                 env.pop(k, None)

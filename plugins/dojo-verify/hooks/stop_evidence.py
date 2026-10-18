@@ -1442,7 +1442,7 @@ def killed():
 def get_mode():
     raw = os.environ.get("CLAUDE_PLUGIN_OPTION_MODE")
     mode = raw.strip().lower() if isinstance(raw, str) else ""
-    return mode if mode in ("block", "warn", "off") else "block"
+    return mode if mode in ("block", "warn", "off") else "warn"
 
 
 def read_stdin():
