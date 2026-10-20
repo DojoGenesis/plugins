@@ -10,6 +10,12 @@ method, the rubric and the tables. It started from five misfires reported from o
 
 ### Added
 
+- **The garden score (wisdom-garden 1.2.0, mod)** — `/garden-score` opens a weekly card on whether memory is
+  compounding: recurrence notes (a labeled proxy for repeat mistakes), median cost and turns per session, new seeds
+  and skills, distinct items reused, reads of stale or superseded memory, and harvest cadence. It reads the typed
+  memory fields (`supersedes`, `superseded_by`, `verified`, `as_of`, `valid_until`) when they are there. After four
+  saved weeks it gives a compounding, linear or saturating reading against bars fixed in the code. Terminal and
+  desktop.
 - **A fixture suite for the hooks** — `scripts/hook_accuracy.py` runs each hook script on fixtures with known
   answers (`plugins/<plugin>/fixtures/accuracy/`) and prints precision and recall per hook with 95% intervals;
   `--hooks-from` measures another checkout against the same fixtures. Fixtures marked `known_miss` record errors the
