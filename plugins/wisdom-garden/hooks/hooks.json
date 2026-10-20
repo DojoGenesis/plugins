@@ -1,3 +1,7 @@
 {
-  "hooks": {}
+  "description": "Weekly compounding score (mod, early access): a reuse log of memory and skill reads, per-session cost and turns, and the /garden-score pane. The classic tier has no hooks.",
+  "hooks": {},
+  "modules": [
+    "./register.tsx"
+  ]
 }
