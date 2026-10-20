@@ -25,15 +25,17 @@ class Base(unittest.TestCase):
 
 
 class TestKillSwitchesAndModes(Base):
-    def test_default_mode_warns_and_does_not_block(self):
+    def test_default_mode_warns_and_never_blocks(self):
         r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE=None))
         self.assertEqual(r.code, 0)
+        self.assertEqual(r.err, "")
         data = r.json()
         self.assertNotIn("decision", data)
         self.assertTrue(data["systemMessage"].startswith("dojo-verify:"))
+        self.assertIn("set mode to block", data["systemMessage"])
 
     def test_block_mode_blocks_with_the_documented_shape(self):
-        r = self.run_hook(self.claim_turn())
+        r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE="block"))
         self.assertEqual(r.code, 0)
         self.assertEqual(r.err, "")
         data = r.json()
@@ -86,7 +88,7 @@ class TestKillSwitchesAndModes(Base):
 
     def test_unknown_mode_falls_back_to_warn(self):
         r = self.run_hook(self.claim_turn(), env=self.sb.env(CLAUDE_PLUGIN_OPTION_MODE="garbage"))
-        self.assertNotIn("decision", r.json())
+        self.assertFalse(r.blocked)
         self.assertIn("systemMessage", r.json())
 
     def test_stop_hook_active_never_blocks(self):
@@ -1098,13 +1100,20 @@ class TestMarkerAndState(Base):
 
 
 class TestPortability(Base):
-    def test_block_and_fail_open_under_a_bare_environment(self):
+    def test_warn_block_and_fail_open_under_a_bare_environment(self):
         # The same invocation the engine could use on a machine with nothing but the system tools.
         import subprocess
         self.sb.write(self.claim_turn())
         env_cmd = ["/usr/bin/env", "-i", "PATH=/usr/bin:/bin", "HOME=" + self.sb.home,
-                   "TMPDIR=" + self.sb.tmpdir, "CLAUDE_PLUGIN_OPTION_MODE=block", h.SYSTEM_PYTHON, h.HOOK]
-        blocked = subprocess.run(env_cmd, input=json.dumps(self.sb.payload()).encode(), stdout=subprocess.PIPE,
+                   "TMPDIR=" + self.sb.tmpdir, h.SYSTEM_PYTHON, h.HOOK]
+        warned = subprocess.run(env_cmd, input=json.dumps(self.sb.payload()).encode(), stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE, timeout=20, cwd=self.sb.project)
+        self.assertEqual(warned.returncode, 0)
+        self.assertNotIn("decision", json.loads(warned.stdout))
+        self.assertIn("systemMessage", json.loads(warned.stdout))
+        self.assertEqual(warned.stderr, b"")
+        block_cmd = env_cmd[:4] + ["CLAUDE_PLUGIN_OPTION_MODE=block"] + env_cmd[4:]
+        blocked = subprocess.run(block_cmd, input=json.dumps(self.sb.payload()).encode(), stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE, timeout=20, cwd=self.sb.project)
         self.assertEqual(blocked.returncode, 0)
         self.assertEqual(json.loads(blocked.stdout)["decision"], "block")

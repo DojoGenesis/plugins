@@ -2,9 +2,9 @@
 """dojo-verify: Stop hook. A reply that claims success needs a passing check behind it.
 
 When the assistant's final message claims success (tests pass, verified, fixed, deployed ...) and no recognized
-check ran, and came back clean, after the last change made in this session, this hook blocks the stop once (mode
-block), or just says so (mode warn). A session with no change in it is not judged. It reads the newest part of the
-transcript, never runs anything, and fails open on every error.
+check ran, and came back clean, after the last change made in this session, this hook says so (mode warn, the
+default), or blocks the stop once (mode block, opt-in). A session with no change in it is not judged. It reads the
+newest part of the transcript, never runs anything, and fails open on every error.
 
 Stdlib only, Python 3.9. The claim and check patterns live in patterns.json (the mod carries a copy in
 patterns.ts; a test keeps them equal).
