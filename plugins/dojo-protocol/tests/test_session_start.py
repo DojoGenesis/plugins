@@ -892,18 +892,30 @@ class TestEvalScaffolds(unittest.TestCase):
                     if kind == "tool_used":
                         self.assertTrue(isinstance(grader.get("min", 1), int) and isinstance(grader.get("max", 0), int))
 
+    def scaffold_text(self, name):
+        # claude plugin eval reads context.scaffold_script as a path to a script file, not as inline
+        # shell, so the fixture is the text of the file the field names, beside case.yaml.
+        field = self.load_case(name)["context"].get("scaffold_script", "")
+        return read(os.path.join(PLUGIN, "evals", name, field)) if field else ""
+
+    def test_scaffold_script_names_an_executable_file_beside_the_case(self):
+        for name in sorted(EXPECTED_EVALS):
+            with self.subTest(name):
+                self.assertEqual(self.load_case(name)["context"].get("scaffold_script"), "scaffold.sh")
+                path = os.path.join(PLUGIN, "evals", name, "scaffold.sh")
+                self.assertTrue(os.access(path, os.X_OK), "scaffold.sh must be executable")
+                self.assertTrue(read(path).startswith("#!/bin/sh\n"))
+
     def test_scaffold_script_present_where_a_fixture_is_needed(self):
         for name in ("cites-file-line", "no-edit-when-told", "trivial-fix-stays-inline"):
-            script = self.load_case(name)["context"].get("scaffold_script", "")
-            self.assertIn("src/client.py", script, name)
-        wide = self.load_case("scout-before-edit")["context"].get("scaffold_script", "")
+            self.assertIn("src/client.py", self.scaffold_text(name), name)
+        wide = self.scaffold_text("scout-before-edit")
         for path in ("src/net/config.py", "src/net/client.py", "src/jobs/worker.py", "tests/test_client.py",
                      "docs/usage.md"):
             self.assertIn(path, wide)
 
     def fixture_files(self, name):
-        script = self.load_case(name)["context"].get("scaffold_script", "")
-        return set(re.findall(r"> (\S+)", script))
+        return set(re.findall(r"> (\S+)", self.scaffold_text(name)))
 
     def test_cases_do_not_contradict_each_other(self):
         # A run that follows the protocol must be able to pass every case. A case that

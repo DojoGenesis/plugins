@@ -14,7 +14,7 @@
   ],
   "runs": 3,
   "context": {
-    "scaffold_script": "printf '{\"retries\": 3}\\n' > settings.json",
+    "scaffold_script": "scaffold.sh",
     "add_dirs": []
   },
   "execution": {

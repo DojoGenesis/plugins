@@ -58,7 +58,7 @@ class TestManifest(unittest.TestCase):
             self.assertIn("default", field, key)
             self.assertIn(field["type"], ("string", "number", "boolean", "directory", "file"), key)
             self.assertTrue(field["title"] and field["description"], key)
-        self.assertEqual(cfg["mode"]["default"], "block")
+        self.assertEqual(cfg["mode"]["default"], "warn")
         self.assertEqual(cfg["mode"]["options"], ["block", "warn", "off"])
         self.assertIn(cfg["mode"]["default"], cfg["mode"]["options"])
         self.assertIs(cfg["show_status"]["default"], True)
@@ -173,6 +173,9 @@ class TestCopyRules(unittest.TestCase):
             self.assertEqual(case["schema_version"], "1.0")
             self.assertIn("graders", case)
             self.assertIn("Not run by the build", text)
+            # claude plugin eval reads the field as a path to a script file, not as inline shell
+            self.assertEqual(case["context"]["scaffold_script"], "scaffold.sh")
+            self.assertTrue(os.access(os.path.join(ROOT, "evals", name, "scaffold.sh"), os.X_OK), name)
 
 
 class TestParity(unittest.TestCase):
