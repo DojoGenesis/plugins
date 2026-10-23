@@ -67,6 +67,10 @@ method, the rubric and the tables. It started from five misfires reported from o
   deny. The shell parser records each substitution's parent segment so the guard can tell.
 - **`dojo-gates` 0.2.0, staging** — `git add -N` (intent to add) and `git add -n` (dry run) stage no content and no
   longer deny.
+- **LF on every checkout** — a root `.gitattributes` (`* text=auto eol=lf`, with the common text types named and
+  binaries marked) pins line endings, so a Windows clone with `core.autocrlf=true` gets the same bytes as git
+  stores. Before, such a clone had CRLF files, every byte count on /proof read high, and the website's deploy guard
+  refused the deploy unless `DOJO_PLUGINS_DIR` pointed at an LF export.
 
 ## Unreleased — 2.3.0 — the desktop pass
 
