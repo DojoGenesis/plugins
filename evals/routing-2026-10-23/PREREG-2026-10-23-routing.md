@@ -267,6 +267,84 @@ or the hidden tests before reading anything into it.
 
 MEASUREMENTS BEGIN BELOW THIS LINE
 
+## Status note before any spend (2026-10-23 21:15 UTC)
+
+The digest above, `d66e5b96bc78d9987d5fc13f60b3b85918b60b1bd0bd04676631bf505645187a`, was recorded at
+21:14:21 UTC, committed as `7404987`, and pushed to `refs/heads/eval/routing-2026-10-23` at 21:15:15 UTC, before
+the first eval invocation at 21:15:42 UTC. The digest and the cap arithmetic went to Cruz in the session's first
+status message, and into the shared notes of the session group, before anything was spent.
+
+## Amendment 1 (2026-10-23, after the pilots, before any main run)
+
+Four fixes, each of the kinds section 6 allows (a flag, a granted tool, a field the eval reads differently than
+assumed). No prompt, criterion, metric, rule or n changed. The pilots (ledger rows 1 to 6, $8.48 in all) are
+excluded from analysis.
+
+1. **`--trust-plugin` added** to both commands. Without it the eval stops at an interactive trust prompt that a
+   non-interactive shell can't answer. The plugins are this repository's own code.
+2. **No shell for any agent.** The first R pilot started no agent and spent $0.12 (the in-eval judge only): on
+   this Windows machine the eval refuses any run that grants a shell tool, because the Windows sandbox is behind a
+   feature gate that is off for this session and the eval sets `failIfUnavailable`. The grants are now
+   `--allow-tools Edit Write` for R and `--allow-tools Edit Write Workflow` for F. Agents and workflow agents in
+   both arms can read, search, edit, write and dispatch, but can run no command: no tests, no gates, no git, no
+   `pwd`. This holds for both arms alike. `hr-reminder-every`'s "run them when you're done" can't be followed, and
+   F's integrator and audit can't run the gates, so no F scorecard can say VERIFIED. Read every result here as
+   what routing does in a session without a shell. The hidden tests run outside the eval and are unaffected.
+3. **Workflow granted in F.** It is a gated tool. The first F pilot withheld it, and no workflow ran ($0.54).
+4. **The files judge runs outside the eval.** On this machine the eval hands the `focus: files` judge an empty
+   view ("(no file changes)") even when the agent changed files: in the R pilot it voted FAIL three times on all
+   10 runs, all of which pass the hidden tests. `judge_files.py` runs the same grader after the eval: the same
+   criteria string, read from each case.yaml; Opus; three votes, the majority deciding; and files only, never
+   the trace. The files are the run's changes against a fresh scaffold. Planted inputs: scaffold plus reference
+   PASS 3 of 3; the scaffold untouched FAIL 3 of 3. On the 10 R pilot runs it voted PASS 3 of 3 on all 10,
+   agreeing with the hidden tests. Each vote is `claude -p --model opus` on the same claude.ai login, with no
+   tools, setting sources, MCP servers or slash commands; a probe showed no user hook reaches it. The in-eval
+   `quality-judge` still runs (about $0.006 a run) and its verdicts are void; Δj uses `judge_files.py`. Its
+   spend is outside `claude plugin eval`, so it is logged in the ledger and counted against the $100.
+
+**Pilot checks.**
+
+- P1: both plugins load; `suite.plugins` lists dojo-router 0.1.1 and dojo-flow 0.1.0, with no problems listed.
+- P2: in R's with arm, the session named a model on every Agent dispatch by itself, so there was no unpinned
+  dispatch for either tier to act on (`hook-warned` 0 of 5). 8 of 9 with-arm subagents ran on
+  `claude-haiku-5-5` or `claude-sonnet-5-5`; on the careful task the session chose Opus for its helper. In the
+  without arm, all 11 subagents ran on `claude-opus-5-5`, Explore included, so the baseline is all-Opus as
+  assumed. What made the with arm name models is not isolated here; the plugin's `router` skill is in its
+  context, and its hooks never fired.
+- P3: each kept run holds its work directory (`home/cwd`) and transcripts with exact model ids
+  (`config/projects/.../subagents/*.jsonl`; F's workflow agents under `subagents/workflows/wf_*/`).
+  `grade_hidden.py` runs on them: 10 of 10 R pilot runs PASS.
+- P4: every grader runs; `quality-judge` is void, as item 4 says.
+- P5: in F the Workflow tool works once granted, and the workflow reached a scorecard in 4 of 4 runs. Run costs of
+  $0.75–0.88 are well above what the session's own transcript accounts for, consistent with the workflow agent's
+  cost being inside the run. **But in all 4 the contract gate (role `judge`, Opus in both arms) returned REFUSED:
+  it found the two tracks coupled, because one calls the other's functions and the visible tests import both
+  modules. Only the contract agent was dispatched, so no routed role ran.** Two of the refusals also say the gate
+  was never given the track prompts. That is true of `build.js`: the contract prompt lists track names and owned
+  files only, while asking the gate to check that "each track prompt matches the code". Under section 6, P5 passes
+  (the workflow runs and reports in this harness), so F's main run goes ahead as frozen. If the gate keeps
+  refusing, the rule's manipulation bar decides how that reads. dojo-flow is the artifact under test and is not
+  changed here.
+- P6, cost per run: R $0.371 in the eval (the largest single run $0.549), plus $0.081 for the files judge. F
+  $0.797 (the largest $0.881).
+
+**Caps, by the stop rule.** Spent so far: $8.4803.
+
+- R reserve = 2 × 0.549 × 1.5 = $1.65. R main cap = min(1.3 × 0.3709 × 60 = $28.93, $35, 100 − 8.48 − 1.65 =
+  $89.87) = **$28.93**. Projected: $22.26 for the eval and $4.86 for the files judge. Runs stay at 6 per case.
+- F reserve = 2 × 0.881 × 1.5 = $2.64. F main cap = min(1.3 × 0.7968 × 20 = $20.72, 100 − spend at that point −
+  2.64), worked out from the ledger before F starts. Projected: $15.94 for the eval and about $1.60 for the files
+  judge. Runs stay at 5 per case.
+- Projected total, pilots included: about $53.
+
+**Analysis code, frozen before any main run** (sha256 of each file as committed with this amendment):
+- `d6498c583dd8fe408747ccd622da19113e0903c5eda5ae1950f9d587922bd33c`  `analyze.py`
+- `811595b01977df1277df9b8609c13f4a0b94f5c8202cd1fd8e3e122676ea8961`  `stats.py`
+- `86a1fdf9ba6d73020d6e5ab5788d3640e647f2f5c23d5d325cf242634a2cfd66`  `grade_hidden.py`
+- `aef332021ec17eef39e5c0cb1b300e67a2932437173f4a97c0b65072391a61a5`  `judge_files.py`
+- `24f82686ef6bd94f6af10eaadaa38770455c6d0c9709a0d422f68a5f06f498bb`  `judge_runs.py`
+- `7d27f380fe1c66048d032d8b6af6d48f5faecec93a558625346bcc3b87d5f085`  `build_cases.py`
+
 ## Results
 
 (Empty until the run. Raw numbers per cell go here, including the cells that make routing look bad.)
