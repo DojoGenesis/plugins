@@ -46,7 +46,7 @@ method, the rubric and the tables. It started from five misfires reported from o
 
 ### Fixed
 
-- **`dojo-verify` 0.2.0** — counts the checks people actually run: a program that exits clean and prints PASS or ok
+- **`dojo-verify` 0.2.1** (0.2.1 only bumps the version, so that installed copies pick up the `warn` default from 7479bd6, which landed under an unchanged 0.2.0 and so never refreshed a plugin cache) — counts the checks people actually run: a program that exits clean and prints PASS or ok
   lines, `N passed`, `N/N pass`, `ALL PASS` or `0 failed`; `gh pr checks` and `gh run view/watch`; opening a rendered
   image after a visual change. The agent's own memory and notes (a Write or Edit there, or a Bash write that names
   them) no longer reset the evidence. Reads claims as the writer meant them: a leading negative covers its list
