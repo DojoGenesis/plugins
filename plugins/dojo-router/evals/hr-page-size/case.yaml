@@ -1,0 +1,58 @@
+# Held-out case for the pre-registered routing eval (evals/routing-2026-10-23/PREREG-2026-10-23-routing.md).
+# The task was written by an independent model author from held-out-brief.md, without access to this
+# repository; its hidden tests live in evals/routing-2026-10-23/cases/, never in the sandbox. The graders
+# are the evaluator's, fixed by the pre-registration. JSON is valid YAML. Runs spend money: never run
+# without a cap and a yes.
+{
+  "schema_version": "1.0",
+  "name": "hr-page-size",
+  "description": "Where a value is defined and used: change the default page size and cap, notice the hard-coded 20 in the renderer, and leave the unrelated printed-sheet 20 alone.",
+  "tags": [
+    "held-out",
+    "routing",
+    "standard"
+  ],
+  "runs": 6,
+  "context": {
+    "scaffold_script": "scaffold.sh",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "The product listing returns 20 products per page by default and lets callers ask for up to 50 with `page_size`. I want the default to be 50, and callers should be able to ask for up to 100 (anything bigger is cut down to 100; zero, negative or non-numeric values fall back to the default). Use subagents first to find where the page size is defined and every place that relies on it or assumes the old number, and to pick out anything that just happens to use the number 20 for something else, because that should stay as it is. Then make the change.",
+    "max_turns": 16,
+    "timeout_seconds": 900,
+    "model": "opus",
+    "allowed_tools": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Agent",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "llm",
+      "name": "quality-judge",
+      "focus": "files",
+      "criteria": "You are grading the final state of a small Python project after a coding task. Read the project's files. A correct finish: The default listing page size is 50 with a cap of 100, the 'Showing a-b of n' text follows the actual page size, and the printed-sheet export still uses 20 per sheet. Decide whether the code now does what that sentence describes, judging behaviour, not style or comments. PASS if it does. FAIL if it does not, or only partly does."
+    },
+    {
+      "type": "tool_used",
+      "name": "dispatched",
+      "tool": "Agent",
+      "min": 1
+    },
+    {
+      "type": "regex",
+      "name": "hook-warned",
+      "target": "trace",
+      "pattern": "dojo-router: this .* dispatch names no model",
+      "arm": "with-only"
+    }
+  ],
+  "expected_outcome": "The default listing page size is 50 with a cap of 100, the 'Showing a-b of n' text follows the actual page size, and the printed-sheet export still uses 20 per sheet."
+}

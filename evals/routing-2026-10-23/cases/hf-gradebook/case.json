@@ -1,0 +1,30 @@
+{
+  "name": "hf-gradebook",
+  "family": "hf",
+  "kind": "standard",
+  "description": "Two parallel tracks build a gradebook: statistics helpers, and CSV report plus command line using them.",
+  "prompt": "",
+  "goal": "Build a small Python package `gradebook` (standard library only) that turns a class's scores, given as CSV text with a name column and a score column, into a ranked plain-text table with letter grades and a class summary line, plus a command line front end. The directory `gradebook/` and its `__init__.py` already exist, and `tests/test_gradebook.py` already exists and must not be edited. Two tracks run at the same time and cannot talk to each other: `stats` writes `gradebook/stats.py`; `report` writes `gradebook/report.py` and `gradebook/cli.py`. The shared interface is `stats.letter_grade(score)` and `stats.summarize(values)`, described identically in both track prompts. At the end the test suite in `tests/` must pass.",
+  "tracks": [
+    {
+      "name": "stats",
+      "prompt": "Write the file `gradebook/stats.py` (Python 3, standard library only). The package `gradebook` already exists with an `__init__.py`. Write only this one file and do not edit anything else, including `tests/`. Another builder is writing `gradebook/report.py` and `gradebook/cli.py` at the same time; they will call `stats.letter_grade(score)` and `stats.summarize(values)` exactly as described below, so keep those names, arguments and return shapes.\n\nProvide exactly these functions:\n- `mean(values)` -> float: the arithmetic mean of a non-empty sequence of numbers. Raise `ValueError` if it is empty.\n- `median(values)` -> float: the middle value of the numbers in sorted order; for an even count, the mean of the two middle values. Raise `ValueError` if empty. It must not modify the sequence passed in.\n- `letter_grade(score)` -> str: `\"A\"` when score >= 90, `\"B\"` when >= 80, `\"C\"` when >= 70, `\"D\"` when >= 60, otherwise `\"F\"`. Scores are floats, so 89.99 is `\"B\"`, 90.0 is `\"A\"` and 104.5 is `\"A\"`.\n- `summarize(values)` -> dict with exactly the keys `count` (int), `mean`, `median`, `min`, `max` for a sequence of numbers. For an empty sequence do not raise: return `{\"count\": 0, \"mean\": None, \"median\": None, \"min\": None, \"max\": None}`.",
+      "files": [
+        "gradebook/stats.py"
+      ]
+    },
+    {
+      "name": "report",
+      "prompt": "Write the files `gradebook/report.py` and `gradebook/cli.py` (Python 3, standard library only). The package `gradebook` already exists with an `__init__.py`. Write only these two files and do not edit anything else, including `tests/`. Another builder is writing `gradebook/stats.py` at the same time; do not write that file. Import it with `from gradebook import stats` and use only these two functions from it, which will behave as follows:\n- `stats.letter_grade(score)` -> str: `\"A\"` for score >= 90, `\"B\"` for >= 80, `\"C\"` for >= 70, `\"D\"` for >= 60, otherwise `\"F\"`.\n- `stats.summarize(values)` -> dict with the keys `count` (int), `mean`, `median`, `min`, `max` for a list of numbers (for an empty list the count is 0 and the others are `None`; you will not need that case).\n\n`gradebook/report.py` provides:\n- `parse_rows(text)` -> list of `(name, score)` tuples with `name` a str and `score` a float. `text` is CSV with two columns, name and score; read it with the `csv` module. Ignore lines that are empty or contain only whitespace. The first remaining line is a header, and is skipped, when it has at least two fields and its second field (stripped) is not a number that `float()` accepts, for example `name,score`; any other line is a data row. Every data row must have exactly two fields, a non-empty name once stripped, and a stripped score that `float()` accepts; otherwise raise `ValueError`. Names are returned stripped. Rows keep their input order. A header line is only recognised as the first remaining line, so a later line with a non-numeric score is an error.\n- `render(rows)` -> str. If `rows` is empty return exactly `No scores`. Otherwise return these lines joined with `\"\\n\"` and no trailing newline: first `Name | Score | Grade`; then one line per row, ordered by score from highest to lowest and, for equal scores, by name in plain string order (case-sensitive, so `Zed` comes before `bob`), each formatted `{name} | {score:.1f} | {grade}` where grade is `stats.letter_grade(score)` applied to the unrounded score (so a score of 89.96 is printed as `90.0` but still gets `B`); then a last line `Class: {count} students, mean {mean:.1f}, median {median:.1f}` with the numbers taken from `stats.summarize` of all the scores, using `1 student` instead of `1 students` when the count is 1.\n\n`gradebook/cli.py` provides:\n- `main(argv=None, stdin=None, stdout=None, stderr=None)` -> int. When an argument is None use `sys.argv[1:]`, `sys.stdin`, `sys.stdout` and `sys.stderr`, looked up when `main` runs and not at import time. With more than one item in `argv`, write `usage: python -m gradebook.cli [file.csv]` and a newline to stderr and return 2. With one item, it is the path of a CSV file: read it as UTF-8 (open it with `newline=\"\"`). With none, read all of `stdin`. Then write `report.render(report.parse_rows(text))` followed by a newline to stdout and return 0. If reading the file raises `OSError` or parsing raises `ValueError`, write `error: <message>` and a newline to stderr, write nothing to stdout, and return 2.\n- End the file with `if __name__ == \"__main__\": raise SystemExit(main())`.",
+      "files": [
+        "gradebook/report.py",
+        "gradebook/cli.py"
+      ]
+    }
+  ],
+  "gates": [
+    "python3 -m unittest discover -s tests -q",
+    "python3 -c \"import gradebook.stats, gradebook.report, gradebook.cli\""
+  ],
+  "expected_outcome": "gradebook/stats.py, gradebook/report.py and gradebook/cli.py exist and agree on the shared stats interface, and the gates pass: the tests pass and all three modules import."
+}

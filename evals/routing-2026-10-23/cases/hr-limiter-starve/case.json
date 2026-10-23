@@ -1,0 +1,8 @@
+{
+  "name": "hr-limiter-starve",
+  "family": "hr",
+  "kind": "careful",
+  "description": "Subtle token-bucket bug: whole-token refill math throws away fractional progress whenever the bucket is looked at more often than once per token interval; naive fixes bank idle time.",
+  "prompt": "Our rate limiter has a nasty problem. With a policy of 2 requests per 4 seconds, a client that gets a 429 and keeps retrying every quarter of a second is never let back in, even after waiting far longer than the two seconds it should take for a slot to free up. A client that goes quiet for a few seconds and then tries once gets through fine, and people polling the remaining-quota status seem to cause the same trouble. The tests in tests/ all pass, so they don't cover it. Ask a subagent to review the token bucket in `ratelimit/bucket.py` carefully and work out what actually causes this (not a guess), then fix it so those clients get a slot back on time, without changing how the limiter behaves for clients that never hit the problem.",
+  "expected_outcome": "The bucket keeps fractional refill progress across frequent calls so retrying or polling clients regain a token on schedule, does not bank time spent full, and leaves all existing bucket and limiter behaviour unchanged."
+}
