@@ -347,12 +347,167 @@ excluded from analysis.
 
 ## Results
 
-(Empty until the run. Raw numbers per cell go here, including the cells that make routing look bad.)
+Both main runs used the tree of commit `76f2779` (the pre-registration plus amendment 1), Claude Code 2.1.305 on
+Windows 11, the frozen grids with the amendment 1 flags, and the logged-in claude.ai account. Every session
+transcript in both studies ran on `claude-opus-5-5`. Per-run rows: `results-2026-10-23-main.json`. Spend, run by
+run: `spend-ledger.md`.
+
+### Study R (dojo-router)
+
+The run started 2026-10-23 at 21:38:50 UTC and took 2,374 s. All 60 runs finished with no errors: $21.86 against a
+cap of $28.93, not partial. The files judge then cost $4.74 (60 runs × 3 Opus votes). Every run counted.
+
+| case | arm | runs | mean agent cost (sd) | hidden pass | judge pass | mean turns | helpers off Opus | mean wall s |
+|---|---|---|---|---|---|---|---|---|
+| hr-note-cache | routed | 6 | $0.311 (0.049) | 6 | 6 | 10.8 | 12 of 12 | 68 |
+| hr-note-cache | all-opus | 6 | $0.494 (0.072) | 6 | 6 | 9.8 | 0 of 13 | 84 |
+| hr-page-size | routed | 6 | $0.188 (0.026) | 6 | 6 | 7.8 | 11 of 11 | 55 |
+| hr-page-size | all-opus | 6 | $0.355 (0.005) | 6 | 6 | 6.0 | 0 of 12 | 56 |
+| hr-reminder-every | routed | 6 | $0.233 (0.019) | 6 | 6 | 8.3 | 19 of 19 | 62 |
+| hr-reminder-every | all-opus | 6 | $0.477 (0.017) | 6 | 6 | 6.2 | 0 of 24 | 72 |
+| hr-retry-limit | routed | 6 | $0.243 (0.042) | 6 | 6 | 7.2 | 14 of 14 | 68 |
+| hr-retry-limit | all-opus | 6 | $0.440 (0.093) | 6 | 6 | 5.5 | 0 of 13 | 80 |
+| hr-limiter-starve (careful) | routed | 6 | $0.388 (0.096) | 6 | 6 | 7.5 | 7 of 11 | 111 |
+| hr-limiter-starve (careful) | all-opus | 6 | $0.441 (0.041) | 6 | 5 | 8.7 | 0 of 7 | 128 |
+
+- Pooled mean agent cost: routed $0.2726, all-opus $0.4415. ρ = 0.617, 95% bootstrap interval 0.570 to 0.665.
+  Per case: 0.63, 0.53, 0.49, 0.55, and 0.88 on the careful case. On the four standard cases alone, 0.552 (0.511
+  to 0.593).
+- Hidden tests, standard cases: routed 24 of 24, all-opus 24 of 24. Δq = 0, Newcombe interval −0.138 to +0.138.
+- Files judge, standard cases: 24 of 24 in both arms. Δj = 0.
+- Careful case: hidden tests 6 of 6 in both arms. The judge disagreed with the hidden tests once: one all-opus run
+  passed every hidden test, and the judge failed it 2 votes to 1.
+- Helpers (subagent transcripts): 63 of 67 off Opus when routed, 0 of 69 in all-opus.
+- What the sessions did: in all 30 routed runs, the session invoked the `dojo-router:router` skill before its first
+  dispatch, then named a model on every one of its own 62 Agent calls: haiku 38, sonnet 20, opus 4, all four Opus
+  calls on the careful case. In all-opus, none of the session's 68 Agent calls named a model (55 Explore, 13
+  general-purpose), and all of them ran on Opus. `hook-warned`, which reads the session's trace, fired in 0 of 30
+  routed runs.
+- Helpers dispatching helpers, all on the careful case: routed, 5 such calls, 2 naming haiku and 3 naming none;
+  all-opus, 1, naming none, which ran on Opus. One routed case is clear-cut: a helper running on Opus dispatched a
+  general-purpose helper without a model, and that helper ran on Sonnet, dojo-router's `default_tier`. So the mod
+  tier loaded in the eval child (the operator's shell sets `CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1`) and acted at
+  least once. The other two unpinned calls came from a helper already on Sonnet and ran on Sonnet, so they don't
+  show which tier acted.
+- Split halves: runs 1–3 give ρ = 0.643 (0.604 to 0.686), runs 4–6 give 0.591 (0.531 to 0.658).
+- The routed arm took about one to two more turns on four of five cases (fewer on the careful case), and less wall
+  time on all five.
+- The in-eval `quality-judge` (void, amendment 1) cost $0.44 of the $21.86. Agent cost excludes it.
+
+### Study F (dojo-flow)
+
+The run started 2026-10-23 at 22:18:45 UTC and took 1,998 s. All 20 runs finished with no errors: $15.75 against a
+cap of $20.72, not partial. The files judge then cost $1.31. Every run counted.
+
+| task | arm | runs | mean agent cost | scorecard | agents dispatched | hidden pass | judge pass | mean wall s |
+|---|---|---|---|---|---|---|---|---|
+| hf-gradebook | routed | 5 | $0.728 | REFUSED 5 of 5 | 1 per run (contract, Opus) | 0 | 0 | 197 |
+| hf-gradebook | all-opus | 5 | $0.718 | REFUSED 5 of 5 | 1 per run (contract, Opus) | 0 | 0 | 181 |
+| hf-semver-ranges (careful) | routed | 5 | $0.829 | REFUSED 5 of 5 | 1 per run (contract, Opus) | 0 | 0 | 201 |
+| hf-semver-ranges (careful) | all-opus | 5 | $0.843 | REFUSED 5 of 5 | 1 per run (contract, Opus) | 0 | 0 | 208 |
+
+- In all 20 runs, the contract gate (role `judge`, Opus in both arms) found the two tracks coupled and stopped the
+  build. No scout, builder, integrator, reviewer or checker ran. The only file any run added is
+  `.dojo/dag-contract.md`, which the gate wrote while refusing. No session edited code itself.
+- Pooled mean agent cost: routed $0.7787, all-opus $0.7807. ρ = 0.997 (0.921 to 1.080).
+- Hidden tests 0 of 10 in both arms, files judge 0 of 10 in both. Helpers off Opus: 0 of 10 in both arms.
 
 ## Ruling applied mechanically
 
+**Study R.**
+
+1. Cost: ρ's interval, 0.570 to 0.665, lies entirely below 1. **Savings detected.**
+2. Quality: Δq's interval, −0.138 to +0.138, is not entirely below 0. Its lower bound is −0.15 or above, and Δj = 0
+   is −0.15 or above. **Non-inferior.**
+3. Careful case: 6 hidden passes in each arm, so 0 fewer. **No harm flagged.**
+4. Routing took effect: 94% of routed helpers ran off Opus, against 0%, which clears 50% and a 25-point gap.
+5. Inconclusive conditions: none apply (60 of 60 runs counted, savings detected).
+
+**The rule outputs, for dojo-router: "saves, no measured loss".** Section 1 lets its README cite the measured cost
+ratio with its conditions. Refutation checks (section 5): ρ's interval excludes 1; the hidden tests show no loss;
+the careful case shows no harm; the all-opus arm ran 0% of helpers off Opus, so Claude Code's default does not
+already route; and the routed arm did not save by doing less (more turns, same pass rate). None of them fires.
+
+Proposed README text for dojo-router, not applied here (the wording is Cruz's decision): *"In a pre-registered eval
+(evals/routing-2026-10-23), an Opus session asked to delegate lookups spent 0.62 as much with dojo-router installed
+as without (95% interval 0.57 to 0.67; 60 runs, five tasks, no shell, Claude Code 2.1.305, dojo-router 0.1.1),
+with every hidden test passing in both arms. The saving came from the session following the router skill, not from
+the hooks. Harder tasks, sessions with a shell and sessions that don't delegate were not measured."*
+
+**Study F.**
+
+1. Cost: ρ's interval, 0.921 to 1.080, includes 1. No detectable difference.
+2. Quality: Δq's interval, −0.278 to +0.278, has a lower bound below −0.15. Not resolved.
+3. Careful case: 0 and 0 passes. No harm flagged.
+4. Routing took effect: 0% of routed helpers ran off Opus, against 0%. **Did not take effect.**
+5. No savings were detected and routing did not take effect.
+
+**The rule outputs, for dojo-flow: "inconclusive: routing did not take effect".** Its README stays as it is. Every
+build stopped at a gate that runs on Opus in both arms, before any routed role started. Section 5's first bullet
+(no saving shown) is literally true here, but it refutes nothing about routing.
+
 ## What outranks the ruling
+
+- **dojo-router's saving came from its skill, not its hooks.** The README describes a plugin that notices unpinned
+  dispatches and warns, blocks or fills in the model. Here none of that happened: the session read the `router`
+  skill in every routed run and pinned every one of its own dispatches, so the hooks had nothing to see at the top
+  level. The mod acted only once, on a helper's own dispatch (Results, above). The measured saving belongs to the
+  plugin as installed (skill plus hooks), and nearly all of it came through the skill. An arm with the skill
+  removed and the hooks kept, or the reverse, would split the two; that was not run.
+- **The skill spent Opus where judgment was asked for.** On the careful task, the session named Opus for 4 of its
+  6 helper dispatches, as the skill's role table says for a judge. So the saving there was small (0.88), and
+  quality held. That is the table doing its job on the task built to make routing lose.
+- **The quality result is a ceiling, not a margin.** Every run in both arms passed every hidden test. Non-inferiority
+  clears the −0.15 margin only because both arms were perfect (lower bound −0.138), as section 4's power note
+  said would be the only way. These tasks were too easy for helpers on Haiku or Sonnet to fail. Harder lookups
+  might separate the arms.
+- **dojo-flow's first live run found a gate problem, not a cost result.** This is the first time the build workflow
+  ran against real models (the README says none had been made). Its contract gate refused 24 of 24 builds, pilots
+  included, on two tasks an outside author wrote to the brief. Two causes:
+  - The independence test counts any track that calls another track's functions as coupled. Two tracks that share
+    a stated interface, which is the usual shape of a parallel build, can't pass it. That leaves either one track,
+    or tracks with nothing at all between them.
+  - The contract prompt gives the gate track names and owned files only, not the track prompts, yet tells it to
+    "check that each track prompt matches the code". 12 of the 20 main-run traces say so.
+
+  The brief asked for exactly this shape of task: a shared interface stated in both prompts. So the task set and
+  the gate's rule collided. A task set built to the gate's rule might pass it; this one tells you the rule is
+  stricter than the README's "Contract before fan-out" suggests.
+- **A refused build leaves its contract file behind.** All 20 refusals wrote `.dojo/dag-contract.md`, and the
+  workflow refuses to overwrite that file. So a re-run in the same repository fails until the file is removed or a
+  new `contractPath` is passed.
 
 ## Gaps and handicaps
 
+- **No shell.** On this Windows machine the eval refuses to grant a shell tool (amendment 1). No agent, helper or
+  workflow agent could run a test, a gate, git or any command. With a shell, sessions do more work per task, and
+  the helpers' share of the cost, and so the saving, may differ.
+- **Sessions that delegate.** The R prompts asked for subagents. A session that never dispatches gets nothing from
+  routing, and this eval says nothing about it.
+- **One platform, one version.** Windows 11; Claude Code 2.1.305; dojo-router 0.1.1; dojo-flow 0.1.0;
+  `claude-opus-5-5`, `claude-sonnet-5-5`, `claude-haiku-5-5`. Not replicated on a second sample; the split halves
+  above are the only check on noise.
+- **Model-written tasks, evaluator-written brief.** The task author is a model (Sonnet 5.5). The brief was the
+  evaluator's, and it shaped the F tasks into a form the dojo-flow gate refuses.
+- **The judge.** It ran outside the eval because the eval's files view is empty here (amendment 1). It is Opus
+  judging Opus-written code in one arm. It disagreed with the hidden tests once in 80 runs.
+- **Cost figures** are Claude Code's list-price equivalents for runs on a claude.ai subscription: plan usage, not
+  invoices. Agent cost leaves out the in-eval judge ($0.44 in R, $0.16 in F).
+- **Most of what dojo-router's README describes was not exercised.** The warn and block paths never fired at the
+  top level, and the mod acted once, on a nested dispatch. Their claims are neither supported nor refuted here,
+  beyond that one routing.
+- **Kept run folders** (traces, transcripts, work directories) stay in the running machine's temp directory and are
+  not in this repository. The per-run rows are.
+- **Spend:** $52.15 of the $100 cap, of which $8.48 was pilots, excluded from analysis (`spend-ledger.md`). The
+  remaining $47.86 was not spent; no follow-up was run.
+
 ## Digest check after write-up
+
+```
+dojo-settle: digest matches the digest you passed with --expect (sha256 d66e5b96bc78d9987d5fc13f60b3b85918b60b1bd0bd04676631bf505645187a). This shows the text above the marker is unchanged since that digest was recorded; it does not show the text is true.
+```
+
+The digest was first recorded in commit `7404987` (pushed 2026-10-23 21:15:15 UTC), before any eval run, and
+again in the session's first status message to Cruz. Amendment 1 and the analysis code are commit `76f2779`,
+pushed before the first main run. These ids are on branch `eval/routing-2026-10-23`; if the branch is merged by
+rebase they will change, and the originals stay fetchable from the pull request.
