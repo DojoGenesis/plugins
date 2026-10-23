@@ -1,0 +1,33 @@
+# Every text file is checked out with LF, whatever core.autocrlf says. The release publishes
+# byte counts of these files (dojogenesis.com/proof, checked by the website's gen_proof.py
+# --check), bash hooks need LF to run, and a CRLF checkout on Windows made every count read high.
+* text=auto eol=lf
+
+# Named so they are always text, even where detection would guess otherwise.
+*.md    text eol=lf
+*.py    text eol=lf
+*.sh    text eol=lf
+*.json  text eol=lf
+*.jsonl text eol=lf
+*.js    text eol=lf
+*.ts    text eol=lf
+*.tsx   text eol=lf
+*.txt   text eol=lf
+*.yaml  text eol=lf
+*.yml   text eol=lf
+
+# Binary: never converted. None are tracked today; listed so a future one is not mangled.
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.ico   binary
+*.webp  binary
+*.pdf   binary
+*.woff  binary
+*.woff2 binary
+*.ttf   binary
+*.otf   binary
+*.zip   binary
+*.gz    binary
+*.tgz   binary
