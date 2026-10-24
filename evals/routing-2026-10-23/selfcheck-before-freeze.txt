@@ -1,0 +1,29 @@
+# grade_hidden.py selfcheck on every case, run 2026-10-23T21:14:06Z before the freeze, Python 3.14.2, Windows 11 / Git Bash
+== hf-gradebook
+known-bad (scaffold as written): FAIL  Ran 1 test in 0.000s |  | FAILED (errors=1)
+known-good (reference laid over): PASS  Ran 37 tests in 0.004s |  | OK
+exit 0
+== hf-semver-ranges
+known-bad (scaffold as written): FAIL  Ran 1 test in 0.000s |  | FAILED (errors=1)
+known-good (reference laid over): PASS  Ran 51 tests in 0.004s |  | OK
+exit 0
+== hr-limiter-starve
+known-bad (scaffold as written): FAIL  Ran 16 tests in 0.003s |  | FAILED (failures=10)
+known-good (reference laid over): PASS  Ran 16 tests in 0.000s |  | OK
+exit 0
+== hr-note-cache
+known-bad (scaffold as written): FAIL  Ran 17 tests in 0.004s |  | FAILED (failures=9)
+known-good (reference laid over): PASS  Ran 17 tests in 0.002s |  | OK
+exit 0
+== hr-page-size
+known-bad (scaffold as written): FAIL  Ran 21 tests in 0.006s |  | FAILED (failures=17)
+known-good (reference laid over): PASS  Ran 21 tests in 0.001s |  | OK
+exit 0
+== hr-reminder-every
+known-bad (scaffold as written): FAIL  Ran 25 tests in 0.004s |  | FAILED (failures=5, errors=4)
+known-good (reference laid over): PASS  Ran 25 tests in 0.001s |  | OK
+exit 0
+== hr-retry-limit
+known-bad (scaffold as written): FAIL  Ran 14 tests in 0.004s |  | FAILED (failures=6)
+known-good (reference laid over): PASS  Ran 14 tests in 0.002s |  | OK
+exit 0

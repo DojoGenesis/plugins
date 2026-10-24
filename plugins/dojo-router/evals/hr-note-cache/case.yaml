@@ -1,0 +1,58 @@
+# Held-out case for the pre-registered routing eval (evals/routing-2026-10-23/PREREG-2026-10-23-routing.md).
+# The task was written by an independent model author from held-out-brief.md, without access to this
+# repository; its hidden tests live in evals/routing-2026-10-23/cases/, never in the sandbox. The graders
+# are the evaluator's, fixed by the pre-registration. JSON is valid YAML. Runs spend money: never run
+# without a cap and a yes.
+{
+  "schema_version": "1.0",
+  "name": "hr-note-cache",
+  "description": "Call-graph lookup: find every function that ends up writing to the store (some indirectly, some in other modules) and add the missing cache invalidation.",
+  "tags": [
+    "held-out",
+    "routing",
+    "standard"
+  ],
+  "runs": 6,
+  "context": {
+    "scaffold_script": "scaffold.sh",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "In the notes package (`notesvc`), reads of a note go through a cache, and some of the code that changes notes doesn't invalidate it, so people see stale data after an edit. Use subagents to find every function in the package that writes to the store (anything that ends up calling `store.save` or `store.delete`, directly or through another function) and work out which of them already drop that note's cache entry. Then fix the ones that don't: invalidate just that note's entry, and keep the cache working for everything else.",
+    "max_turns": 16,
+    "timeout_seconds": 900,
+    "model": "opus",
+    "allowed_tools": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Agent",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "llm",
+      "name": "quality-judge",
+      "focus": "files",
+      "criteria": "You are grading the final state of a small Python project after a coding task. Read the project's files. A correct finish: edit_body, archive/unarchive, delete_note, tags.add_tag and importer.import_notes (and restore, through delete_note) all invalidate only the affected note's cache entry so reads are fresh, while other cached notes and normal read caching are untouched. Decide whether the code now does what that sentence describes, judging behaviour, not style or comments. PASS if it does. FAIL if it does not, or only partly does."
+    },
+    {
+      "type": "tool_used",
+      "name": "dispatched",
+      "tool": "Agent",
+      "min": 1
+    },
+    {
+      "type": "regex",
+      "name": "hook-warned",
+      "target": "trace",
+      "pattern": "dojo-router: this .* dispatch names no model",
+      "arm": "with-only"
+    }
+  ],
+  "expected_outcome": "edit_body, archive/unarchive, delete_note, tags.add_tag and importer.import_notes (and restore, through delete_note) all invalidate only the affected note's cache entry so reads are fresh, while other cached notes and normal read caching are untouched."
+}

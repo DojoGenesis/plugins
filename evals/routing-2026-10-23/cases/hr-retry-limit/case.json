@@ -1,0 +1,8 @@
+{
+  "name": "hr-retry-limit",
+  "family": "hr",
+  "kind": "standard",
+  "description": "Setting trace: a retry count of 0 is dropped in three different files of a small fetch client.",
+  "prompt": "I can't turn retries off in our little fetch client (the fetchkit package). `--retries 0` on the command line, or `max_retries` set to 0 in code, still ends up making four attempts when the server keeps failing; I want 0 to mean one attempt and then give up. Please use subagents to trace where the retry count is read and set across the package, starting from the CLI flag and from the Client, and report every place that touches it. Then fix it so 0 really means no retries, without changing what happens when no retry count is given.",
+  "expected_outcome": "A retry count of 0 (from the --retries flag, from settings overrides, from the FETCHKIT_MAX_RETRIES environment variable, or passed to the client directly) results in exactly one attempt, while the default of three retries and other explicit counts behave as before."
+}

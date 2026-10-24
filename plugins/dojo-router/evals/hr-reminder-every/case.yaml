@@ -1,0 +1,58 @@
+# Held-out case for the pre-registered routing eval (evals/routing-2026-10-23/PREREG-2026-10-23-routing.md).
+# The task was written by an independent model author from held-out-brief.md, without access to this
+# repository; its hidden tests live in evals/routing-2026-10-23/cases/, never in the sandbox. The graders
+# are the evaluator's, fixed by the pre-registration. JSON is valid YAML. Runs spend money: never run
+# without a cap and a yes.
+{
+  "schema_version": "1.0",
+  "name": "hr-reminder-every",
+  "description": "Which module handles each reminder kind: the recurring handler has its own broken unit table and rejects compound intervals; visible tests fail until fixed.",
+  "tags": [
+    "held-out",
+    "routing",
+    "standard"
+  ],
+  "runs": 6,
+  "context": {
+    "scaffold_script": "scaffold.sh",
+    "add_dirs": []
+  },
+  "execution": {
+    "prompt": "Reminders written like `stretch every 2h` go off every two minutes instead of every two hours. Please use subagents to find which module handles each kind of reminder line (`in`, `at` and `every`) and where each one turns the time text into seconds, then fix the `every` case. There are tests in tests/; run them when you're done.",
+    "max_turns": 16,
+    "timeout_seconds": 900,
+    "model": "opus",
+    "allowed_tools": [
+      "Read",
+      "Edit",
+      "Write",
+      "Bash",
+      "Glob",
+      "Grep",
+      "Agent",
+      "Skill"
+    ]
+  },
+  "graders": [
+    {
+      "type": "llm",
+      "name": "quality-judge",
+      "focus": "files",
+      "criteria": "You are grading the final state of a small Python project after a coding task. Read the project's files. A correct finish: Every-reminders convert hours and days correctly and also accept compound intervals such as 1h30m (for example by reusing the shared duration parser), zero or malformed intervals still raise ValueError, in/at reminders are unchanged, and the tests in tests/ pass. Decide whether the code now does what that sentence describes, judging behaviour, not style or comments. PASS if it does. FAIL if it does not, or only partly does."
+    },
+    {
+      "type": "tool_used",
+      "name": "dispatched",
+      "tool": "Agent",
+      "min": 1
+    },
+    {
+      "type": "regex",
+      "name": "hook-warned",
+      "target": "trace",
+      "pattern": "dojo-router: this .* dispatch names no model",
+      "arm": "with-only"
+    }
+  ],
+  "expected_outcome": "Every-reminders convert hours and days correctly and also accept compound intervals such as 1h30m (for example by reusing the shared duration parser), zero or malformed intervals still raise ValueError, in/at reminders are unchanged, and the tests in tests/ pass."
+}

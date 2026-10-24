@@ -1,0 +1,8 @@
+{
+  "name": "hr-page-size",
+  "family": "hr",
+  "kind": "standard",
+  "description": "Where a value is defined and used: change the default page size and cap, notice the hard-coded 20 in the renderer, and leave the unrelated printed-sheet 20 alone.",
+  "prompt": "The product listing returns 20 products per page by default and lets callers ask for up to 50 with `page_size`. I want the default to be 50, and callers should be able to ask for up to 100 (anything bigger is cut down to 100; zero, negative or non-numeric values fall back to the default). Use subagents first to find where the page size is defined and every place that relies on it or assumes the old number, and to pick out anything that just happens to use the number 20 for something else, because that should stay as it is. Then make the change.",
+  "expected_outcome": "The default listing page size is 50 with a cap of 100, the 'Showing a-b of n' text follows the actual page size, and the printed-sheet export still uses 20 per sheet."
+}

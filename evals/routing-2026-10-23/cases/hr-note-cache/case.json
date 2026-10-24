@@ -1,0 +1,8 @@
+{
+  "name": "hr-note-cache",
+  "family": "hr",
+  "kind": "standard",
+  "description": "Call-graph lookup: find every function that ends up writing to the store (some indirectly, some in other modules) and add the missing cache invalidation.",
+  "prompt": "In the notes package (`notesvc`), reads of a note go through a cache, and some of the code that changes notes doesn't invalidate it, so people see stale data after an edit. Use subagents to find every function in the package that writes to the store (anything that ends up calling `store.save` or `store.delete`, directly or through another function) and work out which of them already drop that note's cache entry. Then fix the ones that don't: invalidate just that note's entry, and keep the cache working for everything else.",
+  "expected_outcome": "edit_body, archive/unarchive, delete_note, tags.add_tag and importer.import_notes (and restore, through delete_note) all invalidate only the affected note's cache entry so reads are fresh, while other cached notes and normal read caching are untouched."
+}
