@@ -24,6 +24,10 @@ method, the rubric and the tables. It started from five misfires reported from o
   `plugins/dojo-verify/evals/PREREG-2026-10-17-evidence.md`, frozen before any run, with eight held-out cases. Its
   result, below the marker: no benefit detected, and its rule says the default should be `warn`. Following that rule
   (Cruz's ruling, 2026-10-18), the default is now `warn`; `block` stays one setting away.
+- **A pre-registered eval of routing against all-opus** — `evals/routing-2026-10-23/`, frozen before any run, with
+  seven held-out tasks. dojo-router: an Opus session that delegates spent 0.62 as much with the plugin as without,
+  with no measured quality loss, and its README now says so with the eval's conditions. dojo-flow: inconclusive,
+  because its contract gate refused every build before any routed role ran.
 - **A runtime health report** — `scripts/health_report.py` replays local Claude Code transcripts through the suite's
   own detector code and reports, per rule, what it counted and out of how many, with each finding's evidence and
   each detector's measured accuracy beside it. The same input gives byte-identical output.

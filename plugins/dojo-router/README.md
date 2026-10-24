@@ -148,7 +148,17 @@ Options reach the classic hooks as `CLAUDE_PLUGIN_OPTION_<KEY>` and the mod thro
   execute `hooks.json` command hooks. The two halves are tested separately: a mod test shows
   that the rewritten input reaches the layer beneath, and a unit test shows the classic hook
   stays silent on that rewritten input.
-- Nothing here measures what routing changes. There are no numbers in this plugin, and none are claimed.
+- One pre-registered eval has measured what routing changes (below). No other number is claimed.
+
+## What has been measured
+
+In a pre-registered eval
+([evals/routing-2026-10-23](https://github.com/DojoGenesis/plugins/blob/main/evals/routing-2026-10-23/PREREG-2026-10-23-routing.md)),
+an Opus session asked to delegate lookups spent 0.62 as much with dojo-router installed as
+without (95 percent interval 0.57 to 0.67; 60 runs, five tasks, no shell, Claude Code 2.1.305,
+dojo-router 0.1.1), with every hidden test passing in both arms. The saving came from the session
+following the router skill, not from the hooks. Harder tasks, sessions with a shell and sessions
+that don't delegate were not measured.
 
 ## Tests
 
@@ -157,6 +167,7 @@ cd plugins/dojo-router && python3 -m unittest discover -s tests -v
 CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 claude plugin test plugins/dojo-router
 ```
 
-`evals/unpinned-dispatch-pinned/case.yaml` is a scaffold for `claude plugin eval`; it has not been run.
+`evals/unpinned-dispatch-pinned/case.yaml` is a scaffold for `claude plugin eval`; it has not been run. The
+`evals/hr-*` cases belong to the eval above and were run once.
 
 Tested with Claude Code 2.1.286.
