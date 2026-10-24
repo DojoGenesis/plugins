@@ -1,0 +1,2259 @@
+{
+ "note": "Distilled from the eval JSON, the hidden tests and the files judge by analyze.py (PREREG-2026-10-23-routing.md). agent_cost = cost_usd - judge_cost_in_eval. 'judge' is judge_files.py (amendment 1); the in-eval quality-judge is void. Kept traces and transcripts stay on the machine that ran them.",
+ "studies": {
+  "R": {
+   "summary": {
+    "study": "R",
+    "claude_version": "2.1.305",
+    "started_at": "2026-10-23T21:38:50.944Z",
+    "eval_cost_usd": 21.858342055,
+    "partial": false,
+    "cells": {
+     "hr-limiter-starve|routed": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.3878359775,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 7.5,
+      "agents": 11,
+      "agents_non_opus": 7,
+      "models": [
+       "claude-haiku-5-5",
+       "claude-opus-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "hr-limiter-starve|allopus": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.44102263333333336,
+      "hidden_pass": 6,
+      "judge_pass": 5,
+      "mean_turns": 8.666666666666666,
+      "agents": 7,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hr-note-cache|routed": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.31078108,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 10.833333333333334,
+      "agents": 12,
+      "agents_non_opus": 12,
+      "models": [
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "hr-note-cache|allopus": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.4942568666666667,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 9.833333333333334,
+      "agents": 13,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hr-page-size|routed": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.18771163166666668,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 7.833333333333333,
+      "agents": 11,
+      "agents_non_opus": 11,
+      "models": [
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "hr-page-size|allopus": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.35549830000000004,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 6.0,
+      "agents": 12,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hr-reminder-every|routed": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.23331246166666667,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 8.333333333333334,
+      "agents": 19,
+      "agents_non_opus": 19,
+      "models": [
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "hr-reminder-every|allopus": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.47663553333333325,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 6.166666666666667,
+      "agents": 24,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hr-retry-limit|routed": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.24325749166666666,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 7.166666666666667,
+      "agents": 14,
+      "agents_non_opus": 14,
+      "models": [
+       "claude-haiku-5-5",
+       "claude-sonnet-5-5"
+      ]
+     },
+     "hr-retry-limit|allopus": {
+      "planned_or_seen": 6,
+      "counted": 6,
+      "mean_agent_cost": 0.4401583666666667,
+      "hidden_pass": 6,
+      "judge_pass": 6,
+      "mean_turns": 5.5,
+      "agents": 13,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     }
+    },
+    "runs_planned_or_seen": {
+     "routed": 30,
+     "allopus": 30
+    },
+    "runs_counted": {
+     "routed": 30,
+     "allopus": 30
+    },
+    "pooled_mean_agent_cost": {
+     "routed": 0.2725797285,
+     "allopus": 0.44151434
+    },
+    "cost_ratio": [
+     0.617374576100971,
+     0.5704435212103913,
+     0.6651667714348987
+    ],
+    "cost_outcome": "savings detected",
+    "quality_tasks": [
+     "hr-note-cache",
+     "hr-page-size",
+     "hr-reminder-every",
+     "hr-retry-limit"
+    ],
+    "hidden": {
+     "routed": [
+      24,
+      24
+     ],
+     "allopus": [
+      24,
+      24
+     ],
+     "dq_newcombe": [
+      0.0,
+      -0.13797620467498017,
+      0.13797620467498017
+     ]
+    },
+    "judge": "opus, 3 votes (judge_files.py)",
+    "quality_outcome": "non-inferior",
+    "quality_gain_unexpected": false,
+    "careful": "hr-limiter-starve",
+    "careful_harm": false,
+    "careful_routed_wins_by_2": false,
+    "agents_non_opus": {
+     "routed": [
+      63,
+      67
+     ],
+     "allopus": [
+      0,
+      69
+     ],
+     "share_routed": 0.9402985074626866,
+     "share_allopus": 0.0
+    },
+    "manipulation": "took effect",
+    "verdict": "saves, no measured loss",
+    "cap_usd": 28.93,
+    "started_utc": "2026-10-23T21:38:50Z",
+    "executor": "opus (claude-opus-5-5)",
+    "plugin": "dojo-router 0.1.1"
+   },
+   "runs": [
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.453505,
+     "judge_cost_in_eval": 0.01036,
+     "agent_cost_usd": 0.443145,
+     "turns": 6,
+     "duration_s": 127,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.118887,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.519803,
+     "judge_cost_in_eval": 0.010436,
+     "agent_cost_usd": 0.509367,
+     "turns": 6,
+     "duration_s": 132,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.136935,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.38851,
+     "judge_cost_in_eval": 0.006736,
+     "agent_cost_usd": 0.381774,
+     "turns": 7,
+     "duration_s": 111,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.136613,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.286291,
+     "judge_cost_in_eval": 0.006976,
+     "agent_cost_usd": 0.279315,
+     "turns": 8,
+     "duration_s": 94,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.144482,
+     "helper_models": [
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.449328,
+     "judge_cost_in_eval": 0.006876,
+     "agent_cost_usd": 0.442452,
+     "turns": 11,
+     "duration_s": 120,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.084558,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "routed",
+     "run": 6,
+     "cost_usd": 0.277519,
+     "judge_cost_in_eval": 0.006556,
+     "agent_cost_usd": 0.270963,
+     "turns": 7,
+     "duration_s": 83,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.116832,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.516124,
+     "judge_cost_in_eval": 0.006956,
+     "agent_cost_usd": 0.509168,
+     "turns": 9,
+     "duration_s": 145,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.144156,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.457275,
+     "judge_cost_in_eval": 0.007196,
+     "agent_cost_usd": 0.450079,
+     "turns": 9,
+     "duration_s": 141,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.117037,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.447199,
+     "judge_cost_in_eval": 0.008508,
+     "agent_cost_usd": 0.438691,
+     "turns": 10,
+     "duration_s": 136,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.104147,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.440129,
+     "judge_cost_in_eval": 0.007136,
+     "agent_cost_usd": 0.432993,
+     "turns": 8,
+     "duration_s": 112,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      true,
+      false
+     ],
+     "judge_cost_usd": 0.160061,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.388201,
+     "judge_cost_in_eval": 0.006076,
+     "agent_cost_usd": 0.382125,
+     "turns": 7,
+     "duration_s": 112,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.117352,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-limiter-starve",
+     "task": "hr-limiter-starve",
+     "arm": "allopus",
+     "run": 6,
+     "cost_usd": 0.440156,
+     "judge_cost_in_eval": 0.007076,
+     "agent_cost_usd": 0.43308,
+     "turns": 9,
+     "duration_s": 123,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.133364,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.347468,
+     "judge_cost_in_eval": 0.007004,
+     "agent_cost_usd": 0.340464,
+     "turns": 9,
+     "duration_s": 65,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.066021,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.374773,
+     "judge_cost_in_eval": 0.007584,
+     "agent_cost_usd": 0.367189,
+     "turns": 5,
+     "duration_s": 80,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.057973,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.332238,
+     "judge_cost_in_eval": 0.006504,
+     "agent_cost_usd": 0.325734,
+     "turns": 14,
+     "duration_s": 71,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.063765,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.242792,
+     "judge_cost_in_eval": 0.006684,
+     "agent_cost_usd": 0.236108,
+     "turns": 12,
+     "duration_s": 60,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061633,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.275018,
+     "judge_cost_in_eval": 0.006844,
+     "agent_cost_usd": 0.268174,
+     "turns": 15,
+     "duration_s": 68,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061909,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "routed",
+     "run": 6,
+     "cost_usd": 0.333981,
+     "judge_cost_in_eval": 0.006964,
+     "agent_cost_usd": 0.327018,
+     "turns": 10,
+     "duration_s": 63,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.066057,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.626779,
+     "judge_cost_in_eval": 0.008792,
+     "agent_cost_usd": 0.617987,
+     "turns": 8,
+     "duration_s": 95,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.064997,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.506519,
+     "judge_cost_in_eval": 0.01114,
+     "agent_cost_usd": 0.495379,
+     "turns": 9,
+     "duration_s": 85,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.064741,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.510551,
+     "judge_cost_in_eval": 0.010532,
+     "agent_cost_usd": 0.500019,
+     "turns": 12,
+     "duration_s": 94,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.096671,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.521944,
+     "judge_cost_in_eval": 0.01336,
+     "agent_cost_usd": 0.508584,
+     "turns": 12,
+     "duration_s": 94,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.091684,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.443239,
+     "judge_cost_in_eval": 0.01184,
+     "agent_cost_usd": 0.431399,
+     "turns": 9,
+     "duration_s": 73,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.064641,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-note-cache",
+     "task": "hr-note-cache",
+     "arm": "allopus",
+     "run": 6,
+     "cost_usd": 0.420905,
+     "judge_cost_in_eval": 0.008732,
+     "agent_cost_usd": 0.412173,
+     "turns": 9,
+     "duration_s": 66,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.062969,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.196631,
+     "judge_cost_in_eval": 0.008372,
+     "agent_cost_usd": 0.188259,
+     "turns": 7,
+     "duration_s": 55,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.068692,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.198896,
+     "judge_cost_in_eval": 0.01128,
+     "agent_cost_usd": 0.187616,
+     "turns": 7,
+     "duration_s": 56,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.062552,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.162958,
+     "judge_cost_in_eval": 0.01024,
+     "agent_cost_usd": 0.152718,
+     "turns": 10,
+     "duration_s": 63,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.064476,
+     "helper_models": [
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.242117,
+     "judge_cost_in_eval": 0.008232,
+     "agent_cost_usd": 0.233885,
+     "turns": 10,
+     "duration_s": 56,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.0761,
+     "helper_models": [
+      "claude-sonnet-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.192936,
+     "judge_cost_in_eval": 0.006744,
+     "agent_cost_usd": 0.186192,
+     "turns": 7,
+     "duration_s": 49,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.068464,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "routed",
+     "run": 6,
+     "cost_usd": 0.183784,
+     "judge_cost_in_eval": 0.006184,
+     "agent_cost_usd": 0.1776,
+     "turns": 6,
+     "duration_s": 53,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.059876,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.358756,
+     "judge_cost_in_eval": 0.006904,
+     "agent_cost_usd": 0.351852,
+     "turns": 6,
+     "duration_s": 52,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.062608,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.367501,
+     "judge_cost_in_eval": 0.006384,
+     "agent_cost_usd": 0.361117,
+     "turns": 5,
+     "duration_s": 67,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.059536,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.364141,
+     "judge_cost_in_eval": 0.006644,
+     "agent_cost_usd": 0.357497,
+     "turns": 7,
+     "duration_s": 51,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.0534,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.353552,
+     "judge_cost_in_eval": 0.006204,
+     "agent_cost_usd": 0.347348,
+     "turns": 7,
+     "duration_s": 60,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.056164,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.360542,
+     "judge_cost_in_eval": 0.006224,
+     "agent_cost_usd": 0.354318,
+     "turns": 6,
+     "duration_s": 51,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.052928,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-page-size",
+     "task": "hr-page-size",
+     "arm": "allopus",
+     "run": 6,
+     "cost_usd": 0.366943,
+     "judge_cost_in_eval": 0.006084,
+     "agent_cost_usd": 0.360859,
+     "turns": 5,
+     "duration_s": 53,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061916,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.258895,
+     "judge_cost_in_eval": 0.00476,
+     "agent_cost_usd": 0.254135,
+     "turns": 9,
+     "duration_s": 59,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061784,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.225778,
+     "judge_cost_in_eval": 0.00504,
+     "agent_cost_usd": 0.220738,
+     "turns": 7,
+     "duration_s": 49,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061904,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.223074,
+     "judge_cost_in_eval": 0.00384,
+     "agent_cost_usd": 0.219234,
+     "turns": 7,
+     "duration_s": 62,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.063088,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.240343,
+     "judge_cost_in_eval": 0.00484,
+     "agent_cost_usd": 0.235503,
+     "turns": 6,
+     "duration_s": 57,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.0592,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.218765,
+     "judge_cost_in_eval": 0.00674,
+     "agent_cost_usd": 0.212025,
+     "turns": 13,
+     "duration_s": 73,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.064256,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "routed",
+     "run": 6,
+     "cost_usd": 0.262741,
+     "judge_cost_in_eval": 0.0045,
+     "agent_cost_usd": 0.258241,
+     "turns": 8,
+     "duration_s": 71,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.0682,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.506171,
+     "judge_cost_in_eval": 0.00532,
+     "agent_cost_usd": 0.500851,
+     "turns": 7,
+     "duration_s": 63,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.05934,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.467,
+     "judge_cost_in_eval": 0.00524,
+     "agent_cost_usd": 0.46176,
+     "turns": 7,
+     "duration_s": 71,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.057988,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.459462,
+     "judge_cost_in_eval": 0.00498,
+     "agent_cost_usd": 0.454482,
+     "turns": 6,
+     "duration_s": 67,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.058916,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.488469,
+     "judge_cost_in_eval": 0.0062,
+     "agent_cost_usd": 0.482269,
+     "turns": 6,
+     "duration_s": 78,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.060664,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.492179,
+     "judge_cost_in_eval": 0.00498,
+     "agent_cost_usd": 0.487199,
+     "turns": 4,
+     "duration_s": 65,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.060216,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-reminder-every",
+     "task": "hr-reminder-every",
+     "arm": "allopus",
+     "run": 6,
+     "cost_usd": 0.477933,
+     "judge_cost_in_eval": 0.00468,
+     "agent_cost_usd": 0.473253,
+     "turns": 7,
+     "duration_s": 89,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.061556,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.225256,
+     "judge_cost_in_eval": 0.008488,
+     "agent_cost_usd": 0.216768,
+     "turns": 7,
+     "duration_s": 53,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.081748,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.222861,
+     "judge_cost_in_eval": 0.006568,
+     "agent_cost_usd": 0.216293,
+     "turns": 8,
+     "duration_s": 58,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.089524,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.304616,
+     "judge_cost_in_eval": 0.007808,
+     "agent_cost_usd": 0.296808,
+     "turns": 12,
+     "duration_s": 94,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.082592,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.216257,
+     "judge_cost_in_eval": 0.008148,
+     "agent_cost_usd": 0.208109,
+     "turns": 7,
+     "duration_s": 55,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.06582,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.304426,
+     "judge_cost_in_eval": 0.007748,
+     "agent_cost_usd": 0.296678,
+     "turns": 8,
+     "duration_s": 93,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.082236,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-sonnet-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "routed",
+     "run": 6,
+     "cost_usd": 0.231737,
+     "judge_cost_in_eval": 0.006848,
+     "agent_cost_usd": 0.224889,
+     "turns": 1,
+     "duration_s": 53,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.081768,
+     "helper_models": [
+      "claude-haiku-5-5",
+      "claude-haiku-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.404374,
+     "judge_cost_in_eval": 0.007048,
+     "agent_cost_usd": 0.397326,
+     "turns": 7,
+     "duration_s": 64,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.068911,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.418957,
+     "judge_cost_in_eval": 0.006968,
+     "agent_cost_usd": 0.411989,
+     "turns": 1,
+     "duration_s": 70,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.06938,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.41353,
+     "judge_cost_in_eval": 0.007448,
+     "agent_cost_usd": 0.406082,
+     "turns": 7,
+     "duration_s": 82,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.071048,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.420519,
+     "judge_cost_in_eval": 0.006848,
+     "agent_cost_usd": 0.413671,
+     "turns": 7,
+     "duration_s": 72,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.0708,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.636516,
+     "judge_cost_in_eval": 0.007308,
+     "agent_cost_usd": 0.629208,
+     "turns": 2,
+     "duration_s": 129,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.089216,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hr-retry-limit",
+     "task": "hr-retry-limit",
+     "arm": "allopus",
+     "run": 6,
+     "cost_usd": 0.389483,
+     "judge_cost_in_eval": 0.006808,
+     "agent_cost_usd": 0.382675,
+     "turns": 9,
+     "duration_s": 66,
+     "error": null,
+     "hidden": "PASS",
+     "judge": "PASS",
+     "judge_votes": [
+      true,
+      true,
+      true
+     ],
+     "judge_cost_usd": 0.06738,
+     "helper_models": [
+      "claude-opus-5-5",
+      "claude-opus-5-5"
+     ]
+    }
+   ]
+  },
+  "F": {
+   "summary": {
+    "study": "F",
+    "claude_version": "2.1.305",
+    "started_at": "2026-10-23T22:18:46.491Z",
+    "eval_cost_usd": 15.751031999999999,
+    "partial": false,
+    "cells": {
+     "hf-gradebook|routed": {
+      "planned_or_seen": 5,
+      "counted": 5,
+      "mean_agent_cost": 0.72835308,
+      "hidden_pass": 0,
+      "judge_pass": 0,
+      "mean_turns": 2.0,
+      "agents": 5,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hf-gradebook|allopus": {
+      "planned_or_seen": 5,
+      "counted": 5,
+      "mean_agent_cost": 0.71823656,
+      "hidden_pass": 0,
+      "judge_pass": 0,
+      "mean_turns": 2.0,
+      "agents": 5,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hf-semver-ranges|routed": {
+      "planned_or_seen": 5,
+      "counted": 5,
+      "mean_agent_cost": 0.82904664,
+      "hidden_pass": 0,
+      "judge_pass": 0,
+      "mean_turns": 3.0,
+      "agents": 5,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     },
+     "hf-semver-ranges|allopus": {
+      "planned_or_seen": 5,
+      "counted": 5,
+      "mean_agent_cost": 0.84312212,
+      "hidden_pass": 0,
+      "judge_pass": 0,
+      "mean_turns": 2.4,
+      "agents": 5,
+      "agents_non_opus": 0,
+      "models": [
+       "claude-opus-5-5"
+      ]
+     }
+    },
+    "runs_planned_or_seen": {
+     "routed": 10,
+     "allopus": 10
+    },
+    "runs_counted": {
+     "routed": 10,
+     "allopus": 10
+    },
+    "pooled_mean_agent_cost": {
+     "routed": 0.7786998599999999,
+     "allopus": 0.78067934
+    },
+    "cost_ratio": [
+     0.9974644134940216,
+     0.920586560163663,
+     1.0804471884874487
+    ],
+    "cost_outcome": "no detectable difference",
+    "quality_tasks": [
+     "hf-gradebook",
+     "hf-semver-ranges"
+    ],
+    "hidden": {
+     "routed": [
+      0,
+      10
+     ],
+     "allopus": [
+      0,
+      10
+     ],
+     "dq_newcombe": [
+      0.0,
+      -0.2775327998628892,
+      0.2775327998628892
+     ]
+    },
+    "judge": "opus, 3 votes (judge_files.py)",
+    "quality_outcome": "not resolved",
+    "quality_gain_unexpected": false,
+    "careful": "hf-semver-ranges",
+    "careful_harm": false,
+    "careful_routed_wins_by_2": false,
+    "agents_non_opus": {
+     "routed": [
+      0,
+      10
+     ],
+     "allopus": [
+      0,
+      10
+     ],
+     "share_routed": 0.0,
+     "share_allopus": 0.0
+    },
+    "manipulation": "did not take effect",
+    "verdict": "inconclusive: no savings detected and routing did not take effect or was not measured",
+    "cap_usd": 20.72,
+    "started_utc": "2026-10-23T22:18:45Z",
+    "executor": "opus (claude-opus-5-5)",
+    "plugin": "dojo-flow 0.1.0"
+   },
+   "runs": [
+    {
+     "case": "hf-gradebook-allopus",
+     "task": "hf-gradebook",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.698023,
+     "judge_cost_in_eval": 0.01154,
+     "agent_cost_usd": 0.686483,
+     "turns": 2,
+     "duration_s": 187,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.065239,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-allopus",
+     "task": "hf-gradebook",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.788649,
+     "judge_cost_in_eval": 0.0136,
+     "agent_cost_usd": 0.775049,
+     "turns": 2,
+     "duration_s": 187,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.065711,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-allopus",
+     "task": "hf-gradebook",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.739588,
+     "judge_cost_in_eval": 0.0061,
+     "agent_cost_usd": 0.733488,
+     "turns": 2,
+     "duration_s": 198,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.056566,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-allopus",
+     "task": "hf-gradebook",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.69519,
+     "judge_cost_in_eval": 0.00678,
+     "agent_cost_usd": 0.68841,
+     "turns": 2,
+     "duration_s": 168,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.058236,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-allopus",
+     "task": "hf-gradebook",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.715154,
+     "judge_cost_in_eval": 0.0074,
+     "agent_cost_usd": 0.707754,
+     "turns": 2,
+     "duration_s": 167,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.060868,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-routed",
+     "task": "hf-gradebook",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.718878,
+     "judge_cost_in_eval": 0.0059,
+     "agent_cost_usd": 0.712978,
+     "turns": 2,
+     "duration_s": 237,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.066269,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-routed",
+     "task": "hf-gradebook",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.717568,
+     "judge_cost_in_eval": 0.00576,
+     "agent_cost_usd": 0.711808,
+     "turns": 2,
+     "duration_s": 181,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.059001,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-routed",
+     "task": "hf-gradebook",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.833952,
+     "judge_cost_in_eval": 0.00646,
+     "agent_cost_usd": 0.827492,
+     "turns": 2,
+     "duration_s": 214,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.054722,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-routed",
+     "task": "hf-gradebook",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.798681,
+     "judge_cost_in_eval": 0.00644,
+     "agent_cost_usd": 0.792241,
+     "turns": 2,
+     "duration_s": 215,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.064302,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-gradebook-routed",
+     "task": "hf-gradebook",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.603668,
+     "judge_cost_in_eval": 0.00642,
+     "agent_cost_usd": 0.597248,
+     "turns": 2,
+     "duration_s": 140,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.055612,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-allopus",
+     "task": "hf-semver-ranges",
+     "arm": "allopus",
+     "run": 1,
+     "cost_usd": 0.944354,
+     "judge_cost_in_eval": 0.007472,
+     "agent_cost_usd": 0.936882,
+     "turns": 2,
+     "duration_s": 234,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.073545,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-allopus",
+     "task": "hf-semver-ranges",
+     "arm": "allopus",
+     "run": 2,
+     "cost_usd": 0.715274,
+     "judge_cost_in_eval": 0.007792,
+     "agent_cost_usd": 0.707482,
+     "turns": 2,
+     "duration_s": 170,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.059379,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-allopus",
+     "task": "hf-semver-ranges",
+     "arm": "allopus",
+     "run": 3,
+     "cost_usd": 0.955918,
+     "judge_cost_in_eval": 0.006692,
+     "agent_cost_usd": 0.949226,
+     "turns": 2,
+     "duration_s": 237,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.07786,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-allopus",
+     "task": "hf-semver-ranges",
+     "arm": "allopus",
+     "run": 4,
+     "cost_usd": 0.777085,
+     "judge_cost_in_eval": 0.007512,
+     "agent_cost_usd": 0.769573,
+     "turns": 3,
+     "duration_s": 194,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.07247,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-allopus",
+     "task": "hf-semver-ranges",
+     "arm": "allopus",
+     "run": 5,
+     "cost_usd": 0.861679,
+     "judge_cost_in_eval": 0.009232,
+     "agent_cost_usd": 0.852447,
+     "turns": 3,
+     "duration_s": 205,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.070428,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-routed",
+     "task": "hf-semver-ranges",
+     "arm": "routed",
+     "run": 1,
+     "cost_usd": 0.896438,
+     "judge_cost_in_eval": 0.008692,
+     "agent_cost_usd": 0.887746,
+     "turns": 4,
+     "duration_s": 217,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.075361,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-routed",
+     "task": "hf-semver-ranges",
+     "arm": "routed",
+     "run": 2,
+     "cost_usd": 0.784442,
+     "judge_cost_in_eval": 0.007652,
+     "agent_cost_usd": 0.77679,
+     "turns": 2,
+     "duration_s": 185,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.069693,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-routed",
+     "task": "hf-semver-ranges",
+     "arm": "routed",
+     "run": 3,
+     "cost_usd": 0.741418,
+     "judge_cost_in_eval": 0.008552,
+     "agent_cost_usd": 0.732866,
+     "turns": 2,
+     "duration_s": 173,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.068819,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-routed",
+     "task": "hf-semver-ranges",
+     "arm": "routed",
+     "run": 4,
+     "cost_usd": 0.848551,
+     "judge_cost_in_eval": 0.008692,
+     "agent_cost_usd": 0.839859,
+     "turns": 5,
+     "duration_s": 205,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.06848,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    },
+    {
+     "case": "hf-semver-ranges-routed",
+     "task": "hf-semver-ranges",
+     "arm": "routed",
+     "run": 5,
+     "cost_usd": 0.916524,
+     "judge_cost_in_eval": 0.008552,
+     "agent_cost_usd": 0.907972,
+     "turns": 2,
+     "duration_s": 225,
+     "error": null,
+     "hidden": "FAIL",
+     "judge": "FAIL",
+     "judge_votes": [
+      false,
+      false,
+      false
+     ],
+     "judge_cost_usd": 0.071188,
+     "helper_models": [
+      "claude-opus-5-5"
+     ]
+    }
+   ]
+  }
+ }
+}
