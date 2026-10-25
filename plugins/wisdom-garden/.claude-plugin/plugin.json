@@ -1,6 +1,6 @@
 {
   "name": "wisdom-garden",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Knowledge is planted, cultivated, and harvested \u2014 not created, stored, and retrieved. Compress session context into lasting memory, reflect on patterns as seeds, and elevate proven seeds into reusable skills.",
   "author": {
     "name": "Dojo Genesis"
@@ -21,7 +21,7 @@
     "memory_root": {
       "type": "string",
       "title": "Memory repo folder (mod)",
-      "description": "Mod only: the folder that holds MEMORY.md, the seed files and compressions/. Empty tries ~/TresPies-AI-Orchestration, then ~/.hermes/orchestration/trespies-memory.",
+      "description": "Mod only: the memory repo's root folder, the one that holds compressions/ and MEMORY.md. The seed files are read from its memory/ folder when that holds MEMORY.md, else from the root. Empty tries ~/TresPies-AI-Orchestration, then ~/.hermes/orchestration/trespies-memory.",
       "default": ""
     },
     "stale_days": {

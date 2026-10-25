@@ -55,19 +55,31 @@ async function homeDirs($: EngineInterface): Promise<string[]> {
   return out
 }
 
-// The memory repo: the memory_root option, else the first known layout under the home folder that holds MEMORY.md.
-async function findRoot($: EngineInterface, configured: string): Promise<string | undefined> {
+// The memory repo is two places. `root` is the repo itself: git history, compressions/ and anything else that lives
+// beside the store. `store` is the folder that holds MEMORY.md and the seed, feedback, reference and project files.
+// A repo that moved its store into memory/ keeps only a pointer MEMORY.md at the root, so the store is <root>/memory
+// when that folder holds MEMORY.md, and the root itself otherwise (the older layout, where both are one folder).
+type MemoryDirs = { root: string; store: string }
+
+// The memory_root option (the repo root, in either layout), else the first known layout under the home folder.
+async function findMemory($: EngineInterface, configured: string): Promise<MemoryDirs | undefined> {
   const tries: string[] = []
   if (configured.trim() !== '') tries.push(configured.trim())
   for (const home of await homeDirs($)) {
     tries.push(join(home, 'TresPies-AI-Orchestration'), join(home, '.hermes/orchestration/trespies-memory'))
   }
-  for (const dir of tries) {
+  // An unreadable candidate counts as one without MEMORY.md.
+  const has = async (path: string): Promise<boolean> => {
     try {
-      if (await $.fs.exists(join(dir, 'MEMORY.md'))) return dir
+      return await $.fs.exists(path)
     } catch (_err) {
-      // An unreadable candidate is skipped.
+      return false
     }
+  }
+  for (const dir of tries) {
+    const nested = join(dir, 'memory')
+    if (await has(join(nested, 'MEMORY.md'))) return { root: dir, store: nested }
+    if (await has(join(dir, 'MEMORY.md'))) return { root: dir, store: dir }
   }
   return undefined
 }
@@ -107,7 +119,7 @@ function logRead($: EngineInterface, ctx: Ctx, row: GardenRead): Promise<void> {
 async function score($: EngineInterface, ctx: Ctx, isSaving: boolean): Promise<GardenCard> {
   const now = await $.clock.now()
   const notes: string[] = []
-  const root = await findRoot($, ctx.configuredRoot)
+  const found = await findMemory($, ctx.configuredRoot)
   const reads = asList<GardenRead>(await $.store.get(READS))
   const sessions = asList<GardenSession>(await $.store.get(SESSIONS))
   const superseded = new Set<string>()
@@ -116,9 +128,10 @@ async function score($: EngineInterface, ctx: Ctx, isSaving: boolean): Promise<G
   let lastCompression: number | undefined
   let activeSeeds: number | undefined
 
-  if (root === undefined) {
+  if (found === undefined) {
     notes.push('No memory repo found. Set memory_root in the plugin settings.')
   } else {
+    const { root, store } = found
     const since = `--since=${new Date(now - 5 * WEEK_MS).toISOString()}`
     const recLog = await git($, root, ['log', since, '--no-color', '--format=@@%ct', '-p', '--unified=0', '--',
       ':(glob)**/seed_*.md', ':(glob)**/feedback_*.md'])
@@ -138,11 +151,11 @@ async function score($: EngineInterface, ctx: Ctx, isSaving: boolean): Promise<G
     }
 
     try {
-      const files = (await $.fs.list(root)).filter(f => f.kind === 'file' && classifyPath(f.name) !== undefined)
+      const files = (await $.fs.list(store)).filter(f => f.kind === 'file' && classifyPath(f.name) !== undefined)
       activeSeeds = files.filter(f => /^seed_/i.test(f.name)).length
       for (const f of files.slice(0, 3000)) {
         try {
-          const front = parseFront((await $.fs.read(join(root, f.name))).slice(0, 8000))
+          const front = parseFront((await $.fs.read(join(store, f.name))).slice(0, 8000))
           for (const slug of front.supersedes) superseded.add(slug.replace(/\.md$/i, ''))
           if (front.supersededBy) {
             superseded.add(f.name.replace(/\.md$/i, ''))
@@ -166,7 +179,7 @@ async function score($: EngineInterface, ctx: Ctx, isSaving: boolean): Promise<G
       // No ledger here: the drift ritual hook has not run on this machine.
     }
   }
-  const card = computeCard({ now, reads, sessions, recurrences, added, superseded, lastCompression, activeSeeds, memoryRoot: root, ritualLedger, notes })
+  const card = computeCard({ now, reads, sessions, recurrences, added, superseded, lastCompression, activeSeeds, memoryRoot: found?.root, ritualLedger, notes })
   if (reads.length === 0) card.notes.push('The reuse log is empty: it fills as sessions read memory files and skills.')
 
   let weeks = asList<GardenWeek>(await $.store.get(WEEKS))

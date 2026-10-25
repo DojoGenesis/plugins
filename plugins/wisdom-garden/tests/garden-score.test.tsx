@@ -30,10 +30,36 @@ const REC_LOG = [`@@${sec(T0 - 2 * DAY_MS)}`, '+++ b/seed_fresh.md', '+The guard
   `@@${sec(T0 - 20 * DAY_MS)}`, '+It recurred in the build.'].join('\n')
 const ADD_LOG = [`@@${sec(T0 - DAY_MS)}`, '', 'seed_new.md', 'skills/new-skill/SKILL.md', `@@${sec(T0 - 15 * DAY_MS)}`, '', 'seed_fresh.md'].join('\n')
 
-type World = { toasts: string[]; clock: ReturnType<typeof mock.clock>; gitCalls: number; store: Map<string, unknown> }
+// Where the memory repo keeps its store. `root` is the repo (git, compressions/); `storeDir` is the folder that holds
+// MEMORY.md and the seed files: the root itself in the older layout, <root>/memory once the store moved there, when
+// the root keeps only a pointer MEMORY.md.
+type Layout = { root: string; storeDir: string; files: Record<string, string> }
+const POINTER = '# MEMORY.md moved to memory/MEMORY.md\n\nThe live index is memory/MEMORY.md.\n'
 
-function world(on: any, store: Record<string, unknown> = {}, env: Record<string, string> = {}): World {
-  const w: World = { toasts: [], clock: mock.clock(on, { now: T0 }), gitCalls: 0, store: new Map(Object.entries(store)) }
+function place(root: string, isNested: boolean, extra: Record<string, string> = {}): Layout {
+  const storeDir = isNested ? `${root}/memory` : root
+  const files: Record<string, string> = {}
+  for (const [path, text] of Object.entries(FILES)) files[path.startsWith(`${ROOT}/`) ? `${storeDir}/${path.slice(ROOT.length + 1)}` : path] = text
+  if (isNested) files[`${root}/MEMORY.md`] = POINTER
+  return { root, storeDir, files: { ...files, ...extra } }
+}
+
+// The direct children of a folder in a layout's files; a folder with none is one that does not exist.
+function listDir(files: Record<string, string>, dir: string) {
+  const prefix = `${dir.replace(/\/+$/, '')}/`
+  const seen = new Map<string, 'file' | 'dir'>()
+  for (const path of Object.keys(files)) {
+    if (!path.startsWith(prefix)) continue
+    const [head, ...rest] = path.slice(prefix.length).split('/')
+    if (head) seen.set(head, rest.length > 0 ? 'dir' : seen.get(head) ?? 'file')
+  }
+  return [...seen].map(([name, kind]) => ({ name, kind, size: 1, mtimeMs: 0, isLink: false }))
+}
+
+type World = { toasts: string[]; clock: ReturnType<typeof mock.clock>; gitCalls: number; gitCwds: string[]; store: Map<string, unknown> }
+
+function world(on: any, store: Record<string, unknown> = {}, env: Record<string, string> = {}, layout: Layout = place(ROOT, false)): World {
+  const w: World = { toasts: [], clock: mock.clock(on, { now: T0 }), gitCalls: 0, gitCwds: [], store: new Map(Object.entries(store)) }
   mock.env(on, { HOME: '/home/x', ...env })
   // The plugin's own store, kept here so a test can read what the plugin wrote.
   const copy = (v: unknown) => (v === undefined ? undefined : JSON.parse(JSON.stringify(v)))
@@ -55,23 +81,24 @@ function world(on: any, store: Record<string, unknown> = {}, env: Record<string,
   on('command.register', (_$: any, e: any) => ({ value: { command: e.name } }))
   on('session.id', () => ({ value: 'sess-1' }))
   on('session.usage', () => ({ value: { startedAt: T0, context: {}, rateLimits: [], cost: { usd: 1.5 } } }))
-  on('fs.exists', (_$: any, e: any) => ({ value: e.path in FILES }))
+  on('fs.exists', (_$: any, e: any) => ({ value: e.path in layout.files }))
   on('fs.read', (_$: any, e: any) => {
-    if (!(e.path in FILES)) throw new Error('ENOENT')
-    return { value: FILES[e.path] }
+    if (!(e.path in layout.files)) throw new Error('ENOENT')
+    return { value: layout.files[e.path] }
   })
   on('fs.list', (_$: any, e: any) => {
-    if (e.path === `${ROOT}/compressions`) {
+    // compressions/ stays at the repo root in every layout.
+    if (e.path === `${layout.root}/compressions`) {
       return { value: ['compression_log_2026-10-03_convergence.md', 'compression_log_2026-08-13_x.md', 'harvest.jsonl']
         .map(name => ({ name, kind: 'file', size: 1, mtimeMs: 0, isLink: false })) }
     }
-    if (e.path === ROOT) {
-      return { value: Object.keys(FILES).map(p => ({ name: p.slice(ROOT.length + 1), kind: 'file', size: 1, mtimeMs: 0, isLink: false })) }
-    }
-    throw new Error('ENOENT')
+    const entries = listDir(layout.files, e.path)
+    if (entries.length === 0) throw new Error('ENOENT')
+    return { value: entries }
   })
   on('process.run', (_$: any, e: any) => {
     w.gitCalls += 1
+    w.gitCwds.push(String(e.init?.cwd))
     const argv: string[] = [...e.argv]
     const stdout = argv.includes('--diff-filter=A') ? ADD_LOG : REC_LOG
     return { value: { exitCode: 0, stdout, stderr: '' } }
@@ -261,3 +288,44 @@ test('with no memory_root, the repo is found under the home folder, else the car
   const ran = await $.command.run({ command: 'garden-score', args: 'text' } as any)
   expect((ran.text ?? '').includes('No memory repo found. Set memory_root in the plugin settings.')).toBe(true)
 })
+
+// ---- where the store lives
+
+// The memory repo moved its store into memory/ and left a pointer MEMORY.md at the root; compressions/ stayed at the
+// root. Every layout below must score the same store: 4 active seeds, and seed_replaced read as superseded.
+const HOME_REPO = '/home/x/.hermes/orchestration/trespies-memory'
+const LAYOUTS: { name: string; layout: Layout; options: Record<string, unknown> }[] = [
+  { name: 'store in memory/, memory_root set to the repo root', layout: place(ROOT, true), options: { memory_root: ROOT } },
+  { name: 'store at the root (older layout), memory_root set', layout: place(ROOT, false), options: { memory_root: ROOT } },
+  { name: 'a memory/ folder with no MEMORY.md is not the store', layout: place(ROOT, false, { [`${ROOT}/memory/notes.txt`]: 'x' }), options: { memory_root: ROOT } },
+  { name: 'store in memory/, repo found under the home folder', layout: place(HOME_REPO, true), options: {} },
+  { name: 'store at the root, repo found under the home folder', layout: place(HOME_REPO, false), options: {} },
+]
+
+for (const { name, layout, options } of LAYOUTS) {
+  test(`the store is read from the right folder: ${name}`, { options }, async ($, on) => {
+    const w = world(on, {}, {}, layout)
+    await start($)
+    await $.tool.call({ tool: 'Read', file_path: `${layout.storeDir}/seed_replaced.md` } as any)
+    const ran = await $.command.run({ command: 'garden-score', args: '' } as any)
+    expect(ran.text).toBe('Garden score opened in a pane.')
+
+    // The seeds and the superseded link come from the store folder, not from the pointer file at the root.
+    const weeks = w.store.get('weeks') as GardenWeek[]
+    expect(weeks[0]?.activeSeeds).toBe(4)
+    expect(weeks[0]?.values.stale).toBe(1)
+    const ui = await $.ui.mount(PANE('terminal'))
+    expect((await ui.find({ type: 'Text', text: /4 active seeds/ })) !== undefined).toBe(true)
+    expect((await ui.find({ type: 'Text', text: /seed_replaced/ })) !== undefined).toBe(true)
+    // compressions/ and git stay with the repo root.
+    expect((await ui.find({ type: 'Text', text: /Last compression log 17 days ago/ })) !== undefined).toBe(true)
+    expect(w.gitCwds.length >= 2).toBe(true)
+    expect(w.gitCwds.every(cwd => cwd === layout.root)).toBe(true)
+    await ui.unmount()
+
+    const text = (await $.command.run({ command: 'garden-score', args: 'text' } as any)).text ?? ''
+    expect(text.includes('could not be listed')).toBe(false)
+    expect(text.includes('No compressions folder')).toBe(false)
+    expect(text.includes('No memory repo found')).toBe(false)
+  })
+}

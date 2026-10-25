@@ -62,7 +62,7 @@ not a proof. The mod is measurement only and changes nothing about how a session
 
 | Option | Default | What it does |
 |---|---|---|
-| `memory_root` | empty | The folder that holds `MEMORY.md`, the seed files and `compressions/`. When empty, the mod tries `~/TresPies-AI-Orchestration` and then `~/.hermes/orchestration/trespies-memory`. |
+| `memory_root` | empty | The memory repo's root folder: the one that holds `compressions/` and `MEMORY.md`. The seed and memory files are read from its `memory/` folder when that holds a `MEMORY.md` (a repo whose root keeps only a pointer file), and from the root itself otherwise. When empty, the mod tries `~/TresPies-AI-Orchestration` and then `~/.hermes/orchestration/trespies-memory`. |
 | `stale_days` | 90 | The age limit, in days, for `verified` or `updated`. 0 turns off the age check. `valid_until` and superseded files still count. |
 | `weekly_toast` | on | Score each new week at session start and show a toast. |
 
@@ -78,7 +78,8 @@ The mod needs function hooks turned on (`CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1`). 
   old transcripts is planned in dojo-meter.
 - A file with no `verified`, `as_of`, `updated` or `valid_until` date is never called stale. The mod does not guess
   a file's age from its modified time, because a checkout resets that time.
-- The superseded check reads only the top folder of the memory repo.
+- The superseded check reads only the top folder of the memory store (`memory/` when the repo has one, else the
+  repo root), not its subfolders.
 - In a shallow clone, the oldest commit looks as if it added every file, so new-seed counts run high. The card says
   so when it sees one.
 - Git, and so every measure from git history, needs the CLI. The desktop Code tab runs a local CLI session, so it
@@ -87,5 +88,5 @@ The mod needs function hooks turned on (`CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1`). 
 ### Tests
 
 `claude plugin test plugins/wisdom-garden` runs `tests/garden-score.test.tsx`. It covers the rules, the card, the
-reuse log, the session rows, the weekly toast, the off switch, and the pane drawn on both the terminal and
-desktop surfaces.
+reuse log, the session rows, the weekly toast, the off switch, the pane drawn on both the terminal and
+desktop surfaces, and both memory-repo layouts (the store in `memory/` below the root, and the store at the root).

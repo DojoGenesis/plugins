@@ -50,6 +50,9 @@ method, the rubric and the tables. It started from five misfires reported from o
 
 ### Fixed
 
+- **wisdom-garden 1.2.1** — `/garden-score` reads the memory store from `<root>/memory` when that folder holds
+  `MEMORY.md` (the root otherwise, so older layouts keep working); `compressions/` and git still come from the root.
+  Before this, a repo with its store in `memory/` scored 0 active seeds and 0 stale reads.
 - **`dojo-verify` 0.2.1** (0.2.1 only bumps the version, so that installed copies pick up the `warn` default from 7479bd6, which landed under an unchanged 0.2.0 and so never refreshed a plugin cache) — counts the checks people actually run: a program that exits clean and prints PASS or ok
   lines, `N passed`, `N/N pass`, `ALL PASS` or `0 failed`; `gh pr checks` and `gh run view/watch`; opening a rendered
   image after a visual change. The agent's own memory and notes (a Write or Edit there, or a Bash write that names
