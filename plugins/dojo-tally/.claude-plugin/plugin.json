@@ -1,6 +1,6 @@
 {
   "name": "dojo-tally",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Count returns, not dispatches: when a fan-out settles, the model hears what came back (returned, failed, silent, unchecked), and /tally refute sends a report to a judge.",
   "author": {
     "name": "Dojo Genesis",

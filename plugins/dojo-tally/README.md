@@ -39,6 +39,10 @@ What it does:
 - **Done means done.** An agent that ends a turn but is still held by the engine (parked on background
   work of its own) is waiting, not returned. Nothing about it is reported until the engine says it is done,
   and then its last answer is the one judged.
+- **Structured answers.** An agent run with an output schema (a workflow's `agent()` with `schema`) answers
+  by calling StructuredOutput, so its last turn has no text. The arguments of its last accepted
+  StructuredOutput call are its answer: judged like text, and what `/tally refute` hands the judge. A
+  rejected try is not an answer, and the call itself is not counted as looking at anything.
 - **Classification**, first match wins:
   - `failed`: an error, a refusal, an interrupt, an empty answer, or an agent the engine stopped;
   - `silent`: a clean verdict ("no defects found", "looks good") from an agent that looked at nothing;
@@ -79,6 +83,8 @@ What it does:
 - Only the last five waves are kept; `/tally refute` names agents by their number in the session.
 - The bare `/refute` is only a shortcut: when another plugin holds the name (dojo-protocol's `refute` skill does, so the whole suite installed means no `/refute` from this plugin), Claude Code keeps it there. `/tally refute <n>` always works.
 - Teammates (agents that idle between messages) are not tallied.
+- A structured answer is kept in memory between the StructuredOutput call and the end of that agent's turn,
+  so a hot reload in that window loses it and the agent is counted as an empty answer.
 - A settle note arrives a few seconds after the last agent ends: the mod first asks the engine whether
   that agent is done.
 - A `/tally refute` judge runs on the model you pick and costs what that model costs.
