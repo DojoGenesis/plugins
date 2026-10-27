@@ -12,9 +12,15 @@ import type { TallyAgent, TallyJudge, TallyOutcome, TallyState } from '../types'
 
 // What counts as the agent having looked at something (the `reads` count, which the `silent` test needs): any tool call
 // that is not a write, so Read/Grep/Glob/Bash/Web*/LSP and also every mcp__ tool, Skill and Agent. Bookkeeping that
-// looks at nothing (a todo list, loading a tool's schema) does not count.
+// looks at nothing (a todo list, loading a tool's schema, handing back a structured answer) does not count.
 const WRITE_TOOLS = new Set(['Edit', 'Write', 'NotebookEdit', 'MultiEdit'])
-const BOOKKEEPING = new Set(['TodoWrite', 'ToolSearch', 'ExitPlanMode'])
+const BOOKKEEPING = new Set(['TodoWrite', 'ToolSearch', 'ExitPlanMode', 'StructuredOutput'])
+
+// An agent run with an output schema (a workflow's agent() with `schema`) answers by calling StructuredOutput, and its
+// run ends on that call's result: its last turn has no visible text, so turn.complete's `answer` is "". The call's
+// arguments are the answer. Keys tool.call carries that are not the tool's own arguments:
+const STRUCTURED = 'StructuredOutput'
+const RESERVED_KEYS = new Set(['tool', 'tool_use_id', 'agentId', 'consent', 'requestMeta'])
 
 const KEEP_WAVES = 5
 const ANSWER_CLIP = 8000
@@ -65,9 +71,10 @@ type SpawnInfo = { id: string; label: string; type: string; model: string; isWor
 // How an agent ended. `byReconcile` marks an end the mod inferred (no turn.complete was seen), which a real
 // turn.complete that turns up later may correct.
 type Ending = { verdict: Verdict; byReconcile: boolean }
-// What the hooks share: the options, the turn.completes that came before their agent was registered, and a flag that
-// keeps two reconcile passes from overlapping. One per load of the module.
-type Ctx = { cfg: Config; early: Map<string, Done>; isReconciling: boolean }
+// What the hooks share: the options, the turn.completes that came before their agent was registered, each agent's last
+// accepted StructuredOutput (JSON, until its turn ends), and a flag that keeps two reconcile passes from overlapping.
+// One per load of the module.
+type Ctx = { cfg: Config; early: Map<string, Done>; structured: Map<string, string>; isReconciling: boolean }
 
 // `$` may only be handed to a function declared at the top of this file, and `$.env.get` takes string literals.
 type EnvReader = { env: { get: (name: string) => Promise<string | undefined> } }
@@ -121,6 +128,20 @@ function labelOf(e: SpawnEvent): string {
     if (typeof c === 'string' && c.trim() !== '') return c.trim()
   }
   return 'agent'
+}
+
+// The tool's own arguments, as JSON: what the agent handed back.
+function payloadOf(e: Record<string, unknown>): string {
+  return JSON.stringify(Object.fromEntries(Object.entries(e).filter(([k]) => !RESERVED_KEYS.has(k))))
+}
+
+// A turn with no text whose agent handed back a structured answer returned that answer. Text, when there is any,
+// stays the answer; either way the kept payload is used up by the end.
+function withStructured(ctx: Ctx, id: string, d: Done): Done {
+  const payload = ctx.structured.get(id)
+  if (payload === undefined) return d
+  ctx.structured.delete(id)
+  return d.answer.trim() === '' ? { ...d, answer: payload } : d
 }
 
 function claimsCheck(text: string): boolean {
@@ -730,6 +751,7 @@ export const register: Register = (on, options) => {
       judgeModel: options.judge_model === 'sonnet' ? 'sonnet' : 'opus',
     },
     early: new Map(),
+    structured: new Map(),
     isReconciling: false,
   }
   let tick: { cancel: () => void } | undefined
@@ -765,13 +787,25 @@ export const register: Register = (on, options) => {
     return next(e)
   })
 
-  // Counts after the call settles. A call that came back denied or errored was still attempted.
+  // Counts after the call settles. A call that came back denied or errored was still attempted. A StructuredOutput the
+  // engine accepted is kept as the agent's answer (a rejected try is not: the agent tries again or has none).
   on('tool.call', async ($, e, next) => {
     const r = await next(e)
     const id = e.agentId
     if (id !== undefined) {
       try {
-        if (!(await standDown($))) await countCall($, id, String(e.tool), r.deny !== undefined || r.isError === true)
+        if (await standDown($)) return r
+        const tool = String(e.tool)
+        const failed = r.deny !== undefined || r.isError === true
+        await countCall($, id, tool, failed)
+        if (tool === STRUCTURED && !failed) {
+          ctx.structured.delete(id) // re-set, so the oldest is the first out
+          ctx.structured.set(id, payloadOf(e as Record<string, unknown>))
+          if (ctx.structured.size > EARLY_CAP) {
+            const oldest = ctx.structured.keys().next().value
+            if (oldest !== undefined) ctx.structured.delete(oldest)
+          }
+        }
       } catch {
         // counting is best effort
       }
@@ -801,7 +835,7 @@ export const register: Register = (on, options) => {
     const id = e.agentId
     if (id !== undefined) {
       try {
-        if (!(await standDown($))) await onDone($, ctx, id, e)
+        if (!(await standDown($))) await onDone($, ctx, id, withStructured(ctx, id, e))
       } catch {
         // best effort
       }

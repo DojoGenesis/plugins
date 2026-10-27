@@ -50,6 +50,11 @@ method, the rubric and the tables. It started from five misfires reported from o
 
 ### Fixed
 
+- **dojo-tally 0.1.2** — a workflow agent that answers through StructuredOutput counts as returned. Its last turn
+  has no text, so the tally called every such agent "failed — it returned an empty answer": on 2026-10-27 a run of
+  16 healthy scout, verify and synthesize agents read "returned 2 · failed 16". The arguments of the agent's last
+  accepted StructuredOutput call are now its answer, judged like text and handed to `/tally refute`'s judge; the
+  call itself no longer counts as a read, so a clean verdict handed back after reading nothing is still `silent`.
 - **wisdom-garden 1.2.1** — `/garden-score` reads the memory store from `<root>/memory` when that folder holds
   `MEMORY.md` (the root otherwise, so older layouts keep working); `compressions/` and git still come from the root.
   Before this, a repo with its store in `memory/` scored 0 active seeds and 0 stale reads.

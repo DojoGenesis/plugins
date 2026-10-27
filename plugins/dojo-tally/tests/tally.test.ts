@@ -148,6 +148,81 @@ test('a failed agent says why: error, refusal, empty answer', async ($, on) => {
   expect(row).toMatch('#3 three (general-purpose): failed — it returned an empty answer')
 })
 
+// ----------------------------------------------------------------------------------------------- structured answers
+
+// A workflow agent given an output schema answers through the StructuredOutput tool, and its run ends on that call's
+// result: the turn's final visible text is "" and the report is the call's input. Hand-written from wf_73711b2d-734
+// (2026-10-27): each transcript ends tool_use StructuredOutput → tool_result "Structured output provided successfully"
+// with no text after it, the journal holds a `result` line per agent, and the tally called all 16 "an empty answer".
+const flow = (agentIndex: number) => ({ subagentType: 'workflow-subagent', workflow: { runId: 'wf_73711b2d-734', agentIndex } }) as any
+
+test('a workflow agent that answers through StructuredOutput has returned, and its payload is the report', async ($, on) => {
+  const seen = spawner(on)
+  mock.env(on, {})
+  tick(on, { now: 1000 })
+  const sess = mock.session(on)
+  standIn(on)
+  const ui = watchUi(on)
+  await start($)
+  await spawn($, 'scout:livekit', flow(1))
+  await spawn($, 'verify:livekit', flow(2))
+  await spawn($, 'synthesize', flow(3))
+  await spawn($, 'builder') // a plain Agent-tool builder: it ends with text
+  await call($, 'a1', 'WebFetch', { url: 'https://api.github.com/repos/livekit/livekit' })
+  await bash($, 'a1', 'gh api repos/livekit/livekit --jq .license.spdx_id')
+  await call($, 'a1', 'Write', { file_path: '/work/docs/research/L7-livekit.md', content: '# LiveKit' })
+  await call($, 'a1', 'StructuredOutput', { lane: 'livekit', report: '/work/docs/research/L7-livekit.md', claims: ['LiveKit server is Apache-2.0'] })
+  await read($, 'a2')
+  await bash($, 'a2', 'curl -s https://api.github.com/repos/livekit/livekit')
+  // a first try the schema rejected (the stand-in errors on command 'fail'), then the one that took
+  await call($, 'a2', 'StructuredOutput', { command: 'fail', verdicts: 'not an array' })
+  await call($, 'a2', 'StructuredOutput', { verdicts: [{ claim: '1. LiveKit server is Apache-2.0', verdict: 'confirmed', source_url: 'https://api.github.com/repos/livekit/livekit' }] })
+  await read($, 'a3')
+  await call($, 'a3', 'StructuredOutput', { summary: 'Eight lanes in; three claims not confirmed.', not_confirmed: 3 })
+  await read($, 'a4')
+  for (const id of ['a1', 'a2', 'a3']) await complete($, '', { agentId: id })
+  await complete($, 'Built the scaffold: 4 files under /work/app.', { agentId: 'a4' })
+
+  expect(ui.toast[0]).toBe('wave settled — dispatched 4 · returned 4 · failed 0 · silent 0 · unchecked 0')
+  const row = texts(sess)[0] as string
+  expect(row).toMatch('[dojo-tally] Fan-out settled: dispatched 4 · returned 4 · failed 0')
+  expect(row).not.toMatch('empty answer')
+  // the payload is what a judge is handed, the one that took and not the rejected try
+  const spawns = seen.length
+  await run($, 'tally', 'refute 2')
+  expect(seen.length).toBe(spawns + 1)
+  const judged = seen[seen.length - 1]?.prompt ?? ''
+  expect(judged).toMatch('"verdict":"confirmed"')
+  expect(judged).not.toMatch('not an array')
+})
+
+test('StructuredOutput looks at nothing: a clean verdict handed back with no reads is silent; a rejected one alone is still empty', async ($, on) => {
+  mock.env(on, {})
+  tick(on, { now: 1000 })
+  const sess = mock.session(on)
+  standIn(on)
+  spawner(on)
+  const ui = watchUi(on)
+  await start($)
+  await spawn($, 'review:read', flow(1))
+  await spawn($, 'review:idle', flow(2))
+  await spawn($, 'review:rejected', flow(3))
+  await read($, 'a1')
+  await call($, 'a1', 'StructuredOutput', { verdict: 'No defects found.' })
+  await call($, 'a2', 'StructuredOutput', { verdict: 'No defects found.' })
+  await read($, 'a3')
+  await call($, 'a3', 'StructuredOutput', { command: 'fail', verdict: 'No defects found.' })
+  for (const id of ['a1', 'a2', 'a3']) await complete($, '', { agentId: id })
+
+  expect(ui.toast[0]).toBe('wave settled — dispatched 3 · returned 1 · failed 1 · silent 1 · unchecked 0')
+  const row = texts(sess)[0] as string
+  expect(row).toMatch('#2 review:idle (workflow-subagent): silent — clean verdict after reading nothing (rule 9)')
+  expect(row).toMatch('#3 review:rejected (workflow-subagent): failed — it returned an empty answer')
+  expect(row).not.toMatch('#1 review:read')
+  const out = (await run($, 'tally')).text as string
+  expect(flat(out)).toMatch('#2 review:idle workflow-subagent inherit silent 0 reads · 0 writes · 0 bash')
+})
+
 test('"Tests pass." with no Bash is unchecked; with a Bash call it is returned', async ($, on) => {
   mock.env(on, {})
   tick(on, { now: 1000 })
