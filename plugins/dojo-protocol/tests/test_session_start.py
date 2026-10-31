@@ -623,7 +623,7 @@ class TestManifestAndComponents(unittest.TestCase):
     def test_plugin_json(self):
         data = json.loads(read(os.path.join(PLUGIN, ".claude-plugin", "plugin.json")))
         self.assertEqual(data["name"], "dojo-protocol")
-        self.assertEqual(data["version"], "0.1.0")
+        self.assertEqual(data["version"], "0.1.1")
         self.assertEqual(data["description"], PROMISE)
         self.assertLessEqual(len(data["description"]), 200)
         self.assertEqual(data["author"], {"name": "Dojo Genesis", "email": "cruz@trespiesdesign.com"})
@@ -683,6 +683,8 @@ class TestManifestAndComponents(unittest.TestCase):
         _fm, scout = parse_frontmatter(os.path.join(PLUGIN, "agents", "scout.md"))
         self.assertIn("path:line", scout)
         self.assertIn("not found", scout)
+        _fm, judge = parse_frontmatter(os.path.join(PLUGIN, "agents", "judge.md"))
+        self.assertIn("unverified (not reached)", judge)
 
     def test_skills_and_budget(self):
         skills_dir = os.path.join(PLUGIN, "skills")

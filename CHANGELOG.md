@@ -50,6 +50,10 @@ method, the rubric and the tables. It started from five misfires reported from o
 
 ### Fixed
 
+- **dojo-protocol 0.1.1** — the judge reports by about its 20th tool call and marks what it didn't check
+  `unverified (not reached)`. In a session on 2026-10-22/23 a judge hit its turn limit and returned no report at
+  all. `delegate` and `refute` now say to paste the rules a judge or reviewer applies verbatim, with source path and
+  line: two false findings in that session came from a paraphrased rule.
 - **dojo-tally 0.1.2** — a workflow agent that answers through StructuredOutput counts as returned. Its last turn
   has no text, so the tally called every such agent "failed — it returned an empty answer": on 2026-10-27 a run of
   16 healthy scout, verify and synthesize agents read "returned 2 · failed 16". The arguments of the agent's last

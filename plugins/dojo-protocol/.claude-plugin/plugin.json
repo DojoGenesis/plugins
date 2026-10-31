@@ -1,6 +1,6 @@
 {
   "name": "dojo-protocol",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "The Dojo Protocol for Claude Code: ten rules at session start, a scout→contract→build→verify spine, and role agents pinned to the right model.",
   "author": {
     "name": "Dojo Genesis",

@@ -16,6 +16,7 @@ A review can end clean. If there is no real defect, the answer is `no defects fo
 - Default: `dojo-protocol:reviewer` (sonnet). Fresh context, Read/Glob/Grep/Bash. Give it the goal and the files, not your conclusion.
 - Claims that need a hard second look (an agent's "all green", a risky merge): `dojo-protocol:judge` (opus). It tries to refute, and it re-runs checks itself.
 - The reviewer is read-only by instruction. Its tools list is the only hard limit; Bash can still write if told to.
+- When a judge or reviewer checks work against rules, paste the rules verbatim with their source path and line, never a paraphrase.
 
 ## Steps
 
