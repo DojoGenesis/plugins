@@ -83,6 +83,11 @@ method, the rubric and the tables. It started from five misfires reported from o
   binaries marked) pins line endings, so a Windows clone with `core.autocrlf=true` gets the same bytes as git
   stores. Before, such a clone had CRLF files, every byte count on /proof read high, and the website's deploy guard
   refused the deploy unless `DOJO_PLUGINS_DIR` pointed at an LF export.
+- **The always-on check can't pass on a hook that didn't run** — `scripts/always_on.py` counted a SessionStart hook
+  that exited non-zero as 0 tokens, with no error. On Windows that was every hook, because `cmd.exe` doesn't expand
+  `${CLAUDE_PLUGIN_ROOT}`: the `always-on` row read `PASS` at about 1,288 when the suite was about 1,856, so it could
+  have passed over budget. The script now fills in the path itself, and a hook that exits non-zero stops the check
+  with an error naming the plugin. The suite's real weight hasn't changed.
 
 ## Unreleased — 2.3.0 — the desktop pass
 

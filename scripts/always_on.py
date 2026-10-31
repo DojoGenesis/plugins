@@ -15,6 +15,7 @@ two parts, measured separately:
              labels hooks "no model context cost", which is not true of a SessionStart hook that
              returns additionalContext, so it is counted here. Tokens are characters / 3.5,
              rounded up: an estimate, close to what the CLI's estimator gives for English prose.
+             A hook that exits non-zero stops the run: it measured nothing, which is not zero.
 
 Budget (ADR 039 D7': "the always-on budget"; the paper's D8 action item):
   - the suite (every marketplace entry with category "suite", together) is under SUITE_BUDGET;
@@ -88,6 +89,8 @@ def injected_text(stdout):
 
 
 def injection_chars(pdir):
+    # The hook runs from the temporary project below, so the path has to work from there.
+    pdir = os.path.abspath(pdir)
     total = 0
     with tempfile.TemporaryDirectory() as tmp:
         proj = os.path.join(tmp, "project")
@@ -99,14 +102,20 @@ def injection_chars(pdir):
         payload = json.dumps({"session_id": "always-on", "cwd": proj,
                               "hook_event_name": "SessionStart", "source": "startup"})
         for cmd in session_start_commands(pdir):
+            # cmd.exe, the shell on Windows, leaves ${...} as it is, so it can't be left to the shell.
+            cmd = cmd.replace("${CLAUDE_PLUGIN_ROOT}", pdir)
             try:
                 r = subprocess.run(cmd, shell=True, cwd=proj, env=env, input=payload,
-                                   stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
-                                   universal_newlines=True, timeout=30)
+                                   stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                   universal_newlines=True, errors="replace", timeout=30)
             except (OSError, subprocess.TimeoutExpired) as e:
                 raise RunError("%s: SessionStart hook did not run (%s)" % (os.path.basename(pdir), e.__class__.__name__))
-            if r.returncode == 0:
-                total += len(injected_text(r.stdout))
+            if r.returncode != 0:
+                # Counting this as zero would let the budget pass on a hook that measured nothing.
+                last = r.stderr.strip().splitlines()[-1:]
+                raise RunError("%s: SessionStart hook exited %d: %s" % (
+                    os.path.basename(pdir), r.returncode, last[0] if last else "no error output"))
+            total += len(injected_text(r.stdout))
     return total
 
 
