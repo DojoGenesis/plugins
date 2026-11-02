@@ -26,6 +26,7 @@ Template: `${CLAUDE_PLUGIN_ROOT}/skills/delegate/brief-template.md`.
 4. **Facts you already hold**: `path:line` citations, decisions from the contract file. Do not make it rediscover them.
 5. **Return shape**: what to send back (files changed, commands run with exit codes, open items), and its size. Big deliverables go to a file; reply with the path and a one-line summary.
 6. **Rules it must carry**: subagents do not get the injected protocol. State the ones that apply: read before editing, verify before saying done, cite `path:line`, no git add/commit/push unless asked.
+7. **Rules it will apply**: when a judge or reviewer checks work against rules, paste the rules verbatim with their source path and line, never a paraphrase. It will judge your paraphrase, and report the difference as a defect.
 
 ## Set `model` every time
 
