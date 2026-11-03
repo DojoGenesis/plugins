@@ -312,23 +312,48 @@ step_mod() {
   # A mod's module is register.ts or register.tsx (a mod that draws JSX); either one is a mod to test.
   if [ ! -f "$dir/hooks/register.ts" ] && [ ! -f "$dir/hooks/register.tsx" ]; then add_row "mod:$p" SKIP "no hooks/register.ts(x)"; return 0; fi
   if [ -n "$CLAUDE_REASON" ]; then add_row "mod:$p" ERROR "$CLAUDE_REASON"; return 0; fi
-  local log="$TMP/mod-$p.log"
-  ( cd "$REPO" && env CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 "$CLAUDE_BIN" plugin test "$dir" ) >"$log" 2>&1
-  RC=$?
+  local log="$TMP/mod-$p.log" note=""
+  run_mod "$dir" "$log"
+  # The kit gives every test a fixed 5000 ms that a mod can't raise, and a loaded machine stalls tests past it
+  # (seen 2026-11-02 at load ~550: dojo-verify failed, then passed 109/109 in 4s on the same code). When every
+  # failure is that timeout, run once more and say so; a test that really hangs times out again and stays FAIL.
+  if [ "$RC" -ne 0 ] && only_kit_timeouts "$log"; then
+    note="rerun: the first run's $(grep -c '^(fail)' "$log") failure(s) were all kit timeouts, load $(load_avg)"
+    run_mod "$dir" "$log"
+  fi
   if grep -q 'hooks modules are turned off' "$log" 2>/dev/null; then
     add_row "mod:$p" ERROR "function hooks are off in this process"
     return 0
   fi
   parse_ran "$log"
   if [ "$RC" -ne 0 ]; then
-    add_row "mod:$p" FAIL "exit $RC: $(tail_of "$log")"
+    add_row "mod:$p" FAIL "exit $RC: $(tail_of "$log")${note:+ ($note)}"
   elif [ -z "$RAN" ] || [ "$RAN" -eq 0 ]; then
-    add_row "mod:$p" FAIL "no tests ran (an empty run is not a pass)"
+    add_row "mod:$p" FAIL "no tests ran (an empty run is not a pass)${note:+ ($note)}"
   elif ! grep -Eq '^[[:space:]]*0 fail' "$log" 2>/dev/null; then
-    add_row "mod:$p" FAIL "output has no '0 fail' line"
+    add_row "mod:$p" FAIL "output has no '0 fail' line${note:+ ($note)}"
+  elif [ -n "$note" ]; then
+    add_row "mod:$p" WARN "$RAN tests on a $note"
   else
     add_row "mod:$p" PASS "$RAN tests"
   fi
+}
+
+run_mod() {
+  ( cd "$REPO" && env CLAUDE_CODE_ENABLE_FUNCTION_HOOKS=1 "$CLAUDE_BIN" plugin test "$1" ) >"$2" 2>&1
+  RC=$?
+}
+
+# only_kit_timeouts LOG: true when the run failed tests and every failure is the kit's per-test timeout.
+only_kit_timeouts() {
+  local fails timeouts
+  fails=$(grep -c '^(fail)' "$1" 2>/dev/null) || fails=0
+  timeouts=$(grep -Ec 'timed out after [0-9]+ ms' "$1" 2>/dev/null) || timeouts=0
+  [ "$fails" -gt 0 ] && [ "$fails" -eq "$timeouts" ]
+}
+
+load_avg() {
+  uptime 2>/dev/null | sed -E 's/.*load averages?: *//'
 }
 
 step_self_test() {
