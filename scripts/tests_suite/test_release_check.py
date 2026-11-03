@@ -57,6 +57,13 @@ if [ "$1" = "plugin" ] && [ "$2" = "test" ]; then
     vacuous) printf ' 0 pass\\n 0 fail\\nRan 0 tests across 0 files.\\n'; exit 0 ;;
     noran) printf 'all good\\n'; exit 0 ;;
     fail) printf ' 2 pass\\n 1 fail\\nRan 3 tests across 1 file.\\n'; exit 1 ;;
+    timeout) printf '(fail) slow [5001.00ms]\\n  Error: timed out after 5000 ms\\n 2 pass\\n 1 fail\\nRan 3 tests across 1 file.\\n'; exit 1 ;;
+    timeoutonce)
+      if [ "$(grep -c '^fh:' "$STUB_LOG")" -le 1 ]; then
+        printf '(fail) slow [5001.00ms]\\n  Error: timed out after 5000 ms\\n 2 pass\\n 1 fail\\nRan 3 tests across 1 file.\\n'; exit 1
+      fi
+      printf ' 3 pass\\n 0 fail\\nRan 3 tests across 1 file.\\n'; exit 0 ;;
+    mixed) printf '(fail) slow [5001.00ms]\\n  Error: timed out after 5000 ms\\n(fail) wrong [3.00ms]\\n  error: expect(received).toBe(expected)\\n 1 pass\\n 2 fail\\nRan 3 tests across 1 file.\\n'; exit 1 ;;
     off) echo "hooks modules are turned off in this process"; exit 1 ;;
     spam3) spam; exit 3 ;;
   esac
@@ -215,6 +222,29 @@ class RC(unittest.TestCase):
         rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="fail")
         self.assertNotEqual(rc, 0)
         self.assertRow(rows, "mod:dojo-alpha", "FAIL")
+
+    def test_a_mod_run_that_only_timed_out_is_rerun_once_and_shown_as_warn(self):
+        # Seen 2026-11-02: at load ~550 dojo-verify's mod tests passed the kit's fixed 5000 ms timeout and the row
+        # failed; the same code passed 109/109 in 4s once the machine was quiet.
+        self.add_plugin("dojo-alpha", register=True)
+        rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="timeoutonce")
+        self.assertEqual(rc, 0, out + err)
+        self.assertRow(rows, "mod:dojo-alpha", "WARN", "kit timeouts")
+        self.assertEqual(self.logtext().count("fh:1"), 2)
+
+    def test_a_mod_test_that_times_out_every_time_still_fails(self):
+        self.add_plugin("dojo-alpha", register=True)
+        rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="timeout")
+        self.assertNotEqual(rc, 0)
+        self.assertRow(rows, "mod:dojo-alpha", "FAIL", "kit timeouts")
+        self.assertEqual(self.logtext().count("fh:1"), 2)
+
+    def test_a_real_failure_beside_a_timeout_is_not_rerun(self):
+        self.add_plugin("dojo-alpha", register=True)
+        rc, out, err, rows = self.run_rc("--plugin", "dojo-alpha", STUB_MOD_MODE="mixed")
+        self.assertNotEqual(rc, 0)
+        self.assertRow(rows, "mod:dojo-alpha", "FAIL")
+        self.assertEqual(self.logtext().count("fh:1"), 1)
 
     def test_a_tsx_module_is_a_mod_and_is_tested_not_skipped(self):
         # Seen 2026-10-15: the step looked only for register.ts, so two mods written as register.tsx were SKIP

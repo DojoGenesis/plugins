@@ -9,6 +9,12 @@ import os
 import subprocess
 import sys
 import tempfile
+import time
+
+try:
+    import resource
+except ImportError:  # Windows has no resource module
+    resource = None
 
 sys.dont_write_bytecode = True
 
@@ -23,6 +29,20 @@ _counter = [0]
 def uid():
     _counter[0] += 1
     return "u%06d" % _counter[0]
+
+
+def cpu_seconds():
+    """CPU time used so far by this process and its finished children (the hook runs as a waited subprocess).
+
+    The speed tests guard against work that grows with the input. Wall-clock time also counts time spent waiting
+    for a CPU, so a busy machine failed them with no change to the code. Windows has no child CPU accounting here,
+    so it falls back to the wall clock.
+    """
+    if resource is None:
+        return time.perf_counter()
+    me = resource.getrusage(resource.RUSAGE_SELF)
+    kids = resource.getrusage(resource.RUSAGE_CHILDREN)
+    return me.ru_utime + me.ru_stime + kids.ru_utime + kids.ru_stime
 
 
 def load_hook_module():
