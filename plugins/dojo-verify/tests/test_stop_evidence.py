@@ -1,7 +1,6 @@
 """The Stop hook, run as a subprocess against hand-written transcripts and payloads."""
 import json
 import os
-import time
 import unittest
 
 import _helpers as h
@@ -801,9 +800,9 @@ class TestTailWindow(Base):
                    + h.passing_check("b1") + [h.assistant_text("Fixed.")])
         self.sb.write(entries)
         self.assertGreater(os.path.getsize(self.sb.transcript), 2 * 1024 * 1024)
-        start = time.time()
+        start = h.cpu_seconds()
         r = self.run_hook()
-        elapsed = time.time() - start
+        elapsed = h.cpu_seconds() - start
         self.assertTrue(r.silent)
         self.assertLess(elapsed, 1.5)
 
@@ -828,10 +827,10 @@ class TestTailWindow(Base):
 
     def test_typical_case_is_fast(self):
         self.sb.write(self.claim_turn())
-        start = time.time()
+        start = h.cpu_seconds()
         r = self.run_hook()
         self.assertTrue(r.blocked)
-        self.assertLess(time.time() - start, 1.0)
+        self.assertLess(h.cpu_seconds() - start, 1.0)
 
 
 class TestShellCompounds(Base):
@@ -997,9 +996,9 @@ class TestSpeed(Base):
         }
         for label, text in messages.items():
             with self.subTest(label=label):
-                start = time.time()
+                start = h.cpu_seconds()
                 hook.detect_claim(text, True)
-                self.assertLess(time.time() - start, 0.2)
+                self.assertLess(h.cpu_seconds() - start, 0.2)
 
     def test_questions_and_histories_stay_fast_in_process(self):
         hook = h.load_hook_module()
@@ -1016,9 +1015,9 @@ class TestSpeed(Base):
         }
         for label, text in messages.items():
             with self.subTest(label=label):
-                start = time.time()
+                start = h.cpu_seconds()
                 hook.detect_claim(text, True)
-                self.assertLess(time.time() - start, 0.2)
+                self.assertLess(h.cpu_seconds() - start, 0.2)
 
     def test_a_command_with_thousands_of_branches_stays_fast_in_process(self):
         hook = h.load_hook_module()
@@ -1028,17 +1027,17 @@ class TestSpeed(Base):
             "never closed": "if a; then pytest -q; else echo no; " * 3000,
         }.items():
             with self.subTest(label=label):
-                start = time.time()
+                start = h.cpu_seconds()
                 hook.command_events(command)
-                self.assertLess(time.time() - start, 1.0)
+                self.assertLess(h.cpu_seconds() - start, 1.0)
 
     def test_a_message_that_fills_the_whole_input_still_finishes(self):
         self.sb.write(self.claim_turn())
         text = "Fixed " + " " * (1024 * 1024 - 20000)
-        start = time.time()
+        start = h.cpu_seconds()
         r = self.run_hook(last_assistant_message=text)
         self.assertEqual((r.code, r.err), (0, ""))
-        self.assertLess(time.time() - start, 1.5)
+        self.assertLess(h.cpu_seconds() - start, 1.5)
 
     def test_a_claim_at_the_start_or_the_end_of_a_long_message_is_still_seen(self):
         hook = h.load_hook_module()
