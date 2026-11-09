@@ -22,7 +22,7 @@ So the suite plus any three other plugins stays under 5,000 tokens. `scripts/rel
   home folder. `claude plugin details` labels hooks "no model context cost", but a SessionStart hook that returns
   `additionalContext` does add to context, so it is counted here at characters divided by 3.5. dojo-protocol's
   ten rules are the only SessionStart text in a default setup. A project's own `DOJO.md` replaces them and is not
-  counted.
+  counted. A hook that exits non-zero stops the check with an error: it measured nothing, which is not zero.
 
 Both are estimates, not billed usage. Run `python3 scripts/always_on.py --write` to refresh the table below.
 
